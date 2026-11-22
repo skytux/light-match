@@ -85,6 +85,11 @@ Each twin has options (**Configure** on the entry):
    the cell in the colour mode, so a dim white can go below the brightness
    floor. It starts as the lamp option sets it; whites shown with the colour
    LEDs have a colour bar in the grid.
+   The circle shows the target colour and brightness as a screen can show
+   it. A lit lamp never looks black, even at 1 %, so full output is screen
+   white and lower levels follow perceived lightness (CIE L*) down to a
+   **screen floor**, half brightness by default. Change the floor with the
+   slider under the hint; the panel remembers it in this browser.
 5. **Save** stores the cell and moves on; **Skip** leaves it at its default.
    **Previous** goes back; **Reset this cell** returns a cell to its default.
    Click any square in the grid to jump to that cell. The bar at the top shows
@@ -188,13 +193,22 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) to calibrate and submit a profile.
 ## Sharing profiles
 
 The panel's **Export profile** downloads the lamp's calibration as a JSON
-file, optionally with the bulb model typed in the field above it. The download
-goes through a short-lived signed link, so it also works in the companion app
-and in phone browsers. **Copy JSON** puts the same JSON on the clipboard (or
-shows it to copy by hand where there is no clipboard). **Import profile** loads
-a file and **Paste JSON** loads pasted text, either replacing the lamp's cells
-or merging them. **Copy calibration from** reuses another twin's calibrated
-cells on this lamp, with the same conversion as an import. A profile made on a lamp that is
+file. Make and model are filled in from the device registry (or the matched
+model profile) and can be changed. The profile and the file are named
+`<make>_<model>_<YYYY-MM-DD>_<random>.light-match.json`, and the file carries
+the name, date, make and model. The name can be edited. The download goes
+through a short-lived signed link, so it also works in the companion app and
+in phone browsers. **Copy JSON** puts the same JSON on the clipboard (or shows
+it to copy by hand where there is no clipboard).
+
+**Import profile file**, **Paste JSON**, **Copy calibration from** and a
+profile's **Apply to chosen lamps** in the profile list all apply to the lamps
+ticked under **Apply to**: single lamps or whole groups. Each lamp gets the
+profile converted for its own capabilities. **Merge** keeps the lamps' other
+cells; without it their cells are replaced, after one confirmation. The panel
+then lists the result per lamp. A profile without calibrated cells is refused
+before any lamp is touched, and when replacing, a lamp none of whose cells fit
+is left as it was. A profile made on a lamp that is
 commanded differently is converted where possible (for example RGBW channels
 to hue/saturation); cells that cannot be converted are skipped. Calibrations
 are by eye and depend on the reference lamp, so treat a shared profile as a
@@ -223,6 +237,29 @@ Cell keys are `color:<name>:<level>` or `white:<kelvin>:<level>`, with levels
 ids, capabilities, provenance, an optional nickname and the CC BY 4.0
 licence) and opens a prefilled "New lamp profile" issue on GitHub. Nothing is
 sent until you submit that issue yourself.
+
+## My calibrations and groups
+
+**Save to my library** keeps the current lamp's calibration in a local
+library on your Home Assistant (`.storage/light_match.library`), under the
+name in the export field. Imported files can be saved there too (tick "also
+save imported profiles to my library"). Saving is on demand only; nothing is
+saved automatically.
+
+The **Profiles** card lists three separate sections, each filtered by make or
+model:
+
+- **My calibrations**: your library. Entries can be applied to lamps,
+  exported, copied as JSON, renamed and deleted.
+- **Built-in**: the calibrated profiles shipped with Light Match.
+- **Community**: imported public lamp data (`profiles/imported/`) and profiles
+  downloaded from the online database.
+
+**Lamp groups** pick several lamps at once. Lamps of the same make and model
+are grouped automatically from the device registry. These groups are worked
+out live, so they follow new and removed lamps without upkeep. Groups of your
+own are created from the ticked lamps, can be set to the ticked lamps again,
+renamed or deleted, and are stored with the library.
 
 ## Services
 
@@ -283,8 +320,9 @@ Everything runs in containers; nothing is installed on the host:
 ```
 
 This builds a test image (Python 3.13, Home Assistant through
-`pytest-homeassistant-custom-component`), runs ruff and the tests, and checks
-the panel's JavaScript with `node --check`.
+`pytest-homeassistant-custom-component`), runs ruff and the tests, checks
+the panel's JavaScript with `node --check` and runs the panel tests in
+`tests/js` with `node --test`.
 
 ## Licence
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
@@ -289,16 +290,23 @@ async def test_export_download_view(
     client = await hass_client()
     assert (await client.get(f"/api/{DOMAIN}/export/nope")).status == 404
 
-    resp = await client.get(path, params={"model": "Acme Bulb 9"})
+    resp = await client.get(path, params={"make": "Acme", "model": "Bulb 9"})
     assert resp.status == 200
-    assert resp.headers["Content-Disposition"] == 'attachment; filename="Acme_Bulb_9.light-match.json"'
+    assert re.fullmatch(
+        r'attachment; filename="Acme_Bulb_9_\d{4}-\d\d-\d\d_[a-z0-9]{5}\.light-match\.json"',
+        resp.headers["Content-Disposition"],
+    )
     assert resp.content_type == "application/json"
     body = json.loads(await resp.text())
-    assert body["format"] == "light_match_profile" and body["model"] == "Acme Bulb 9"
+    assert body["format"] == "light_match_profile" and body["model"] == "Bulb 9" and body["make"] == "Acme"
+    assert body["name"].startswith("Acme_Bulb_9_") and re.fullmatch(r"\d{4}-\d\d-\d\d", body["date"])
     assert body["cells"] == {"color:red:1": {"brightness": 26, "rgbw_color": [12, 0, 0, 0]}}
 
+    # a chosen name; a lamp without make and model falls back to "profile"
+    resp = await client.get(path, params={"name": "My lamp"})
+    assert resp.headers["Content-Disposition"] == 'attachment; filename="My_lamp.light-match.json"'
     resp = await client.get(path)
-    assert resp.headers["Content-Disposition"] == 'attachment; filename="Desk_lamp.light-match.json"'
+    assert re.search(r'filename="profile_\d{4}-\d\d-\d\d_[a-z0-9]{5}\.light-match\.json"', resp.headers["Content-Disposition"])
 
     # the panel signs the path (auth/sign_path) and opens it without a bearer token
     token = hass.auth.async_validate_access_token(hass_access_token)

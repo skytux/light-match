@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.0 - 2026-11-22
+
+- Target swatch brightness follows perceived lightness from a screen floor (default 50 %), because a lit lamp never looks black: 1 % now shows at about 55 % screen level instead of nearly black. A "Screen floor" slider sets the floor, remembered in the browser.
+- Exports are named `<make>_<model>_<YYYY-MM-DD>_<random>`, with make and model taken from the device registry (else the model profile) and prefilled in the panel. The profile file carries its name, date, make and model.
+- My calibrations: a local library (`light_match.library` store) of saved profiles, separate from the built-in and community profiles. Save the current lamp's calibration or an imported file, then rename, delete, export, copy as JSON or apply it to lamps.
+- Profiles card with three separate, filterable sections: My calibrations, Built-in, Community (imported data and online profiles).
+- Apply to many lamps: import, paste, copy-from and profile apply take the lamps and groups ticked under "Apply to". Each lamp is converted for its own capabilities, there is one confirmation when replacing, and the result is shown per lamp. New websocket command `light_match/profile/apply`; `profile/import` and `profile/copy` are unchanged.
+- Lamp groups: automatic groups of lamps with the same make and model (live, from the device registry) and groups of your own (create, set, rename, delete).
+- A profile without cells is refused before any lamp is touched, and a lamp none of whose cells fit is left alone when replacing.
+- Panel tests in `tests/js` (swatch mapping, names, rendering), run by `scripts/test.sh`.
+
 ## 0.7.5 - 2026-11-22
 
 - Copy calibration refuses a source lamp with no calibrated cells, so a

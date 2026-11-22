@@ -17,6 +17,7 @@ from homeassistant.helpers import (
 )
 from homeassistant.helpers.storage import Store
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.util import dt as dt_util
 
 from .const import (
     BEHAVIOUR_REFERENCE,
@@ -247,9 +248,25 @@ class LightMatchData:
         await self.async_save()
         return had
 
-    def export(self, model: str | None = None) -> dict[str, Any]:
-        """The profile as shareable JSON."""
-        return self.profile().to_json(model)
+    def export(
+        self, model: str | None = None, make: str | None = None, name: str | None = None
+    ) -> dict[str, Any]:
+        """The profile as shareable JSON, named ``<make>_<model>_<date>_<random>``.
+
+        Make and model default to the lamp's (device registry, else model profile).
+        """
+        from .library import make_model, profile_name  # noqa: PLC0415
+
+        auto_make, auto_model = make_model(self)
+        make = (make or "").strip() or auto_make
+        model = (model or "").strip() or auto_model
+        meta: dict[str, Any] = {
+            "name": (name or "").strip()[:120] or profile_name(make, model),
+            "date": dt_util.now().date().isoformat(),
+        }
+        if make:
+            meta["make"] = make
+        return self.profile().to_json(model, meta=meta)
 
     def share_target(self, reference: str | None = None) -> str:
         """lm-ref-1 if the cells were matched to a reference-space lamp, else house."""
@@ -282,10 +299,17 @@ class LightMatchData:
             **contributor,
         )
 
-    async def async_import(self, data: Any, merge: bool = False) -> tuple[int, int]:
-        """Import an exported profile; returns (imported, skipped)."""
+    async def async_import(
+        self, data: Any, merge: bool = False, refuse_empty: bool = False
+    ) -> tuple[int, int]:
+        """Import an exported profile; returns (imported, skipped).
+
+        ``refuse_empty`` leaves the lamp alone (ValueError) when no cell fits it.
+        """
         profile = self.profile()
         result = profile.import_json(data, replace=not merge)
+        if refuse_empty and not result[0]:
+            raise ValueError("no cell of the profile fits this lamp")
         self.cells = profile.cells
         await self.async_save()
         return result
@@ -382,6 +406,7 @@ def data_for_entity(hass: HomeAssistant, entity_id: str) -> LightMatchData | Non
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Register the websocket API, services and the calibration panel."""
+    from .library import library  # noqa: PLC0415
     from .online import OnlineUpdater  # noqa: PLC0415
     from .panel import async_register_panel  # noqa: PLC0415
     from .services import async_register_services  # noqa: PLC0415
@@ -392,6 +417,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     updater = OnlineUpdater(hass, db)
     hass.data[DOMAIN]["online"] = updater
     await updater.async_load()
+    await library(hass).async_load()
     async_register_websocket(hass)
     async_register_services(hass)
     async_register_views(hass)

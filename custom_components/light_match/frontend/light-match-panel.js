@@ -3,9 +3,31 @@
 
 const LEVELS = [1, 5, 20, 50, 100];
 
-// CIE xy + relative output -> CSS colour on an sRGB screen. Screen white = the
-// lamp's full output, so a 1 % cell shows as a very dark patch.
-function xyToCss(xy, output = 1) {
+// CIE lightness L* (0-100) of a relative luminance (0-1).
+function lightness(Y) {
+  Y = Math.max(0, Math.min(1, Y));
+  return Y > 216 / 24389 ? 116 * Math.cbrt(Y) - 16 : (24389 / 27) * Y;
+}
+
+// How bright the screen shows a relative output: the sRGB-encoded value of the
+// strongest channel. A lit lamp never looks black, even at 1 %, so the scale
+// starts at a floor (default half brightness) and rises with perceived lightness.
+function screenLevel(output, floor = 0.5) {
+  const f = Math.max(0, Math.min(1, floor));
+  return f + ((1 - f) * lightness(output)) / 100;
+}
+
+const SCREEN_FLOOR_DEFAULT = 50;
+
+function screenFloor() {
+  const v = Number(storageGet("light_match_screen_floor"));
+  return storageGet("light_match_screen_floor") !== "" && v >= 0 && v <= 90 ? v : SCREEN_FLOOR_DEFAULT;
+}
+
+const decodeSrgb = (v) => (v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+
+// CIE xy + relative output -> CSS colour on an sRGB screen (see screenLevel).
+function xyToCss(xy, output = 1, floor = 0.5) {
   const [x, y] = xy;
   if (!(y > 0)) return "rgb(0,0,0)";
   const X = x / y, Z = (1 - x - y) / y;
@@ -14,7 +36,7 @@ function xyToCss(xy, output = 1) {
   let b = 0.0557 * X - 0.204 + 1.057 * Z;
   r = Math.max(0, r); g = Math.max(0, g); b = Math.max(0, b);
   const m = Math.max(r, g, b) || 1;
-  const k = Math.max(0, Math.min(1, output)) / m;
+  const k = decodeSrgb(screenLevel(output, floor)) / m;
   const enc = (c) => {
     c = Math.min(1, c * k);
     return Math.round(255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055));
@@ -35,6 +57,26 @@ function storageSet(key, value) {
   } catch (e) {
     /* private mode: nothing remembered */
   }
+}
+
+function slug(value) {
+  return String(value || "").replace(/[^A-Za-z0-9.-]+/g, "_").replace(/^[_.]+|[_.]+$/g, "");
+}
+
+// <make>_<model>_<YYYY-MM-DD>_<random>, like the integration names exports.
+function autoName(make, model, day = new Date()) {
+  const parts = [slug(make), slug(model)].filter(Boolean);
+  if (!parts.length) parts.push("profile");
+  const pad = (n) => String(n).padStart(2, "0");
+  const date = `${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`;
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let token = "";
+  for (const b of crypto.getRandomValues(new Uint8Array(5))) token += chars[b % chars.length];
+  return [...parts, date, token].join("_").slice(0, 120);
+}
+
+function fileName(name) {
+  return `${slug(name) || "profile"}.light-match.json`;
 }
 
 function download(filename, data) {
@@ -80,6 +122,12 @@ class LightMatchPanel extends HTMLElement {
     this._previewTimer = null;
     this._loaded = false;
     this._quick = storageGet("light_match_quick") === "1";
+    this._screenFloor = screenFloor();
+    this._targets = new Set();
+    this._browse = null;
+    this._groups = null;
+    this._filter = "";
+    this._applyResults = null;
   }
 
   _order() {
@@ -131,6 +179,7 @@ class LightMatchPanel extends HTMLElement {
       } catch (err) {
         this._settings = null;
       }
+      await this._loadLibrary();
       if (this._entries.length) {
         await this._selectEntry(this._entries[0].entry_id);
       }
@@ -156,9 +205,15 @@ class LightMatchPanel extends HTMLElement {
   }
 
   async _selectEntry(entryId) {
+    const previous = this._entryId;
     this._entryId = entryId;
     this._jsonText = "";
     const entry = this._entry;
+    this._make = entry.make || "";
+    this._model = entry.model || "";
+    this._name = autoName(this._make, this._model);
+    this._nameEdited = false;
+    if (this._targets.size === 0 || (this._targets.size === 1 && this._targets.has(previous))) this._targets = new Set([entryId]);
     this._reference = this._defaultReference(entry);
     await this._loadProfile();
     const order = this._order();
@@ -303,85 +358,182 @@ class LightMatchPanel extends HTMLElement {
     download(filename, await getData());
   }
 
-  _exportModel() {
-    return (this._model || "").trim();
+  // Library, browser sections and groups; absent until Home Assistant has
+  // loaded a version with them (the panel still works without).
+  async _loadLibrary() {
+    try {
+      this._browse = await this._ws("profiles/browse");
+    } catch (err) {
+      this._browse = null;
+    }
+    try {
+      this._groups = await this._ws("groups");
+    } catch (err) {
+      this._groups = null;
+    }
+  }
+
+  _exportArgs() {
+    const out = {};
+    for (const key of ["make", "model", "name"]) {
+      const v = String(this[`_${key}`] || "").trim();
+      if (v) out[key] = v;
+    }
+    return out;
   }
 
   async _export() {
-    const model = this._exportModel();
-    const name = (model || this._entry.title).replace(/[^\w.-]+/g, "_").replace(/^_+|_+$/g, "") || "profile";
-    const query = model ? `?${new URLSearchParams({ model })}` : "";
+    const args = this._exportArgs();
+    const query = new URLSearchParams(args).toString();
     try {
-      await this._downloadSigned(`/api/light_match/export/${this._entryId}${query}`, `${name}.light-match.json`, async () =>
-        (await this._ws("profile/export", { entry_id: this._entryId, ...(model ? { model } : {}) })).profile
+      await this._downloadSigned(`/api/light_match/export/${this._entryId}${query ? `?${query}` : ""}`, fileName(args.name), async () =>
+        (await this._ws("profile/export", { entry_id: this._entryId, ...args })).profile
       );
     } catch (err) {
       this._flash(`Export failed: ${err.message || err}`);
     }
   }
 
-  async _copyJson() {
-    const model = this._exportModel();
+  async _showJson(profile) {
+    const text = JSON.stringify(profile, null, 2) + "\n";
     try {
-      const res = await this._ws("profile/export", { entry_id: this._entryId, ...(model ? { model } : {}) });
-      const text = JSON.stringify(res.profile, null, 2) + "\n";
-      try {
-        await navigator.clipboard.writeText(text);
-        this._jsonText = "";
-        this._render();
-        this._flash("Profile JSON copied to the clipboard.");
-        return;
-      } catch (err) {
-        // no clipboard (plain http, some WebViews): show it to copy by hand
-      }
-      this._jsonText = text;
+      await navigator.clipboard.writeText(text);
+      this._jsonText = "";
       this._render();
-      const area = this.shadowRoot.querySelector("#jsonout");
-      if (area) {
-        area.focus();
-        area.select();
-      }
-      this._flash("Copy the JSON below (the clipboard is not available here).");
+      this._flash("Profile JSON copied to the clipboard.");
+      return;
+    } catch (err) {
+      // no clipboard (plain http, some WebViews): show it to copy by hand
+    }
+    this._jsonText = text;
+    this._render();
+    const area = this.shadowRoot.querySelector("#jsonout");
+    if (area) {
+      area.focus();
+      area.select();
+    }
+    this._flash("Copy the JSON below (the clipboard is not available here).");
+  }
+
+  async _copyJson() {
+    try {
+      const res = await this._ws("profile/export", { entry_id: this._entryId, ...this._exportArgs() });
+      await this._showJson(res.profile);
     } catch (err) {
       this._flash(`Copy failed: ${err.message || err}`);
+    }
+  }
+
+  async _saveToLibrary() {
+    try {
+      const res = await this._ws("library/save", { entry_id: this._entryId, ...this._exportArgs() });
+      await this._loadLibrary();
+      this._name = autoName(this._make, this._model);
+      this._nameEdited = false;
+      this._render();
+      this._flash(`Saved to My calibrations as ${res.profile.name}.`);
+    } catch (err) {
+      this._flash(`Not saved: ${err.message || err}`);
+    }
+  }
+
+  _targetIds() {
+    return [...this._targets].filter((id) => this._entries.some((e) => e.entry_id === id));
+  }
+
+  _title(entryId) {
+    const e = this._entries.find((x) => x.entry_id === entryId);
+    return e ? e.title : entryId;
+  }
+
+  // Apply a profile (source: {profile} | {from_entry_id} | {library_id} | {db_id})
+  // to every chosen lamp, each converted for its own capabilities.
+  async _apply(source, label) {
+    const ids = this._targetIds();
+    if (!ids.length) {
+      this._flash("Choose at least one lamp to apply to.");
+      return false;
+    }
+    const merge = Boolean(this._merge);
+    if (!merge && !confirm(`Replace every calibrated cell of ${ids.map((id) => this._title(id)).join(", ")} with ${label}?`)) return false;
+    try {
+      const res = await this._ws("profile/apply", { entry_ids: ids, merge, ...source });
+      this._applyResults = { label, results: res.results };
+      await this._reload();
+      await this._goto(this._index, false);
+      const ok = res.results.filter((r) => !r.error).length;
+      this._flash(`Applied to ${ok} of ${res.results.length} lamp${res.results.length === 1 ? "" : "s"}.`);
+      return true;
+    } catch (err) {
+      this._flash(`Not applied: ${err.message || err}`);
+      return false;
     }
   }
 
   async _copyFrom() {
     const from = this._copyFromId;
-    const source = this._entries.find((e) => e.entry_id === from);
-    if (!source) return;
-    const merge = Boolean(this._merge);
-    if (!merge && !confirm(`Replace every calibrated cell of ${this._entry.title} with the calibration of ${source.title}?`)) return;
-    try {
-      const res = await this._ws("profile/copy", { entry_id: this._entryId, from_entry_id: from, merge });
-      await this._loadProfile();
-      await this._goto(this._index, false);
-      this._flash(`Copied ${res.imported} cells, skipped ${res.skipped}.`);
-    } catch (err) {
-      this._flash(`Copy failed: ${err.message || err}`);
-    }
+    if (!this._entries.some((e) => e.entry_id === from)) return;
+    await this._apply({ from_entry_id: from }, `the calibration of ${this._title(from)}`);
+  }
+
+  _targetPicker() {
+    const box = (id, label, checked, extra = "") =>
+      `<label class="check"><input type="checkbox" ${extra} ${checked ? "checked" : ""}> ${esc(label)}</label>`;
+    const lamps = this._entries
+      .map((e) => box(e.entry_id, e.title, this._targets.has(e.entry_id), `data-target="${esc(e.entry_id)}"`))
+      .join("");
+    const groups = this._groups ? [...this._groups.auto, ...this._groups.manual] : [];
+    const groupBoxes = groups
+      .map((g) => {
+        const ids = g.entry_ids.filter((id) => this._entries.some((e) => e.entry_id === id));
+        if (!ids.length) return "";
+        const all = ids.every((id) => this._targets.has(id));
+        return box(g.id, `${g.name} (${ids.length}${g.auto ? ", same make and model" : ""})`, all, `data-group="${esc(g.id)}"`);
+      })
+      .join("");
+    return `<div class="targets">
+        <p class="meta">Apply to</p>
+        <div class="checks">${lamps}</div>
+        ${groupBoxes ? `<p class="meta">Groups</p><div class="checks">${groupBoxes}</div>` : ""}
+        <label class="check"><input type="checkbox" id="merge" ${this._merge ? "checked" : ""}> merge with the lamps' existing cells (otherwise replace them)</label>
+      </div>`;
+  }
+
+  _applyResultsList() {
+    const r = this._applyResults;
+    if (!r) return "";
+    return `<p class="meta">Applied ${esc(r.label)}:</p><ul class="results">${r.results
+      .map((x) => `<li>${esc(x.title || x.entry_id)}: ${x.error ? `<span class="bad">not changed (${esc(x.error)})</span>` : `${x.imported} cells, ${x.skipped} skipped`}</li>`)
+      .join("")}</ul>`;
   }
 
   _filesCard() {
-    const others = this._entries.filter((e) => e.entry_id !== this._entryId);
-    if (!others.some((e) => e.entry_id === this._copyFromId)) this._copyFromId = others.length ? others[0].entry_id : null;
+    const others = this._entries;
+    if (!others.some((e) => e.entry_id === this._copyFromId)) {
+      const other = others.find((e) => e.entry_id !== this._entryId);
+      this._copyFromId = other ? other.entry_id : null;
+    }
+    const lib = Boolean(this._browse);
     return `<div class="card files">
-      <h2>Export, import and copy</h2>
+      <h2>Export and save</h2>
       <div class="pickers">
-        <label>Lamp model to put in the export (optional)<input id="model" value="${esc(this._model || "")}" maxlength="100" placeholder="make and model"></label>
+        <label>Make<input id="make" value="${esc(this._make || "")}" maxlength="100" placeholder="manufacturer"></label>
+        <label>Model<input id="model" value="${esc(this._model || "")}" maxlength="100" placeholder="model"></label>
       </div>
+      <label>Profile name<input id="pname" value="${esc(this._name || "")}" maxlength="120"></label>
       <div class="links">
         <a href="#" id="export">Export profile</a> ·
         <a href="#" id="copyjson">Copy JSON</a> ·
-        <a href="#" id="share">Share profile</a> ·
-        <label class="file">Import profile <input type="file" id="import" accept=".json,application/json"></label> ·
-        <a href="#" id="pastetoggle">Paste JSON</a>
-      </div>
-      <div class="links">
-        <label><input type="checkbox" id="merge" ${this._merge ? "checked" : ""}> merge with existing cells (import and copy)</label>
+        <a href="#" id="share">Share profile</a>${lib ? ` · <a href="#" id="savelib">Save to my library</a>` : ""}
       </div>
       ${this._jsonText ? `<textarea id="jsonout" readonly rows="8">${esc(this._jsonText)}</textarea>` : ""}
+      <h2 class="sub">Import and copy</h2>
+      ${lib ? this._targetPicker() : `<p class="meta">Applies to this lamp. Restart Home Assistant to apply to several lamps.</p><label class="check"><input type="checkbox" id="merge" ${this._merge ? "checked" : ""}> merge with existing cells</label>`}
+      <div class="links">
+        <label class="file">Import profile file <input type="file" id="import" accept=".json,application/json"></label> ·
+        <a href="#" id="pastetoggle">Paste JSON</a>
+        ${lib ? `<label class="check"><input type="checkbox" id="keeplib" ${this._keepLib ? "checked" : ""}> also save imported profiles to my library</label>` : ""}
+      </div>
       ${
         this._pasteOpen
           ? `<textarea id="jsonin" rows="8" placeholder="Paste an exported Light Match profile here">${esc(this._pasteText || "")}</textarea>
@@ -389,7 +541,7 @@ class LightMatchPanel extends HTMLElement {
           : ""
       }
       ${
-        others.length
+        lib && others.length > 1
           ? `<div class="copyfrom">
         <label>Copy calibration from<select id="copyfrom">${others
           .map((e) => `<option value="${esc(e.entry_id)}" ${e.entry_id === this._copyFromId ? "selected" : ""}>${esc(e.title)}</option>`)
@@ -398,8 +550,120 @@ class LightMatchPanel extends HTMLElement {
       </div>`
           : ""
       }
+      ${this._applyResultsList()}
       <p class="message">${esc(this._message)}</p>
     </div>`;
+  }
+
+  _matches(item) {
+    const q = this._filter.trim().toLowerCase();
+    if (!q) return true;
+    const hay = [item.name, item.make, item.model, ...(item.models || []), item.id].filter(Boolean).join(" ").toLowerCase();
+    return q.split(/\s+/).every((w) => hay.includes(w));
+  }
+
+  _section(title, hint, items, row) {
+    const shown = items.filter((i) => this._matches(i));
+    const LIMIT = 30;
+    return `<h3>${esc(title)} <small>${shown.length}${shown.length !== items.length ? ` of ${items.length}` : ""}</small></h3>
+      <p class="hint">${hint}</p>
+      ${shown.length ? `<ul class="plist">${shown.slice(0, LIMIT).map(row).join("")}</ul>` : `<p class="meta">None${items.length ? " match the filter" : ""}.</p>`}
+      ${shown.length > LIMIT ? `<p class="meta">${shown.length - LIMIT} more: type in the filter to narrow.</p>` : ""}`;
+  }
+
+  _libraryCard() {
+    const b = this._browse;
+    const what = (i) => [i.make, i.model].filter(Boolean).join(" ");
+    const mine = (i) => `<li><b>${esc(i.name)}</b> <span class="meta">${esc(what(i))}${what(i) ? " · " : ""}${i.cells} cells · ${esc(i.date || "")}${i.source ? ` · from ${esc(i.source)}` : ""}</span>
+        <span class="acts"><a href="#" data-lib-apply="${esc(i.id)}">Apply to chosen lamps</a> · <a href="#" data-lib-export="${esc(i.id)}">Export</a> · <a href="#" data-lib-json="${esc(i.id)}">Copy JSON</a> · <a href="#" data-lib-rename="${esc(i.id)}">Rename</a> · <a href="#" data-lib-delete="${esc(i.id)}">Delete</a></span></li>`;
+    const db = (i) => `<li><b>${esc(i.name)}</b> <span class="meta">${esc(i.make || "")} ${esc((i.models || []).join(", "))} · ${i.cells} cells · ${esc(METHOD_LABEL[i.method] || i.method || "")}${i.verified ? ", verified" : ""}${i.origin === "online" ? ", online" : ""}</span>
+        ${i.cells ? `<span class="acts"><a href="#" data-db-apply="${esc(i.id)}">Apply to chosen lamps</a></span>` : ""}</li>`;
+    return `<div class="card">
+      <h2>Profiles</h2>
+      <label>Filter by make or model<input id="filter" value="${esc(this._filter)}" placeholder="e.g. wiz, hue, ESP01"></label>
+      ${this._section("My calibrations", "Your own saved calibrations, kept on this Home Assistant.", b.mine, mine)}
+      ${this._section("Built-in", "Calibrated profiles shipped with Light Match.", b.builtin, db)}
+      ${this._section("Community", "Imported public lamp data and profiles from the online database.", b.community, db)}
+      <p class="message">${esc(this._message)}</p>
+    </div>`;
+  }
+
+  _groupsCard() {
+    const g = this._groups;
+    const names = (ids) => ids.map((id) => this._title(id)).join(", ") || "no lamps";
+    const manual = g.manual
+      .map((x) => `<li><b>${esc(x.name)}</b> <span class="meta">${esc(names(x.entry_ids))}</span>
+        <span class="acts"><a href="#" data-grp-set="${esc(x.id)}">Set to the chosen lamps</a> · <a href="#" data-grp-rename="${esc(x.id)}">Rename</a> · <a href="#" data-grp-delete="${esc(x.id)}">Delete</a></span></li>`)
+      .join("");
+    const auto = g.auto.map((x) => `<li><b>${esc(x.name)}</b> <span class="meta">${esc(names(x.entry_ids))}</span></li>`).join("");
+    return `<div class="card">
+      <h2>Lamp groups</h2>
+      <p class="hint">Groups pick several lamps at once under "Apply to". Lamps of the same make and model are grouped automatically, from the device registry, and the groups update by themselves.</p>
+      ${auto ? `<h3>Same make and model</h3><ul class="plist">${auto}</ul>` : ""}
+      <h3>My groups</h3>
+      ${manual ? `<ul class="plist">${manual}</ul>` : `<p class="meta">None yet.</p>`}
+      <div class="copyfrom">
+        <label>New group from the chosen lamps<input id="grpname" maxlength="60" placeholder="group name"></label>
+        <button id="grpadd">Create</button>
+      </div>
+    </div>`;
+  }
+
+  async _libAction(kind, id) {
+    try {
+      if (kind === "apply") {
+        const item = this._browse.mine.find((i) => i.id === id);
+        await this._apply({ library_id: id }, `the saved profile ${item ? item.name : ""}`);
+      } else if (kind === "db") {
+        const item = [...this._browse.builtin, ...this._browse.community].find((i) => i.id === id);
+        await this._apply({ db_id: id }, `the profile ${item ? item.name : id}`);
+      } else if (kind === "export") {
+        const item = this._browse.mine.find((i) => i.id === id);
+        await this._downloadSigned(`/api/light_match/library/${id}`, fileName(item && item.name), async () =>
+          (await this._ws("library/get", { item_id: id })).profile
+        );
+      } else if (kind === "json") {
+        await this._showJson((await this._ws("library/get", { item_id: id })).profile);
+      } else if (kind === "rename") {
+        const item = this._browse.mine.find((i) => i.id === id);
+        const name = prompt("New name:", item ? item.name : "");
+        if (!name || !name.trim()) return;
+        await this._ws("library/rename", { item_id: id, name: name.trim() });
+        await this._loadLibrary();
+        this._render();
+      } else if (kind === "delete") {
+        const item = this._browse.mine.find((i) => i.id === id);
+        if (!confirm(`Delete ${item ? item.name : "this profile"} from My calibrations? Lamps keep their cells.`)) return;
+        await this._ws("library/delete", { item_id: id });
+        await this._loadLibrary();
+        this._render();
+      }
+    } catch (err) {
+      this._flash(`Not done: ${err.message || err}`);
+    }
+  }
+
+  async _groupAction(kind, id) {
+    try {
+      const group = this._groups.manual.find((x) => x.id === id);
+      if (kind === "add") {
+        const name = String(this.shadowRoot.querySelector("#grpname")?.value || "").trim();
+        if (!name) return this._flash("Give the group a name.");
+        this._groups = await this._ws("groups/set", { name, entry_ids: this._targetIds() });
+      } else if (kind === "set" && group) {
+        this._groups = await this._ws("groups/set", { group_id: id, name: group.name, entry_ids: this._targetIds() });
+      } else if (kind === "rename" && group) {
+        const name = prompt("New group name:", group.name);
+        if (!name || !name.trim()) return;
+        this._groups = await this._ws("groups/set", { group_id: id, name: name.trim(), entry_ids: group.entry_ids });
+      } else if (kind === "delete" && group) {
+        if (!confirm(`Delete the group ${group.name}? The lamps stay as they are.`)) return;
+        this._groups = await this._ws("groups/delete", { group_id: id });
+      }
+      this._render();
+    } catch (err) {
+      this._flash(`Not done: ${err.message || err}`);
+    }
   }
 
   _shareCard() {
@@ -468,15 +732,33 @@ class LightMatchPanel extends HTMLElement {
   }
 
   async _importText(text, merge) {
+    let profile;
     try {
-      const profile = JSON.parse(text);
-      const res = await this._ws("profile/import", { entry_id: this._entryId, profile, merge });
-      await this._loadProfile();
-      await this._goto(this._index, false);
-      this._pasteText = "";
-      this._pasteOpen = false;
-      this._render();
-      this._flash(`Imported ${res.imported} cells, skipped ${res.skipped}.`);
+      profile = JSON.parse(text);
+    } catch (err) {
+      this._flash(`Import failed: not JSON (${err.message || err})`);
+      return;
+    }
+    try {
+      if (this._keepLib && this._browse) {
+        await this._ws("library/save", { profile });
+        await this._loadLibrary();
+      }
+      let done;
+      if (this._browse) {
+        done = await this._apply({ profile }, `the imported profile${profile && profile.name ? ` ${profile.name}` : ""}`);
+      } else {
+        const res = await this._ws("profile/import", { entry_id: this._entryId, profile, merge });
+        await this._loadProfile();
+        await this._goto(this._index, false);
+        this._flash(`Imported ${res.imported} cells, skipped ${res.skipped}.`);
+        done = true;
+      }
+      if (done) {
+        this._pasteText = "";
+        this._pasteOpen = false;
+        this._render();
+      }
     } catch (err) {
       this._flash(`Import failed: ${err.message || err}`);
     }
@@ -493,7 +775,7 @@ class LightMatchPanel extends HTMLElement {
   }
 
   _targetCss(cell) {
-    if (cell.target && cell.target.xy) return xyToCss(cell.target.xy, cell.target.relative_output ?? 1);
+    if (cell.target && cell.target.xy) return xyToCss(cell.target.xy, cell.target.relative_output ?? 1, this._screenFloor / 100);
     return this._swatch(cell);
   }
 
@@ -667,6 +949,7 @@ class LightMatchPanel extends HTMLElement {
   async _reload() {
     const res = await this._ws("entries");
     this._entries = res.entries;
+    await this._loadLibrary();
     if (this._entryId) await this._loadProfile();
     this._render();
   }
@@ -705,7 +988,10 @@ class LightMatchPanel extends HTMLElement {
         <p class="meta">Target in lm-ref-1: xy ${cell.target ? cell.target.xy.join(", ") : "-"} · ${cell.target ? (cell.target.relative_output * 100).toPrecision(2) : "-"} % of full output</p>
         <div class="target">
           <button class="swatch" id="swatch" title="Show full screen" style="background:${this._targetCss(cell)}"></button>
-          <p class="hint">Target colour and brightness as your screen can show it (screen white = full output). A rough guide only: screens are not calibrated, so trust the reference lamp first. Tap the circle for full screen; at low levels turn the screen brightness down.</p>
+          <div>
+            <p class="hint">Target colour and brightness as your screen can show it: full output is screen white, and the scale follows perceived lightness from the screen floor up, since a lit lamp never looks black, even at 1 %. A rough guide only: screens are not calibrated, so trust the reference lamp first. Tap the circle for full screen.</p>
+            <label class="row floor"><span>Screen floor</span><input type="range" id="screenfloor" min="0" max="90" step="5" value="${this._screenFloor}"><span>${this._screenFloor} %</span></label>
+          </div>
         </div>
         <p class="hint">Make the lamp under test look like the reference, then Save. Changes are sent to the lamp live.</p>
         ${this._colourToggle(cell)}
@@ -729,6 +1015,8 @@ class LightMatchPanel extends HTMLElement {
       ${this._shareOpen ? this._shareCard() : ""}
       <div class="card">${this._profile && this._profile.cells.length ? this._grid() : "<p>This lamp has nothing to calibrate.</p>"}</div>
       ${this._filesCard()}
+      ${this._browse ? this._libraryCard() : ""}
+      ${this._groups && this._browse ? this._groupsCard() : ""}
       <div class="card links">
         <a href="#" id="resetall">Reset all cells</a>${entry.model_profile && entry.model_profile.cells ? ` · <a href="#" id="copymodelall">Copy all model profile cells</a>` : ""}
       </div>
@@ -765,6 +1053,18 @@ class LightMatchPanel extends HTMLElement {
         textarea { display:block; width:100%; box-sizing:border-box; margin-top:8px; padding:6px; font-family: monospace; font-size:12px; background: var(--card-background-color); color: var(--primary-text-color); border:1px solid var(--divider-color); border-radius:6px; }
         .copyfrom { display:flex; gap: 8px; align-items:flex-end; margin-top: 12px; }
         .copyfrom label { flex: 1; }
+        h2.sub { font-size: 16px; margin-top: 16px; }
+        h3 { font-size: 15px; margin: 16px 0 2px; }
+        h3 small { font-size: 12px; color: var(--secondary-text-color); font-weight: normal; }
+        .checks { display:flex; flex-wrap: wrap; gap: 4px 16px; }
+        label.check { display:inline-flex; align-items:center; gap: 4px; font-size: 14px; margin: 2px 0; }
+        .targets { margin: 8px 0; }
+        .plist { list-style: none; padding: 0; margin: 4px 0; }
+        .plist li { padding: 6px 0; border-bottom: 1px solid var(--divider-color); font-size: 14px; }
+        .plist .acts { display:block; font-size: 13px; margin-top: 2px; }
+        .results { margin: 4px 0; padding-left: 18px; font-size: 13px; }
+        .bad { color: var(--error-color, #db4437); }
+        .row.floor { grid-template-columns: 110px 1fr 50px; }
         .file { color: var(--primary-color); text-decoration: underline; cursor: pointer; }
         .message { min-height: 1em; color: var(--primary-color); font-size: 13px; }
         .dot { display:inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; border: 1px solid var(--divider-color); vertical-align: middle; }
@@ -850,8 +1150,86 @@ class LightMatchPanel extends HTMLElement {
     });
     link("#export", () => this._export());
     link("#copyjson", () => this._copyJson());
-    on("#model", "input", (e) => (this._model = e.target.value));
+    const renameAuto = () => {
+      if (this._nameEdited) return;
+      this._name = autoName(this._make, this._model);
+      const el = $("#pname");
+      if (el) el.value = this._name;
+    };
+    on("#make", "input", (e) => {
+      this._make = e.target.value;
+      renameAuto();
+    });
+    on("#model", "input", (e) => {
+      this._model = e.target.value;
+      renameAuto();
+    });
+    on("#pname", "input", (e) => {
+      this._name = e.target.value;
+      this._nameEdited = true;
+    });
+    link("#savelib", () => this._saveToLibrary());
     on("#merge", "change", (e) => (this._merge = e.target.checked));
+    on("#keeplib", "change", (e) => (this._keepLib = e.target.checked));
+    on("#screenfloor", "input", (e) => {
+      this._screenFloor = Number(e.target.value);
+      storageSet("light_match_screen_floor", String(this._screenFloor));
+      const label = e.target.nextElementSibling;
+      if (label) label.textContent = `${this._screenFloor} %`;
+      const sw = $("#swatch");
+      if (sw && this._cell) sw.style.background = this._targetCss(this._cell);
+    });
+    on("#filter", "input", (e) => {
+      this._filter = e.target.value;
+      const pos = e.target.selectionStart;
+      this._render();
+      const el = $("#filter");
+      if (el) {
+        el.focus();
+        el.setSelectionRange(pos, pos);
+      }
+    });
+    this.shadowRoot.querySelectorAll("input[data-target]").forEach((el) =>
+      el.addEventListener("change", () => {
+        if (el.checked) this._targets.add(el.dataset.target);
+        else this._targets.delete(el.dataset.target);
+        this._render();
+      })
+    );
+    this.shadowRoot.querySelectorAll("input[data-group]").forEach((el) =>
+      el.addEventListener("change", () => {
+        const g = [...this._groups.auto, ...this._groups.manual].find((x) => x.id === el.dataset.group);
+        if (!g) return;
+        for (const id of g.entry_ids) {
+          if (el.checked) this._targets.add(id);
+          else this._targets.delete(id);
+        }
+        this._render();
+      })
+    );
+    for (const kind of ["apply", "export", "json", "rename", "delete"]) {
+      this.shadowRoot.querySelectorAll(`[data-lib-${kind}]`).forEach((el) =>
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          this._libAction(kind, el.getAttribute(`data-lib-${kind}`));
+        })
+      );
+    }
+    this.shadowRoot.querySelectorAll("[data-db-apply]").forEach((el) =>
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        this._libAction("db", el.dataset.dbApply);
+      })
+    );
+    for (const kind of ["set", "rename", "delete"]) {
+      this.shadowRoot.querySelectorAll(`[data-grp-${kind}]`).forEach((el) =>
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          this._groupAction(kind, el.getAttribute(`data-grp-${kind}`));
+        })
+      );
+    }
+    on("#grpadd", "click", () => this._groupAction("add"));
     link("#pastetoggle", () => {
       this._pasteOpen = !this._pasteOpen;
       this._render();
