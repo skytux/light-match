@@ -49,6 +49,7 @@ from .share import portable_profile
 
 if TYPE_CHECKING:
     from .light import CalibratedLight
+    from .online import OnlineUpdater
 
 _LOGGER = logging.getLogger(__name__)
 PLATFORMS = [Platform.LIGHT]
@@ -87,6 +88,12 @@ class LightMatchData:
     async def async_save(self) -> None:
         """Save the profile cells and refresh the twin's state."""
         await self.store.async_save({"cells": self.cells})
+        for listener in list(self._listeners):
+            listener()
+
+    @callback
+    def refresh(self) -> None:
+        """Tell the twin its model profile may have changed."""
         for listener in list(self._listeners):
             listener()
 
@@ -273,6 +280,11 @@ async def async_get_database(hass: HomeAssistant) -> ProfileDatabase:
     return db
 
 
+def online_updater(hass: HomeAssistant) -> OnlineUpdater:
+    """The online updater (created at setup)."""
+    return hass.data[DOMAIN]["online"]
+
+
 def device_info_for(hass: HomeAssistant, entity_id: str) -> DeviceInfo:
     """Manufacturer, model, integration and firmware of a light's device."""
     reg = er.async_get(hass).async_get(entity_id)
@@ -317,11 +329,15 @@ def data_for_entity(hass: HomeAssistant, entity_id: str) -> LightMatchData | Non
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Register the websocket API, services and the calibration panel."""
+    from .online import OnlineUpdater  # noqa: PLC0415
     from .panel import async_register_panel  # noqa: PLC0415
     from .services import async_register_services  # noqa: PLC0415
     from .websocket import async_register_websocket  # noqa: PLC0415
 
-    await async_get_database(hass)
+    db = await async_get_database(hass)
+    updater = OnlineUpdater(hass, db)
+    hass.data[DOMAIN]["online"] = updater
+    await updater.async_load()
     async_register_websocket(hass)
     async_register_services(hass)
     await async_register_panel(hass)

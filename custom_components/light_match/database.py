@@ -19,6 +19,7 @@ import logging
 from pathlib import Path
 import re
 from typing import Any
+from urllib.parse import quote
 
 import voluptuous as vol
 
@@ -46,6 +47,8 @@ CONTRIBUTOR_ROLES = ["calibrated", "measured", "verified", "edited"]
 _NICK_RE = r"^[^@<>\s][^@<>]{0,38}[^@<>\s]$|^[^@<>\s]$"
 _GITHUB_RE = r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$"
 METHOD_RANK = {METHOD_COLORIMETER: 3, METHOD_LUX: 3, METHOD_BY_EYE: 2, METHOD_SPEC: 1}
+
+DISCUSSIONS_URL = "https://github.com/skytux/ha-light-match/discussions/categories/lamp-profiles"
 
 TARGET_REFERENCE = "lm-ref-1"
 TARGET_HOUSE = "house"
@@ -175,6 +178,55 @@ DB_PROFILE_SCHEMA = vol.All(
     ),
     _provenance_rules,
 )
+
+
+INDEX_FORMAT = "light_match_profile_index"
+STATS_FIELDS = ("updated", "discussion", "rating", "downloads")
+_SHA_RE = r"^[0-9a-f]{64}$"
+
+INDEX_ENTRY_SCHEMA = vol.Schema(
+    {
+        vol.Required("id"): vol.Match(_ID_RE.pattern),
+        vol.Required("path"): vol.Match(r"^[a-z0-9][a-z0-9_/.-]*\.json$"),
+        vol.Required("asset"): vol.Match(r"^[a-z0-9_.-]+\.json$"),
+        vol.Required("revision"): vol.All(int, vol.Range(min=1)),
+        vol.Required("sha256"): vol.Match(_SHA_RE),
+        vol.Required("name"): str,
+        vol.Required("manufacturer"): str,
+        vol.Required("models"): [str],
+        vol.Required("method"): vol.In(METHODS),
+        vol.Required("verified"): bool,
+        vol.Required("contributors"): [str],
+        vol.Optional("updated", default=None): vol.Any(None, vol.Match(r"^\d{4}-\d{2}-\d{2}$")),
+        vol.Optional("discussion", default=None): vol.Any(None, vol.Url()),
+        vol.Optional("rating", default=lambda: {"up": 0, "down": 0}): {
+            vol.Required("up"): vol.All(int, vol.Range(min=0)),
+            vol.Required("down"): vol.All(int, vol.Range(min=0)),
+        },
+        vol.Optional("downloads", default=0): vol.All(int, vol.Range(min=0)),
+    },
+    extra=vol.REMOVE_EXTRA,
+)
+
+INDEX_SCHEMA = vol.Schema(
+    {
+        vol.Required("format"): INDEX_FORMAT,
+        vol.Required("version"): 1,
+        vol.Optional("generated"): vol.Any(None, str),
+        vol.Required("profiles"): [INDEX_ENTRY_SCHEMA],
+    },
+    extra=vol.REMOVE_EXTRA,
+)
+
+
+def asset_name(profile_id: str, revision: int) -> str:
+    """The release asset of one revision of a profile (never replaced, so downloads add up)."""
+    return f"{profile_id.replace('/', '__')}__r{revision}.json"
+
+
+def validate_index(data: Any) -> dict[str, Any]:
+    """Validate a profile index; return the cleaned copy or raise vol.Invalid."""
+    return INDEX_SCHEMA(data)
 
 
 def validate_db_profile(data: Any) -> dict[str, Any]:
@@ -312,7 +364,30 @@ class ProfileDatabase:
 
     bundled: dict[str, ModelProfile] = field(default_factory=dict)
     online: dict[str, ModelProfile] = field(default_factory=dict)
+    stats: dict[str, dict[str, Any]] = field(default_factory=dict)
     loaded: bool = False
+
+    def set_stats(self, index: dict[str, Any]) -> None:
+        """Take ratings, downloads and discussion links from a validated index."""
+        self.stats = {e["id"]: {k: e.get(k) for k in STATS_FIELDS} for e in index["profiles"]}
+
+    def rating(self, profile_id: str) -> int:
+        """Thumbs up minus thumbs down in the profile's discussion."""
+        rating = (self.stats.get(profile_id) or {}).get("rating") or {}
+        return int(rating.get("up", 0)) - int(rating.get("down", 0))
+
+    def summary(self, prof: ModelProfile) -> dict[str, Any]:
+        """A profile's summary with its community stats."""
+        stats = self.stats.get(prof.id) or {}
+        out = prof.summary()
+        out["rating"] = stats.get("rating") or {"up": 0, "down": 0}
+        out["downloads"] = stats.get("downloads") or 0
+        out["updated"] = stats.get("updated")
+        out["discussion"] = prof.data.get("discussion") or stats.get("discussion")
+        out["rate_url"] = out["discussion"] or (
+            f"{DISCUSSIONS_URL}?discussions_q={quote(prof.id)}"
+        )
+        return out
 
     def all(self) -> dict[str, ModelProfile]:
         """Every profile; an online one wins over a bundled one of a lower revision."""
@@ -327,9 +402,12 @@ class ProfileDatabase:
         return self.all().get(profile_id) if profile_id else None
 
     def rank(self, prof: ModelProfile) -> tuple[int, ...]:
-        """Order among profiles that fit equally well: verified, then measured, then revision."""
+        """Order among profiles that fit equally well.
+
+        Verified first, then measured, then the community rating, then revision.
+        """
         prov = prof.data["provenance"]
-        return (int(prov["verified"]), METHOD_RANK[prov["method"]], prof.revision)
+        return (int(prov["verified"]), METHOD_RANK[prov["method"]], self.rating(prof.id), prof.revision)
 
     def candidates(self, device: DeviceInfo) -> list[ModelProfile]:
         """Every profile that fits a device, best first."""
@@ -369,6 +447,15 @@ def load_bundled(root: Path = PROFILES_DIR) -> dict[str, ModelProfile]:
             continue
         profiles[pid] = ModelProfile(pid, data)
     return profiles
+
+
+def load_bundled_index(path: Path = INDEX_FILE) -> dict[str, Any] | None:
+    """The bundled index with its stats snapshot (blocking)."""
+    try:
+        return validate_index(json.loads(path.read_text(encoding="utf-8")))
+    except (OSError, ValueError, vol.Invalid) as err:
+        _LOGGER.warning("Bundled profile index not usable: %s", err)
+        return None
 
 
 def valid_profile_id(value: str) -> bool:

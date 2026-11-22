@@ -11,7 +11,15 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.loader import async_get_integration
 import voluptuous as vol
 
-from . import LightMatchData, data_for_entity, data_for_entry, database, device_info_for, loaded_entries
+from . import (
+    LightMatchData,
+    data_for_entity,
+    data_for_entry,
+    database,
+    device_info_for,
+    loaded_entries,
+    online_updater,
+)
 from .const import CONF_BEHAVIOUR, CONF_PROFILE, CONF_REFERENCE, DOMAIN
 from .profile import MODE_ATTR, cell_target, grid_cells, nominal_command, quick_keys
 from .reference import reference_command, target_of
@@ -35,6 +43,9 @@ def async_register_websocket(hass: HomeAssistant) -> None:
         ws_share,
         ws_copy_model,
         ws_reference,
+        ws_settings,
+        ws_settings_set,
+        ws_profiles_update,
     ):
         websocket_api.async_register_command(hass, handler)
 
@@ -45,7 +56,7 @@ def _summary(data: LightMatchData) -> dict[str, Any]:
     model = data.model_profile()
     return {
         "device": data.device_info().as_dict(),
-        "model_profile": model.summary() if model else None,
+        "model_profile": database(data.hass).summary(model) if model else None,
         "profile_choice": data.option(CONF_PROFILE),
         "transition": data.transition_supported(),
         "entry_id": data.entry.entry_id,
@@ -331,3 +342,41 @@ async def ws_copy_model(hass: HomeAssistant, connection: Any, msg: dict[str, Any
     if (data := _get(hass, connection, msg)) is None:
         return
     connection.send_result(msg["id"], {"copied": await data.async_copy_model(msg["key"])})
+
+
+@websocket_api.websocket_command({vol.Required("type"): f"{DOMAIN}/settings"})
+@callback
+def ws_settings(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """The online update setting and the last check."""
+    connection.send_result(msg["id"], online_updater(hass).status())
+
+
+@websocket_api.websocket_command(
+    {vol.Required("type"): f"{DOMAIN}/settings/set", vol.Required("online_update"): bool}
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_settings_set(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """Turn the online profile update on or off."""
+    updater = online_updater(hass)
+    await updater.async_set_enabled(msg["online_update"])
+    connection.send_result(msg["id"], updater.status())
+
+
+@websocket_api.websocket_command({vol.Required("type"): f"{DOMAIN}/profiles/update"})
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_profiles_update(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """Check the online database now (only when the online update is on)."""
+    updater = online_updater(hass)
+    if not updater.enabled:
+        connection.send_error(msg["id"], "not_enabled", "Turn the online update on first")
+        return
+    result = await updater.async_update()
+    _refresh_twins(hass)
+    connection.send_result(msg["id"], {**updater.status(), "result": result})
+
+
+def _refresh_twins(hass: HomeAssistant) -> None:
+    for entry in loaded_entries(hass):
+        entry.runtime_data.refresh()

@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.5.0 - 2026-11-22
+
+- Optional online update of the profile database, off by default: a
+  checkbox in the panel (or `light_match.update_profiles`) fetches the
+  profile index from GitHub with an ETag, downloads only profiles newer than
+  the bundled ones from the "profiles" release assets, checks each against
+  the index's sha256 and the schema, caches them, and checks once a day.
+  Online profiles only fill the model layer; your cells are never touched.
+  Turning it off drops the online layer and its cache. Nothing else is sent.
+- Community stats: the index carries each profile's rating (thumbs up/down
+  on its GitHub Discussion), downloads (release asset counts), verified
+  status, contributor nicknames and last update, with
+  `profiles/index.schema.json` and a runtime schema. The panel shows them
+  next to the matched profile with a "Rate / report" link.
+- Ranking among equally good matches: verified, then measured, then rating,
+  then revision.
+- `scripts/profile_stats.py`: release assets per revision and the stats
+  refresh (Discussions are created per profile when missing), for a
+  scheduled workflow.
+
 ## 0.4.0 - 2026-11-22
 
 - Smart inference, so fewer cells need calibrating: an uncalibrated cell takes

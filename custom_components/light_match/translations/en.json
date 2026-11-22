@@ -68,6 +68,9 @@
   "exceptions": {
     "not_a_twin": {
       "message": "{entity_id} is not a Light Match light."
+    },
+    "online_off": {
+      "message": "The online profile update is off; turn it on in the Light Match panel."
     }
   },
   "services": {
@@ -168,6 +171,10 @@
           "description": "Object of target percentage to lamp percentage."
         }
       }
+    },
+    "update_profiles": {
+      "name": "Update lamp profiles",
+      "description": "Check the online Light Match profile database now and download newer profiles. Only works when the online update is turned on in the panel; nothing is sent apart from the download requests."
     }
   }
 }

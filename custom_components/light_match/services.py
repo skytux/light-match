@@ -10,7 +10,7 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 import voluptuous as vol
 
-from . import LightMatchData, data_for_entity
+from . import LightMatchData, data_for_entity, loaded_entries, online_updater
 from .const import DOMAIN
 
 ATTR_CELL = "cell"
@@ -105,6 +105,22 @@ def async_register_services(hass: HomeAssistant) -> None:
             raise ServiceValidationError(f"bad curve: {err}") from err
         return {"written": written}
 
+    async def update_profiles(call: ServiceCall) -> ServiceResponse:
+        updater = online_updater(hass)
+        if not updater.enabled:
+            raise ServiceValidationError(
+                "The online profile update is off; turn it on in the Light Match panel",
+                translation_domain=DOMAIN,
+                translation_key="online_off",
+            )
+        result = await updater.async_update()
+        for entry in loaded_entries(hass):
+            entry.runtime_data.refresh()
+        return result
+
+    hass.services.async_register(
+        DOMAIN, "update_profiles", update_profiles, vol.Schema({}), SupportsResponse.OPTIONAL
+    )
     hass.services.async_register(DOMAIN, "calibrate_cell", calibrate_cell, CALIBRATE_SCHEMA)
     hass.services.async_register(DOMAIN, "reset_cell", reset_cell, RESET_SCHEMA)
     hass.services.async_register(

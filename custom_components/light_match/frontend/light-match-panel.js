@@ -107,6 +107,11 @@ class LightMatchPanel extends HTMLElement {
     try {
       const res = await this._ws("entries");
       this._entries = res.entries;
+      try {
+        this._settings = await this._ws("settings");
+      } catch (err) {
+        this._settings = null;
+      }
       if (this._entries.length) {
         await this._selectEntry(this._entries[0].entry_id);
       }
@@ -389,7 +394,50 @@ class LightMatchPanel extends HTMLElement {
     const lamp = [dev.manufacturer, dev.model, dev.model_id].filter(Boolean).join(" ") || "unknown lamp";
     if (!m) return `<p class="meta">${esc(lamp)} · no model profile${entry.profile_choice === "none" ? " (turned off)" : ""}</p>`;
     const how = METHOD_LABEL[m.method] || m.method;
-    return `<p class="meta">${esc(lamp)} · model profile <b>${esc(m.name)}</b> (${esc(how)}, ${m.verified ? "verified" : "unverified"}${m.cells ? `, ${m.cells} cells` : ""})</p>`;
+    const rating = m.rating || { up: 0, down: 0 };
+    const who = (m.contributors || []).map((c) => c.nickname).filter(Boolean);
+    return `<p class="meta">${esc(lamp)} · model profile <b>${esc(m.name)}</b> (${esc(how)}, ${m.verified ? "verified" : "unverified"}${m.cells ? `, ${m.cells} cells` : ""}${m.origin === "online" ? ", online" : ""})</p>
+      <p class="meta">&#128077; ${Number(rating.up) || 0} &#128078; ${Number(rating.down) || 0} · ${Number(m.downloads) || 0} downloads${who.length ? ` · by ${esc(who.join(", "))}` : ""}${m.updated ? ` · updated ${esc(m.updated)}` : ""}
+      ${m.rate_url ? ` · <a href="${esc(m.rate_url)}" target="_blank" rel="noopener">Rate / report</a>` : ""}</p>`;
+  }
+
+  _onlineCard() {
+    const st = this._settings;
+    const res = st.last_result;
+    let last = st.checked ? `Last checked ${esc(st.checked.slice(0, 16).replace("T", " "))} UTC` : "Not checked yet";
+    if (res && res.error) last += ` · ${esc(res.error)}`;
+    else if (res && res.enabled) last += ` · ${res.downloaded.length} downloaded, ${res.rejected.length} rejected`;
+    return `<div class="card">
+      <label><input type="checkbox" id="online" ${st.online_update ? "checked" : ""}> Get newer lamp profiles from the online database</label>
+      <p class="hint">Off by default. When on, Light Match downloads the profile index and newer profiles from GitHub once a day. Nothing about your lamps or your home is sent; your own cells are never changed.</p>
+      ${st.online_update ? `<p class="meta">${last} · ${st.online_profiles.length} online profiles · <a href="#" id="checknow">Check now</a></p>` : ""}
+    </div>`;
+  }
+
+  async _setOnline(on) {
+    try {
+      this._settings = await this._ws("settings/set", { online_update: on });
+      if (on) await this._checkNow();
+      else await this._reload();
+    } catch (err) {
+      this._flash(`Not changed: ${err.message || err}`);
+    }
+  }
+
+  async _checkNow() {
+    try {
+      this._settings = await this._ws("profiles/update");
+      await this._reload();
+    } catch (err) {
+      this._flash(`Not checked: ${err.message || err}`);
+    }
+  }
+
+  async _reload() {
+    const res = await this._ws("entries");
+    this._entries = res.entries;
+    if (this._entryId) await this._loadProfile();
+    this._render();
   }
 
   _render() {
@@ -450,7 +498,8 @@ class LightMatchPanel extends HTMLElement {
         <label class="file">Import profile <input type="file" id="import" accept=".json,application/json"></label>
         <label><input type="checkbox" id="merge"> merge with existing cells</label> ·
         <a href="#" id="resetall">Reset all cells</a>${entry.model_profile && entry.model_profile.cells ? ` · <a href="#" id="copymodelall">Copy all model profile cells</a>` : ""}
-      </div>`;
+      </div>
+      ${this._settings ? this._onlineCard() : ""}`;
     }
     root.innerHTML = `
       <style>
@@ -545,6 +594,8 @@ class LightMatchPanel extends HTMLElement {
     on("#auto", "change", (e) => (this._autoShow = e.target.checked));
     link("#reset", () => this._reset(false));
     link("#resetall", () => this._reset(true));
+    on("#online", "change", (e) => this._setOnline(e.target.checked));
+    link("#checknow", () => this._checkNow());
     link("#default", () => {
       this._command = structuredClone(this._cell.default);
       this._render();

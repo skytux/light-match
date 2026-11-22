@@ -5,7 +5,9 @@
     {
       "id": "signify/hue-gamut-a",
       "path": "signify/hue-gamut-a.json",
+      "asset": "signify__hue-gamut-a__r1.json",
       "revision": 1,
+      "sha256": "31971c6aec99f2ff488b77470ce46da0d513773db8a64891dc13cbeaf53b9de1",
       "name": "Philips Hue legacy colour lights (gamut A)",
       "manufacturer": "Signify Netherlands B.V.",
       "models": [
@@ -19,12 +21,16 @@
         "LLC013",
         "LLC014"
       ],
-      "sha256": "31971c6aec99f2ff488b77470ce46da0d513773db8a64891dc13cbeaf53b9de1"
+      "method": "spec",
+      "verified": false,
+      "contributors": []
     },
     {
       "id": "signify/hue-gamut-b",
       "path": "signify/hue-gamut-b.json",
+      "asset": "signify__hue-gamut-b__r1.json",
       "revision": 1,
+      "sha256": "8ebcabe93e1c7af3b341f7aa9ceae029c2916338618fc4e07d706db0b49413ce",
       "name": "Philips Hue older colour bulbs (gamut B)",
       "manufacturer": "Signify Netherlands B.V.",
       "models": [
@@ -34,12 +40,16 @@
         "LCT007",
         "LLM001"
       ],
-      "sha256": "8ebcabe93e1c7af3b341f7aa9ceae029c2916338618fc4e07d706db0b49413ce"
+      "method": "spec",
+      "verified": false,
+      "contributors": []
     },
     {
       "id": "signify/hue-gamut-c",
       "path": "signify/hue-gamut-c.json",
+      "asset": "signify__hue-gamut-c__r1.json",
       "revision": 1,
+      "sha256": "41d796ef827a00920a7c42002c9b6a3dab59b9cc20f8548063485d01f3991d23",
       "name": "Philips Hue colour lights (gamut C)",
       "manufacturer": "Signify Netherlands B.V.",
       "models": [
@@ -52,18 +62,24 @@
         "LLC020",
         "LST002"
       ],
-      "sha256": "41d796ef827a00920a7c42002c9b6a3dab59b9cc20f8548063485d01f3991d23"
+      "method": "spec",
+      "verified": false,
+      "contributors": []
     },
     {
       "id": "wiz/generic",
       "path": "wiz/generic.json",
+      "asset": "wiz__generic__r1.json",
       "revision": 1,
+      "sha256": "e781f9aa8dbc12380a6784daac288e03fc53a81a18d0f7579bfacd83d6b5f42d",
       "name": "WiZ bulbs (all models)",
       "manufacturer": "WiZ",
       "models": [
         "*"
       ],
-      "sha256": "e781f9aa8dbc12380a6784daac288e03fc53a81a18d0f7579bfacd83d6b5f42d"
+      "method": "spec",
+      "verified": false,
+      "contributors": []
     }
   ]
 }

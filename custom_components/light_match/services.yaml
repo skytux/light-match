@@ -93,3 +93,4 @@ import_brightness_curve:
       example: '{"10": 30, "50": 70}'
       selector:
         object:
+update_profiles:

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/skytux/ha-light-match/custom_components/light_match/profiles/index.schema.json",
+  "title": "Light Match profile index",
+  "description": "Every profile in the database with its checksum and release asset (structural fields, from the files) and its community stats (rating, downloads, discussion, last update; refreshed by a scheduled workflow).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "version", "profiles"],
+  "properties": {
+    "format": {"const": "light_match_profile_index"},
+    "version": {"const": 1},
+    "generated": {"type": ["string", "null"]},
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "path", "asset", "revision", "sha256", "name", "manufacturer", "models", "method", "verified", "contributors"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_.-]*$"},
+          "path": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_/.-]*\\.json$"},
+          "asset": {"type": "string", "pattern": "^[a-z0-9_.-]+\\.json$", "description": "Release asset name in the 'profiles' release; one per revision, so its download count adds up."},
+          "revision": {"type": "integer", "minimum": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "name": {"type": "string"},
+          "manufacturer": {"type": "string"},
+          "models": {"type": "array", "items": {"type": "string"}},
+          "method": {"enum": ["spec", "by_eye", "lux_meter", "colorimeter"]},
+          "verified": {"type": "boolean"},
+          "contributors": {"type": "array", "items": {"type": "string"}, "description": "Nicknames only."},
+          "updated": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+          "discussion": {"type": ["string", "null"], "pattern": "^https://github\\.com/"},
+          "rating": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["up", "down"],
+            "properties": {"up": {"type": "integer", "minimum": 0}, "down": {"type": "integer", "minimum": 0}},
+            "description": "Thumbs up and down on the profile's GitHub Discussion."
+          },
+          "downloads": {"type": "integer", "minimum": 0, "description": "Sum of the download counts of the profile's release assets (opted-in online updates only)."}
+        }
+      }
+    }
+  }
+}
