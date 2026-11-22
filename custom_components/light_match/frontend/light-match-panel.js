@@ -2,6 +2,25 @@
 // Talks to the integration over the websocket API (light_match/*).
 
 const LEVELS = [1, 5, 20, 50, 100];
+
+// CIE xy + relative output -> CSS colour on an sRGB screen. Screen white = the
+// lamp's full output, so a 1 % cell shows as a very dark patch.
+function xyToCss(xy, output = 1) {
+  const [x, y] = xy;
+  if (!(y > 0)) return "rgb(0,0,0)";
+  const X = x / y, Z = (1 - x - y) / y;
+  let r = 3.2406 * X - 1.5372 - 0.4986 * Z;
+  let g = -0.9689 * X + 1.8758 + 0.0415 * Z;
+  let b = 0.0557 * X - 0.204 + 1.057 * Z;
+  r = Math.max(0, r); g = Math.max(0, g); b = Math.max(0, b);
+  const m = Math.max(r, g, b) || 1;
+  const k = Math.max(0, Math.min(1, output)) / m;
+  const enc = (c) => {
+    c = Math.min(1, c * k);
+    return Math.round(255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055));
+  };
+  return `rgb(${enc(r)}, ${enc(g)}, ${enc(b)})`;
+}
 function storageGet(key) {
   try {
     return localStorage.getItem(key) || "";
@@ -301,6 +320,27 @@ class LightMatchPanel extends HTMLElement {
     return `${name} at ${cell.brightness} %`;
   }
 
+  _targetCss(cell) {
+    if (cell.target && cell.target.xy) return xyToCss(cell.target.xy, cell.target.relative_output ?? 1);
+    return this._swatch(cell);
+  }
+
+  _fullScreen() {
+    const cell = this._cell;
+    if (!cell) return;
+    const div = document.createElement("div");
+    div.className = "fullscreen";
+    div.style.background = this._targetCss(cell);
+    div.innerHTML = `<span>${esc(this._label(cell))} · tap to close</span>`;
+    const close = () => {
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      div.remove();
+    };
+    div.addEventListener("click", close);
+    this.shadowRoot.appendChild(div);
+    if (div.requestFullscreen) div.requestFullscreen().catch(() => {});
+  }
+
   _swatch(cell) {
     if (cell.kind === "white") {
       const k = cell.kelvin;
@@ -486,6 +526,10 @@ class LightMatchPanel extends HTMLElement {
         <h2><span class="dot big" style="background:${this._swatch(cell)}"></span>${esc(this._label(cell))}
           <small>${esc(SOURCE_LABEL[cell.source] || cell.source)} · ${this._order().indexOf(this._index) + 1}/${this._order().length}${this._quick ? " quick" : ""}</small></h2>
         <p class="meta">Target in lm-ref-1: xy ${cell.target ? cell.target.xy.join(", ") : "-"} · ${cell.target ? (cell.target.relative_output * 100).toPrecision(2) : "-"} % of full output</p>
+        <div class="target">
+          <button class="swatch" id="swatch" title="Show full screen" style="background:${this._targetCss(cell)}"></button>
+          <p class="hint">Target colour and brightness as your screen can show it (screen white = full output). A rough guide only: screens are not calibrated, so trust the reference lamp first. Tap the circle for full screen; at low levels turn the screen brightness down.</p>
+        </div>
         <p class="hint">Make the lamp under test look like the reference, then Save. Changes are sent to the lamp live.</p>
         ${this._sliders()}
         <p class="cmd">${esc(JSON.stringify(this._command))}</p>
@@ -547,6 +591,11 @@ class LightMatchPanel extends HTMLElement {
         .message { min-height: 1em; color: var(--primary-color); font-size: 13px; }
         .dot { display:inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; border: 1px solid var(--divider-color); vertical-align: middle; }
         .dot.big { width: 20px; height: 20px; }
+        .target { display:flex; gap: 16px; align-items:center; margin: 12px 0; }
+        .swatch { flex: 0 0 auto; width: 160px; height: 160px; border-radius: 50%; padding: 0; border: 2px solid var(--divider-color); }
+        .fullscreen { position: fixed; inset: 0; z-index: 9999; display:flex; align-items:flex-end; justify-content:center; cursor: pointer; }
+        .fullscreen span { margin-bottom: 24px; padding: 4px 10px; border-radius: 12px; background: rgba(0,0,0,.35); color: rgba(255,255,255,.6); font-size: 12px; }
+        @media (max-width: 600px) { .target { flex-direction: column; } .swatch { width: 200px; height: 200px; } }
         .grid { border-collapse: collapse; width: 100%; font-size: 13px; }
         .grid th { text-align:left; font-weight: normal; color: var(--secondary-text-color); padding: 2px 4px; white-space: nowrap; }
         .grid td { padding: 2px; text-align:center; }
@@ -605,6 +654,7 @@ class LightMatchPanel extends HTMLElement {
     link("#copymodelall", () => this._copyModel("*"));
     on("#save", "click", () => this._save());
     on("#show", "click", () => this._showTarget());
+    on("#swatch", "click", () => this._fullScreen());
     on("#auto", "change", (e) => (this._autoShow = e.target.checked));
     link("#reset", () => this._reset(false));
     link("#resetall", () => this._reset(true));

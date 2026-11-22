@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.2 - 2026-11-22
+
+- Calibration panel: a big circle shows the target colour and brightness
+  of the current cell (CIE xy and relative output converted for an sRGB
+  screen, screen white = full output); tap it for a full-screen patch to
+  hold next to the lamp. Marked as a rough guide: screens are not
+  calibrated, the reference lamp comes first.
+
 ## 0.7.1 - 2026-11-22
 
 - CONTRIBUTING.md: how to calibrate against lm-ref-1, share, the profile
