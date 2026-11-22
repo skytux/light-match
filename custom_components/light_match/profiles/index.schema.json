@@ -28,6 +28,8 @@
           "method": {"enum": ["spec", "imported", "by_eye", "lux_meter", "colorimeter"]},
           "verified": {"type": "boolean"},
           "contributors": {"type": "array", "items": {"type": "string"}, "description": "Nicknames only."},
+          "format_version": {"type": "integer", "minimum": 1, "description": "Format of the profile file (1 when it does not say)."},
+          "good_practice": {"type": "boolean", "description": "The calibrator confirmed the recommended screen conditions."},
           "updated": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
           "discussion": {"type": ["string", "null"], "pattern": "^https://github\\.com/"},
           "rating": {

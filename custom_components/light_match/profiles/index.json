@@ -16,7 +16,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/3a-smarthome__wl-sd001-9w",
@@ -33,7 +35,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ajax-online__aj_zb_gu10",
@@ -50,7 +54,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ajax-online__aj_zigproa60",
@@ -67,7 +73,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/anko__42997610",
@@ -82,7 +90,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/antela__antela-9w-rgb-cct",
@@ -98,7 +108,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/aqara__cl-l02d",
@@ -115,7 +127,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/aqara__lb-l01d",
@@ -139,7 +153,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/aqara__lb-l03e",
@@ -160,7 +176,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/aqara__ledlbt1-l01",
@@ -180,7 +198,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/aqara__znldp12lm",
@@ -196,7 +216,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/arlec__ald295ha",
@@ -212,7 +234,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/arlec__gld115ha",
@@ -227,7 +251,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/arlec__gld130ha",
@@ -243,7 +269,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/arlec__gld312ha",
@@ -258,7 +286,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/athom__lb01-15w-e27",
@@ -275,7 +305,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/athom__lb01-7w-e27",
@@ -293,7 +325,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/avm__fritz-dect-500",
@@ -308,7 +342,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/belkin__f7c033",
@@ -324,7 +360,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/calex__5101002000",
@@ -340,7 +378,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/casalux__np-dls-smooth",
@@ -356,7 +396,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/cree__ba19-08027omf-12ce26-1c100",
@@ -373,7 +415,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/cree__cma19-60w-al-9tw-gl",
@@ -389,7 +433,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/eglo__110288",
@@ -406,7 +452,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/eglo__900053",
@@ -421,7 +469,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/eglo__900084",
@@ -437,7 +487,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/eglo__901287",
@@ -454,7 +506,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/eglo__98847",
@@ -471,7 +525,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/elgato__20gak9901",
@@ -487,7 +543,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/elgato__20laa9901",
@@ -503,7 +561,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/elgato__20lab9901",
@@ -519,7 +579,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/elgato__20lac9901",
@@ -535,7 +597,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/elgato__20lag9901",
@@ -551,7 +615,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/elgin__48bled15wifi",
@@ -567,7 +633,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/elgin__48bledwifi00",
@@ -583,7 +651,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/elgin__48lsb30wifi0",
@@ -598,7 +668,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/emos__zqw516r",
@@ -614,7 +686,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/emos__zqz832r",
@@ -629,7 +703,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ewelight__2apyc-jl01",
@@ -644,7 +720,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ewelink__ez-e14",
@@ -663,7 +741,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ge__psb30-sw27",
@@ -678,7 +758,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ge__psb38-bw30",
@@ -693,7 +775,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/genio__i002333",
@@ -708,7 +792,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/genio__i002334",
@@ -723,7 +809,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/genio__i002579",
@@ -738,7 +826,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/genio__i002741",
@@ -753,7 +843,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/genio__i002747",
@@ -768,7 +860,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/genio__i002926",
@@ -783,7 +877,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/genio__i003028",
@@ -798,7 +894,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/genio__i003869",
@@ -813,7 +911,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/genio__i004544",
@@ -828,7 +928,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/gledopto__gl-b-001p",
@@ -843,7 +945,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/gledopto__gl-b-003p",
@@ -858,7 +962,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/gledopto__gl-b-004p",
@@ -873,7 +979,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/gledopto__gl-d-004p",
@@ -888,7 +996,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/gledopto__gl-d-006p",
@@ -903,7 +1013,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/gledopto__gl-s-005z",
@@ -918,7 +1030,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/gledopto__gl-s-007z",
@@ -934,7 +1048,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h1401",
@@ -949,7 +1065,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h14c0",
@@ -964,7 +1082,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h1ab1",
@@ -979,7 +1099,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h600d",
@@ -994,7 +1116,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h601c",
@@ -1009,7 +1133,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h6061",
@@ -1024,7 +1150,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h6072",
@@ -1039,7 +1167,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h6076",
@@ -1054,7 +1184,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h607c",
@@ -1069,7 +1201,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h6088",
@@ -1084,7 +1218,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h60a1",
@@ -1099,7 +1235,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h61a1",
@@ -1114,7 +1252,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h61b8",
@@ -1129,7 +1269,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h61f5",
@@ -1144,7 +1286,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h7020",
@@ -1159,7 +1303,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h7021",
@@ -1174,7 +1320,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/govee__h7094",
@@ -1189,7 +1337,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/hampton-bay__hb-10521-hs",
@@ -1204,7 +1354,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/hifree__t21",
@@ -1220,7 +1372,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/hornbach__10454469",
@@ -1236,7 +1390,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__e2499",
@@ -1253,7 +1409,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__l1527",
@@ -1269,7 +1427,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__l1528",
@@ -1285,7 +1445,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__l1529",
@@ -1301,7 +1463,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__l1616",
@@ -1317,7 +1481,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__l2112",
@@ -1333,7 +1499,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__l2206",
@@ -1349,7 +1517,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__l2207",
@@ -1367,7 +1537,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1536g5",
@@ -1384,7 +1556,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1537r6",
@@ -1399,7 +1573,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1545g12",
@@ -1416,7 +1592,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1546g12",
@@ -1433,7 +1611,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1623g12",
@@ -1450,7 +1630,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1624g9",
@@ -1471,7 +1653,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1649c5",
@@ -1489,7 +1673,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1650r5",
@@ -1505,7 +1691,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1732g11",
@@ -1522,7 +1710,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1733g7",
@@ -1537,7 +1727,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1736g9",
@@ -1554,7 +1746,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1738g7",
@@ -1569,7 +1763,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1739r5",
@@ -1584,7 +1780,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1805e22eu",
@@ -1599,7 +1797,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1835c6",
@@ -1619,7 +1819,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1836g9",
@@ -1636,7 +1838,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1837r5",
@@ -1652,7 +1856,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1842g3",
@@ -1667,7 +1873,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1923r5",
@@ -1683,7 +1891,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1924g9",
@@ -1702,7 +1912,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1925g6",
@@ -1720,7 +1932,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1934g3",
@@ -1736,7 +1950,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1935c3",
@@ -1754,7 +1970,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1936g5",
@@ -1773,7 +1991,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1937t5_e27",
@@ -1796,7 +2016,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led1949c5",
@@ -1814,7 +2036,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2002g5",
@@ -1833,7 +2057,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2003g10",
@@ -1852,7 +2078,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2004g8",
@@ -1871,7 +2099,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2005r5",
@@ -1887,7 +2117,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2035g10",
@@ -1903,7 +2135,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2101g4",
@@ -1920,7 +2154,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2102g3",
@@ -1939,7 +2175,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2103g5",
@@ -1958,7 +2196,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2104r3",
@@ -1977,7 +2217,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2106r3",
@@ -1992,7 +2234,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2107c4",
@@ -2009,7 +2253,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2109g6",
@@ -2028,7 +2274,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2110r3",
@@ -2043,7 +2291,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2111g6",
@@ -2061,7 +2311,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2201g8",
@@ -2080,7 +2332,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2401g5",
@@ -2097,7 +2351,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2402c3",
@@ -2114,7 +2370,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2403r5",
@@ -2131,7 +2389,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2404g6",
@@ -2148,7 +2408,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2405g8",
@@ -2165,7 +2427,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2405g8na",
@@ -2181,7 +2445,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2406g4",
@@ -2198,7 +2464,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2407g8",
@@ -2215,7 +2483,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2407g8na",
@@ -2231,7 +2501,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2408g10",
@@ -2248,7 +2520,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2409g6",
@@ -2265,7 +2539,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2410r5",
@@ -2282,7 +2558,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__led2411g3",
@@ -2299,7 +2577,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__t1820",
@@ -2315,7 +2595,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__t1828",
@@ -2331,7 +2613,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__t2035",
@@ -2348,7 +2632,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ikea__t2037",
@@ -2364,7 +2650,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__ae-280-c",
@@ -2379,7 +2667,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__by-265",
@@ -2395,7 +2685,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__by-285-c",
@@ -2410,7 +2702,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__fl-122-c",
@@ -2425,7 +2719,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-148-t",
@@ -2440,7 +2736,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-175-w",
@@ -2455,7 +2753,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-185-c",
@@ -2470,7 +2770,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-247-t",
@@ -2485,7 +2787,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-248-t",
@@ -2500,7 +2804,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-249-t",
@@ -2515,7 +2821,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-250-c",
@@ -2530,7 +2838,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-265",
@@ -2545,7 +2855,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-266",
@@ -2560,7 +2872,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-282-c",
@@ -2575,7 +2889,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-285-c",
@@ -2590,7 +2906,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rb-287-c",
@@ -2605,7 +2923,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rcl-110",
@@ -2620,7 +2940,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rf-262",
@@ -2635,7 +2957,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rf-263",
@@ -2650,7 +2974,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rf-271-t",
@@ -2665,7 +2991,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rf-273-t",
@@ -2680,7 +3008,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rf-274-t",
@@ -2695,7 +3025,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rs-125",
@@ -2710,7 +3042,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rs-226",
@@ -2725,7 +3059,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rs-227-t",
@@ -2740,7 +3076,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rs-229-t",
@@ -2755,7 +3093,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/innr__rs-230-c",
@@ -2770,7 +3110,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/kauf__blf10",
@@ -2785,7 +3127,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/kobi__kags14rgbctw",
@@ -2800,7 +3144,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/kogan__kasb10wb22ha",
@@ -2815,7 +3161,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledisons__ldn22-rgbww5",
@@ -2832,7 +3180,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__4058075208339",
@@ -2848,7 +3198,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__73741",
@@ -2864,7 +3216,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__73742",
@@ -2881,7 +3235,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__ac12419",
@@ -2898,7 +3254,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__ac25697",
@@ -2914,7 +3272,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__ac264430155",
@@ -2929,7 +3289,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__ac26447",
@@ -2946,7 +3308,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__ac26827",
@@ -2965,7 +3329,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__ac32960",
@@ -2981,7 +3347,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__ac41283",
@@ -2998,7 +3366,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__ac41293",
@@ -3015,7 +3385,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__ac4129900nj",
@@ -3032,7 +3404,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__ac74759",
@@ -3049,7 +3423,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledvance__cla60-rgbw-z3",
@@ -3065,7 +3441,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ledworks__tws600stp",
@@ -3080,7 +3458,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lexman__ig-cdzotaag014ra-man",
@@ -3096,7 +3476,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__14156506l",
@@ -3112,7 +3494,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__14158704l",
@@ -3127,7 +3511,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__14158804l",
@@ -3142,7 +3528,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__399629_2110",
@@ -3157,7 +3545,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg06104a",
@@ -3172,7 +3562,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg06106a",
@@ -3187,7 +3579,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg06106b",
@@ -3202,7 +3596,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg06106c",
@@ -3217,7 +3613,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg06462a",
@@ -3232,7 +3630,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg06463a",
@@ -3247,7 +3647,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg06467",
@@ -3262,7 +3664,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg06492a",
@@ -3278,7 +3682,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg06492b",
@@ -3293,7 +3699,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg06492c",
@@ -3308,7 +3716,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg07834a",
@@ -3323,7 +3733,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg07834b",
@@ -3338,7 +3750,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg07834c",
@@ -3353,7 +3767,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg08007",
@@ -3368,7 +3784,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg08008",
@@ -3383,7 +3801,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg08010",
@@ -3398,7 +3818,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg08130b",
@@ -3413,7 +3835,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg08131a",
@@ -3428,7 +3852,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg08131b",
@@ -3443,7 +3869,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg08131c",
@@ -3458,7 +3886,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lidl__hg08383a",
@@ -3474,7 +3904,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__bul-11-a21e27-w",
@@ -3491,7 +3923,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__cc25l3ae14",
@@ -3508,7 +3942,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__l3a19mc08e26",
@@ -3525,7 +3961,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__l3a19mtw08e27",
@@ -3542,7 +3980,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__l3a19mw08e27",
@@ -3559,7 +3999,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__lfxa211600rgbw",
@@ -3576,7 +4018,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__lh4dk1uc08au",
@@ -3594,7 +4038,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__lha19e27uc10",
@@ -3609,7 +4055,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__lhb30e26uc10",
@@ -3624,7 +4072,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__lhb30e27uc10p",
@@ -3640,7 +4090,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__lhla19e26irus",
@@ -3657,7 +4109,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__lhla19e26us",
@@ -3674,7 +4128,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lifx__lzhc2m4inuc07",
@@ -3690,7 +4146,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lightinginside__li-a19-11w-mt",
@@ -3705,7 +4163,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lightinginside__li-e12-b11-6w-mt",
@@ -3721,7 +4181,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lightinginside__lm-mt-c2-a19-9w",
@@ -3736,7 +4198,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lindby__9971013",
@@ -3751,7 +4215,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/linkind__ls0101911261",
@@ -3767,7 +4233,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/linkind__ls0102411267",
@@ -3783,7 +4251,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/linkind__ls0125051883a",
@@ -3799,7 +4269,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/linkind__zl1000701-27-eu-v1a02",
@@ -3815,7 +4287,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lsc__3004154",
@@ -3832,7 +4306,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lsc__3012586",
@@ -3847,7 +4323,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lsc__970710",
@@ -3863,7 +4341,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lsc__970714",
@@ -3878,7 +4358,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/luedd__02626",
@@ -3894,7 +4376,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/lumiman__lm530",
@@ -3909,7 +4393,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/malmbergs__9970020",
@@ -3924,7 +4410,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/megos__l122aa63h11a6.5w",
@@ -3939,7 +4427,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/megos__l122ff63h11a5.0w",
@@ -3954,7 +4444,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/melitec__dp15",
@@ -3969,7 +4461,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/mercator-ikuu__smd4109w-rgb-zb",
@@ -3985,7 +4479,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/meross__msl120",
@@ -4001,7 +4497,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/moes__mwb-td5-rcw-gu10-ms",
@@ -4017,7 +4515,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/moes__zb-lzd10-rcw-en",
@@ -4033,7 +4533,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/moes__zb-td5-rcw-gu10",
@@ -4048,7 +4550,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/mueller-licht__404005",
@@ -4063,7 +4567,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/mueller-licht__404006",
@@ -4081,7 +4587,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/mueller-licht__404019",
@@ -4096,7 +4604,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/mueller-licht__404094",
@@ -4113,7 +4623,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/mueller-licht__404095",
@@ -4129,7 +4641,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/mueller-licht__45311",
@@ -4144,7 +4658,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/mueller-licht__45317",
@@ -4159,7 +4675,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/mueller-licht__45318",
@@ -4175,7 +4693,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/mueller-licht__45328",
@@ -4190,7 +4710,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/nanoleaf__nf080b03-1a19e",
@@ -4205,7 +4727,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/nanoleaf__nl67e200",
@@ -4221,7 +4745,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/osram__aa68199",
@@ -4237,7 +4763,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/osram__aa69697",
@@ -4253,7 +4781,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/osram__ab32840",
@@ -4269,7 +4799,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/osram__ab401130055",
@@ -4286,7 +4818,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/osram__ac0009401nj",
@@ -4303,7 +4837,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/osram__ac03641",
@@ -4319,7 +4855,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/osram__ac03642",
@@ -4336,7 +4874,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/osram__ac03647",
@@ -4352,7 +4892,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/osram__lightify-indoor-flex-rgbw",
@@ -4370,7 +4912,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/oz-smart-things__dl41-03-10-r-zb",
@@ -4385,7 +4929,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/paulmann-licht__29145",
@@ -4400,7 +4946,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/paulmann-licht__29147",
@@ -4415,7 +4963,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/paulmann-licht__29150",
@@ -4432,7 +4982,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/paulmann-licht__371000002",
@@ -4447,7 +4999,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/paulmann-licht__50396",
@@ -4462,7 +5016,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/paulmann-licht__92470",
@@ -4479,7 +5035,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/paulmann-licht__93044",
@@ -4495,7 +5053,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/rye__slzc3705-a",
@@ -4512,7 +5072,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/sengled__e11-g13",
@@ -4527,7 +5089,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/sengled__e11-n13_e11-n13a_e11-n14_e11-n14a",
@@ -4545,7 +5109,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/sengled__e13-n11",
@@ -4560,7 +5126,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/shelly__shcb-1",
@@ -4576,7 +5144,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005561201",
@@ -4594,7 +5164,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005630201",
@@ -4611,7 +5183,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005730601",
@@ -4628,7 +5202,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005730801",
@@ -4643,7 +5219,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005731001",
@@ -4662,7 +5240,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005731401",
@@ -4679,7 +5259,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005731601",
@@ -4696,7 +5278,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005731801",
@@ -4713,7 +5297,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005732301",
@@ -4732,7 +5318,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005761701",
@@ -4749,7 +5337,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005766601",
@@ -4776,7 +5366,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005841701",
@@ -4793,7 +5385,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005842601",
@@ -4811,7 +5405,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005842901",
@@ -4829,7 +5425,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005871601",
@@ -4846,7 +5444,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005871801",
@@ -4864,7 +5464,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005872301",
@@ -4881,7 +5483,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005912301",
@@ -4898,7 +5502,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005914301",
@@ -4915,7 +5521,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005920801",
@@ -4932,7 +5540,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005920901",
@@ -4950,7 +5560,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005923701",
@@ -4967,7 +5579,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005928101",
@@ -4983,7 +5597,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005928501",
@@ -5000,7 +5616,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005928701",
@@ -5017,7 +5635,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005976401",
@@ -5044,7 +5664,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005986901",
@@ -5063,7 +5685,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005987201",
@@ -5083,7 +5707,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005988201",
@@ -5100,7 +5726,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005996601",
@@ -5117,7 +5745,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005996901",
@@ -5136,7 +5766,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005997301",
@@ -5153,7 +5785,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005997401",
@@ -5169,7 +5803,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005997501",
@@ -5184,7 +5820,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005997701",
@@ -5200,7 +5838,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005997801",
@@ -5216,7 +5856,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__915005997901",
@@ -5232,7 +5874,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__9290022176",
@@ -5247,7 +5891,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929002376201",
@@ -5263,7 +5909,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__9290029013",
@@ -5279,7 +5927,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929002966501",
@@ -5295,7 +5945,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003045001",
@@ -5316,7 +5968,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003045201",
@@ -5336,7 +5990,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__9290030514",
@@ -5352,7 +6008,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003053601",
@@ -5368,7 +6026,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003055101",
@@ -5386,7 +6046,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003056701",
@@ -5402,7 +6064,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003056901",
@@ -5418,7 +6082,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003099001",
@@ -5436,7 +6102,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003099102",
@@ -5452,7 +6120,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003521501",
@@ -5467,7 +6137,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003526101",
@@ -5487,7 +6159,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003531702",
@@ -5503,7 +6177,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003553001",
@@ -5518,7 +6194,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003598001",
@@ -5533,7 +6211,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003598101",
@@ -5548,7 +6228,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003617901",
@@ -5565,7 +6247,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003618001",
@@ -5580,7 +6264,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003736201",
@@ -5597,7 +6283,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003808201",
@@ -5625,7 +6313,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003817002",
@@ -5642,7 +6332,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003823501",
@@ -5666,7 +6358,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929003853701",
@@ -5682,7 +6376,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929004276702",
@@ -5700,7 +6396,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929004297401",
@@ -5717,7 +6415,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929004608002",
@@ -5732,7 +6432,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__929004610402",
@@ -5754,7 +6456,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca001",
@@ -5773,7 +6477,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca003",
@@ -5789,7 +6495,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca004",
@@ -5805,7 +6513,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca005",
@@ -5823,7 +6533,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca006",
@@ -5840,7 +6552,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca007",
@@ -5856,7 +6570,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca008",
@@ -5873,7 +6589,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca009",
@@ -5889,7 +6607,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca010",
@@ -5904,7 +6624,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca011",
@@ -5921,7 +6643,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca012",
@@ -5937,7 +6661,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca014",
@@ -5953,7 +6679,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca015",
@@ -5969,7 +6697,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lca016",
@@ -5985,7 +6715,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcb001",
@@ -6001,7 +6733,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcb002",
@@ -6017,7 +6751,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcc001",
@@ -6033,7 +6769,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcd002",
@@ -6050,7 +6788,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcd003",
@@ -6067,7 +6807,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcd006",
@@ -6084,7 +6826,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcd007",
@@ -6100,7 +6844,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcd008",
@@ -6116,7 +6862,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lce002",
@@ -6134,7 +6882,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcf002",
@@ -6152,7 +6902,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcg001",
@@ -6168,7 +6920,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcg002",
@@ -6205,7 +6959,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcg006",
@@ -6221,7 +6977,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcg008",
@@ -6237,7 +6995,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcl001",
@@ -6256,7 +7016,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcl002",
@@ -6272,7 +7034,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcl003",
@@ -6288,7 +7052,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcl008",
@@ -6304,7 +7070,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcs001",
@@ -6323,7 +7091,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lct001",
@@ -6338,7 +7108,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lct002",
@@ -6355,7 +7127,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lct003",
@@ -6371,7 +7145,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lct007",
@@ -6386,7 +7162,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lct010",
@@ -6402,7 +7180,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lct012",
@@ -6417,7 +7197,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lct014",
@@ -6432,7 +7214,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lct015",
@@ -6447,7 +7231,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lct016",
@@ -6462,7 +7248,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lct024",
@@ -6482,7 +7270,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lct026",
@@ -6511,7 +7301,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcu001",
@@ -6527,7 +7319,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcx001",
@@ -6544,7 +7338,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcx002",
@@ -6561,7 +7357,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcx004",
@@ -6578,7 +7376,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcx015",
@@ -6598,7 +7398,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcx027",
@@ -6614,7 +7416,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lcx028",
@@ -6632,7 +7436,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ldt001",
@@ -6648,7 +7454,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lgt009",
@@ -6669,7 +7477,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__llc001",
@@ -6684,7 +7494,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__llc006",
@@ -6700,7 +7512,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__llc010",
@@ -6716,7 +7530,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__llc011",
@@ -6732,7 +7548,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__llc012",
@@ -6747,7 +7565,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__llc013",
@@ -6762,7 +7582,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__llc020",
@@ -6779,7 +7601,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lst001",
@@ -6795,7 +7619,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lst002",
@@ -6811,7 +7637,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lst004",
@@ -6828,7 +7656,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lta001",
@@ -6845,7 +7675,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lta003",
@@ -6861,7 +7693,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lta004",
@@ -6878,7 +7712,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lta005",
@@ -6895,7 +7731,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lta007",
@@ -6912,7 +7750,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lta008",
@@ -6932,7 +7772,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lta009",
@@ -6949,7 +7791,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lta010",
@@ -6965,7 +7809,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lta011",
@@ -6981,7 +7827,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lta012",
@@ -6998,7 +7846,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lta015",
@@ -7014,7 +7864,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltc001",
@@ -7032,7 +7884,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltc002",
@@ -7048,7 +7902,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltc003",
@@ -7066,7 +7922,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltc011",
@@ -7082,7 +7940,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltc012",
@@ -7099,7 +7959,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltc013",
@@ -7116,7 +7978,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltc015",
@@ -7132,7 +7996,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltc016",
@@ -7149,7 +8015,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltd011",
@@ -7166,7 +8034,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltd017",
@@ -7182,7 +8052,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lte002",
@@ -7198,7 +8070,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltg002",
@@ -7214,7 +8088,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltg003",
@@ -7230,7 +8106,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltg005",
@@ -7246,7 +8124,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lto001",
@@ -7263,7 +8143,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lto002",
@@ -7280,7 +8162,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltp001",
@@ -7297,7 +8181,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltp002",
@@ -7314,7 +8200,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltp003",
@@ -7330,7 +8218,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltp008",
@@ -7346,7 +8236,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltu001",
@@ -7362,7 +8254,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltv001",
@@ -7380,7 +8274,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltv002",
@@ -7398,7 +8294,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltv004",
@@ -7416,7 +8314,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltw001",
@@ -7431,7 +8331,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltw004",
@@ -7446,7 +8348,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltw010",
@@ -7461,7 +8365,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltw011",
@@ -7477,7 +8383,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltw012",
@@ -7494,7 +8402,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltw013",
@@ -7510,7 +8420,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltw015",
@@ -7526,7 +8438,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltw017",
@@ -7543,7 +8457,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__ltw018",
@@ -7559,7 +8475,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa001",
@@ -7576,7 +8494,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa002",
@@ -7592,7 +8512,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa003",
@@ -7610,7 +8532,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa004",
@@ -7627,7 +8551,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa005",
@@ -7643,7 +8569,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa007",
@@ -7660,7 +8588,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa008",
@@ -7676,7 +8606,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa009",
@@ -7692,7 +8624,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa010",
@@ -7709,7 +8643,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa011",
@@ -7726,7 +8662,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa017",
@@ -7742,7 +8680,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa018",
@@ -7759,7 +8699,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa019",
@@ -7775,7 +8717,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa024",
@@ -7791,7 +8735,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwa029",
@@ -7807,7 +8753,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwb004",
@@ -7823,7 +8771,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwb006",
@@ -7838,7 +8788,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwb010",
@@ -7854,7 +8806,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwb014",
@@ -7871,7 +8825,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwb022",
@@ -7887,7 +8843,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwe002",
@@ -7904,7 +8862,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwe004",
@@ -7921,7 +8881,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwe007",
@@ -7937,7 +8899,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwf001",
@@ -7955,7 +8919,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwg001",
@@ -7971,7 +8937,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwg004",
@@ -7987,7 +8955,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwg005",
@@ -8003,7 +8973,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwo001",
@@ -8020,7 +8992,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwo002",
@@ -8036,7 +9010,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwo003",
@@ -8052,7 +9028,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwo005",
@@ -8068,7 +9046,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lws003",
@@ -8084,7 +9064,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwu001",
@@ -8100,7 +9082,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwu002",
@@ -8116,7 +9100,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwv001",
@@ -8133,7 +9119,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwv002",
@@ -8150,7 +9138,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwv005",
@@ -8167,7 +9157,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lwv007",
@@ -8183,7 +9175,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/signify__lww001",
@@ -8198,7 +9192,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/sonoff__b1",
@@ -8214,7 +9210,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/sonoff__nspanel-eu",
@@ -8229,7 +9227,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/sunco__g25_s-5w-27k_5k-1pk",
@@ -8245,7 +9245,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/sylstar__sl-cl-24",
@@ -8261,7 +9263,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/sylvania__40a19filcclwifi",
@@ -8277,7 +9281,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/sylvania__40g25filcclwifi",
@@ -8293,7 +9299,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/sylvania__40st19filcclwifi",
@@ -8309,7 +9317,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/sylvania__a19ccecwf",
@@ -8325,7 +9335,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/teckin__sb50",
@@ -8340,7 +9352,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/third-reality__3rcb01057z",
@@ -8355,7 +9369,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/third-reality__3rcb02070z",
@@ -8370,7 +9386,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/tp-link__kl135",
@@ -8386,7 +9404,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/tp-link__l510",
@@ -8401,7 +9421,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/tp-link__l530",
@@ -8416,7 +9438,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/tp-link__l900",
@@ -8431,7 +9455,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/tp-link__l920",
@@ -8446,7 +9472,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/treatlife__sl10",
@@ -8462,7 +9490,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/treatlife__sl20",
@@ -8477,7 +9507,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/trust__zled-g2705",
@@ -8492,7 +9524,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/tuya__no66-zb",
@@ -8507,7 +9541,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/tuya__ty-a60-15w",
@@ -8522,7 +9558,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/tuya__tyc-300mm-z",
@@ -8537,7 +9575,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__7dgu10ledcctwvb-k",
@@ -8552,7 +9592,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290022650",
@@ -8568,7 +9610,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290022656",
@@ -8583,7 +9627,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290022662",
@@ -8599,7 +9645,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290023835",
@@ -8615,7 +9663,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290023836aa",
@@ -8630,7 +9680,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290023839",
@@ -8645,7 +9697,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290024483a",
@@ -8660,7 +9714,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290024484a",
@@ -8675,7 +9731,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290024496",
@@ -8691,7 +9749,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290024496a",
@@ -8707,7 +9767,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290024497",
@@ -8723,7 +9785,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290024497a",
@@ -8739,7 +9803,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__929003294819",
@@ -8755,7 +9821,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__929003500001",
@@ -8770,7 +9838,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__9290036010",
@@ -8785,7 +9855,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__929003824501",
@@ -8800,7 +9872,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__esp01_shrgb_03",
@@ -8815,7 +9889,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__esp03_fandims_31",
@@ -8830,7 +9906,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__esp05_shdw_21",
@@ -8845,7 +9923,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__esp10_socket_06",
@@ -8860,7 +9940,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__esp20_dhrgb_01",
@@ -8875,7 +9957,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__esp20_shrgb_01abi",
@@ -8890,7 +9974,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__esp20_shrgb_01bt",
@@ -8905,7 +9991,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__esp21_shtw_01",
@@ -8920,7 +10008,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__esp24_shrgb_01",
@@ -8935,7 +10025,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wiz__esp25_shrgb_01",
@@ -8950,7 +10042,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/wyze__wlpa19c",
@@ -8965,7 +10059,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/xiaomi__9290020093",
@@ -8981,7 +10077,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/xiaomi__mjdpl01yl",
@@ -8997,7 +10095,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__bslamp1",
@@ -9012,7 +10112,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__bslamp2",
@@ -9027,7 +10129,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__bslamp3",
@@ -9042,7 +10146,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceil26",
@@ -9057,7 +10163,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceila",
@@ -9072,7 +10180,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceilc",
@@ -9087,7 +10197,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling13",
@@ -9102,7 +10214,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling15",
@@ -9117,7 +10231,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling17",
@@ -9132,7 +10248,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling18",
@@ -9147,7 +10265,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling19",
@@ -9162,7 +10282,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling2",
@@ -9177,7 +10299,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling20",
@@ -9192,7 +10316,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling24",
@@ -9207,7 +10333,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling3",
@@ -9222,7 +10350,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling4",
@@ -9237,7 +10367,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling5",
@@ -9252,7 +10384,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ceiling6",
@@ -9267,7 +10401,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__color",
@@ -9282,7 +10418,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__color1",
@@ -9297,7 +10435,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__color4",
@@ -9312,7 +10452,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__color5",
@@ -9327,7 +10469,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__colorc",
@@ -9342,7 +10486,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ct2",
@@ -9357,7 +10503,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ct_bulb",
@@ -9372,7 +10520,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__lamp1",
@@ -9387,7 +10537,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__lamp15",
@@ -9402,7 +10554,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__lamp3",
@@ -9417,7 +10571,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__lamp4",
@@ -9432,7 +10588,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__mjctd02yl",
@@ -9447,7 +10605,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__mjdp09yl",
@@ -9464,7 +10624,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__mjtd01syl",
@@ -9479,7 +10641,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__mono",
@@ -9494,7 +10658,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__mono5",
@@ -9509,7 +10675,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__mono6",
@@ -9524,7 +10692,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__monob",
@@ -9539,7 +10709,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__strip1",
@@ -9554,7 +10726,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__strip2",
@@ -9569,7 +10743,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__strip4",
@@ -9584,7 +10760,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__yldd04yl",
@@ -9599,7 +10777,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__yldd05yl",
@@ -9615,7 +10795,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__yldl01yl",
@@ -9631,7 +10813,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__yldp01yl",
@@ -9647,7 +10831,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__yldp02yl",
@@ -9662,7 +10848,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__yldp06yl",
@@ -9678,7 +10866,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__yldp13yl",
@@ -9693,7 +10883,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__yldp25yl",
@@ -9710,7 +10902,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ylqpd-0011",
@@ -9725,7 +10919,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ylxd01yl",
@@ -9741,7 +10937,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/yeelight__ylxd024",
@@ -9757,7 +10955,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/ynoa__la-gu10-rgbw",
@@ -9773,7 +10973,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/zemismart__moonlamp",
@@ -9788,7 +10990,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/zengge__ak001-zj2104",
@@ -9804,7 +11008,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "imported/zipato__rgbwe2",
@@ -9819,7 +11025,9 @@
       ],
       "method": "imported",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "signify/hue-gamut-a",
@@ -9842,7 +11050,9 @@
       ],
       "method": "spec",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "signify/hue-gamut-b",
@@ -9861,7 +11071,9 @@
       ],
       "method": "spec",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "signify/hue-gamut-c",
@@ -9883,7 +11095,9 @@
       ],
       "method": "spec",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     },
     {
       "id": "wiz/generic",
@@ -9898,7 +11112,9 @@
       ],
       "method": "spec",
       "verified": false,
-      "contributors": []
+      "contributors": [],
+      "format_version": 1,
+      "good_practice": false
     }
   ]
 }

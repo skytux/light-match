@@ -21,6 +21,15 @@ from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN, PROFILE_FORMAT, PROFILE_VERSION
 from .database import ModelProfile, norm
+from .formats import (
+    FORMAT_VERSION,
+    NewerFormatError,
+    clean_notes,
+    format_version,
+    good_practice,
+    is_newer,
+    migrate,
+)
 
 if TYPE_CHECKING:
     from . import LightMatchData
@@ -68,10 +77,19 @@ def make_model(data: LightMatchData) -> tuple[str | None, str | None]:
     return make or None, model or None
 
 
-def check_profile(data: Any) -> dict[str, Any]:
-    """An exported profile with at least one cell, or ValueError."""
+def check_profile(data: Any, allow_newer: bool = False) -> dict[str, Any]:
+    """An exported profile with at least one cell, or ValueError.
+
+    A profile of a newer format raises NewerFormatError, unless ``allow_newer``
+    (the library keeps it read-only).
+    """
     if not isinstance(data, dict) or data.get("format") != PROFILE_FORMAT:
         raise ValueError("not a Light Match profile")
+    version = format_version(data)
+    if version > FORMAT_VERSION:
+        if not allow_newer:
+            raise NewerFormatError(version)
+        return data
     try:
         version = int(data.get("version", 0))
     except (TypeError, ValueError) as err:
@@ -116,6 +134,10 @@ class Library:
     def summary(item: dict[str, Any]) -> dict[str, Any]:
         """A saved profile without its cells."""
         prof = item["profile"]
+        try:
+            version = format_version(prof)
+        except ValueError:
+            version = 1
         return {
             "id": item["id"],
             "name": item["name"],
@@ -123,8 +145,14 @@ class Library:
             "model": item.get("model"),
             "date": item.get("date"),
             "source": item.get("source"),
-            "cells": len(prof.get("cells") or {}),
+            "cells": len(prof.get("cells") or {}) if isinstance(prof.get("cells"), dict) else 0,
             "modes": {k: v for k, v in (prof.get("modes") or {}).items() if k != "cells"},
+            "format_version": version,
+            "read_only": version > FORMAT_VERSION,
+            "convertible": version < FORMAT_VERSION,
+            "good_practice": good_practice(prof),
+            "notes": prof.get("notes") if isinstance(prof.get("notes"), str) else None,
+            "calibration": prof.get("calibration") if isinstance(prof.get("calibration"), dict) else {},
         }
 
     def list(self) -> list[dict[str, Any]]:
@@ -144,8 +172,13 @@ class Library:
         model: str | None = None,
         source: str | None = None,
     ) -> dict[str, Any]:
-        """Save a profile; raises ValueError if it is not one or has no cells."""
-        profile = dict(check_profile(profile))
+        """Save a profile as it is (a newer format stays read-only).
+
+        Raises ValueError if it is not a profile, has no cells or bad notes.
+        """
+        profile = dict(check_profile(profile, allow_newer=True))
+        if not is_newer(profile):
+            clean_notes(profile.get("notes"))
         make = _text(make) or _text(profile.get("make"))
         model = _text(model) or _text(profile.get("model"))
         name = _text(name) or _text(profile.get("name")) or profile_name(make, model)
@@ -175,6 +208,16 @@ class Library:
             raise ValueError("the name is empty")
         item["name"] = clean
         item["profile"]["name"] = clean
+        await self.async_save()
+        return item
+
+    async def async_convert(self, item_id: str) -> dict[str, Any]:
+        """Rewrite a saved profile in the current format.
+
+        KeyError if unknown, NewerFormatError if it is newer than this code.
+        """
+        item = self.profiles[item_id]
+        item["profile"] = migrate(item["profile"])
         await self.async_save()
         return item
 
@@ -252,12 +295,18 @@ def db_entry(prof: ModelProfile) -> dict[str, Any]:
         "method": prov.get("method"),
         "verified": bool(prov.get("verified")),
         "origin": prof.origin,
+        "read_only": prof.read_only,
+        "good_practice": good_practice(prof.data),
+        "notes": prof.data.get("notes") if isinstance(prof.data.get("notes"), str) else None,
+        "discussion": prof.data.get("discussion") if isinstance(prof.data.get("discussion"), str) else None,
     }
 
 
-def browse(lib: Library, profiles: dict[str, ModelProfile]) -> dict[str, list[dict[str, Any]]]:
-    """The three separate sections of the profile browser."""
+def browse(
+    lib: Library, profiles: dict[str, ModelProfile], read_only: list[ModelProfile] | None = None
+) -> dict[str, list[dict[str, Any]]]:
+    """The three separate sections of the profile browser (newer formats listed read-only)."""
     sections: dict[str, list[dict[str, Any]]] = {SECTION_MINE: lib.list(), SECTION_BUILTIN: [], SECTION_COMMUNITY: []}
-    for prof in sorted(profiles.values(), key=lambda p: p.id):
+    for prof in sorted([*profiles.values(), *(read_only or [])], key=lambda p: (p.id, p.read_only)):
         sections[section_of(prof)].append(db_entry(prof))
     return sections

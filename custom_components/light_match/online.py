@@ -31,7 +31,7 @@ from homeassistant.util import dt as dt_util
 import voluptuous as vol
 
 from .const import DOMAIN
-from .database import ProfileDatabase, load_bundled_index, validate_db_profile, validate_index
+from .database import ProfileDatabase, accept_db_profile, load_bundled_index, validate_index
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -78,12 +78,16 @@ class OnlineUpdater:
 
     def _apply_cache(self) -> None:
         profiles: dict[str, dict[str, Any]] = {}
+        read_only: set[str] = set()
         for pid, data in (self.cache.get("profiles") or {}).items():
             try:
-                profiles[pid] = validate_db_profile(data)
+                profiles[pid], newer = accept_db_profile(data)
             except vol.Invalid as err:
                 _LOGGER.warning("Dropping cached profile %s: %s", pid, err)
-        self.db.set_online(profiles)
+                continue
+            if newer:
+                read_only.add(pid)
+        self.db.set_online(profiles, read_only)
         if index := self.cache.get("index"):
             with contextlib.suppress(vol.Invalid):
                 self.db.set_stats(validate_index(index))
@@ -182,7 +186,7 @@ class OnlineUpdater:
                 reason = "checksum mismatch"
             else:
                 try:
-                    data = validate_db_profile(json.loads(body))
+                    data, _newer = accept_db_profile(json.loads(body))
                 except (ValueError, vol.Invalid) as err:
                     reason = f"invalid: {err}"
                 else:

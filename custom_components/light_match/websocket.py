@@ -21,6 +21,8 @@ from . import (
     online_updater,
 )
 from .const import CONF_BEHAVIOUR, CONF_PROFILE, CONF_REFERENCE, CONF_WHITE_COLOR, DOMAIN
+from .formats import FORMAT_VERSION, NewerFormatError, format_version, migrate
+from .github import GitHubError, github
 from .library import auto_groups, browse, check_profile, library, make_model, profile_filename
 from .profile import MODE_ATTR, cell_target, grid_cells, nominal_command, quick_keys
 from .reference import reference_command, target_of
@@ -48,6 +50,13 @@ def async_register_websocket(hass: HomeAssistant) -> None:
         ws_library_get,
         ws_library_rename,
         ws_library_delete,
+        ws_library_convert,
+        ws_calibration_set,
+        ws_github_status,
+        ws_github_login,
+        ws_github_poll,
+        ws_github_logout,
+        ws_github_react,
         ws_groups,
         ws_group_set,
         ws_group_delete,
@@ -87,6 +96,9 @@ def _summary(data: LightMatchData) -> dict[str, Any]:
         "floor": caps.floor,
         "calibrated": len([k for k in data.cells if k in {c["key"] for c in grid_cells(caps)}]),
         "total": total,
+        "calibration": data.calibration,
+        "notes": data.notes,
+        "format_version": FORMAT_VERSION,
     }
 
 
@@ -443,22 +455,26 @@ def _source_profile(hass: HomeAssistant, msg: dict[str, Any]) -> dict[str, Any]:
     Raises ValueError (not found, not a profile, or no cells).
     """
     if "profile" in msg:
-        return check_profile(msg["profile"])
+        return migrate(check_profile(msg["profile"]))
     if "from_entry_id" in msg:
         source = data_for_entry(hass, msg["from_entry_id"])
         if source is None:
             raise ValueError("no such lamp to copy from")
         if not source.cells:
             raise ValueError("that lamp has no calibrated cells to copy")
-        return source.profile().to_json()
+        return source.profile().to_json(meta=source.calibration_meta())
     if "library_id" in msg:
         item = library(hass).get(msg["library_id"])
         if item is None:
             raise ValueError("no such saved profile")
-        return check_profile(item["profile"])
+        return migrate(check_profile(item["profile"]))
     if "db_id" in msg:
-        prof = database(hass).get(msg["db_id"])
+        db = database(hass)
+        prof = db.get(msg["db_id"])
         if prof is None:
+            newer = next((p for p in db.read_only() if p.id == msg["db_id"]), None)
+            if newer is not None:
+                raise NewerFormatError(format_version(newer.data))
             raise ValueError("no such profile in the database")
         return check_profile(prof.data)
     raise ValueError("nothing to apply")
@@ -596,6 +612,44 @@ async def ws_library_delete(hass: HomeAssistant, connection: Any, msg: dict[str,
     connection.send_result(msg["id"], {})
 
 
+@websocket_api.websocket_command({vol.Required("type"): f"{DOMAIN}/library/convert", vol.Required("item_id"): str})
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_library_convert(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """Rewrite a saved profile in the current format."""
+    try:
+        item = await library(hass).async_convert(msg["item_id"])
+    except KeyError:
+        connection.send_error(msg["id"], "not_found", "No such saved profile")
+        return
+    except ValueError as err:
+        connection.send_error(msg["id"], "invalid_format", str(err))
+        return
+    connection.send_result(msg["id"], {"profile": library(hass).summary(item)})
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): f"{DOMAIN}/calibration/set",
+        vol.Required("entry_id"): str,
+        vol.Required("calibration"): dict,
+        vol.Optional("notes"): vol.Any(None, str),
+    }
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_calibration_set(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """How a lamp was calibrated (screen conditions, device, instrument, method) and its note."""
+    if (data := _get(hass, connection, msg)) is None:
+        return
+    try:
+        await data.async_set_calibration(msg["calibration"], msg.get("notes"))
+    except ValueError as err:
+        connection.send_error(msg["id"], "invalid_format", str(err))
+        return
+    connection.send_result(msg["id"], {"calibration": data.calibration, "notes": data.notes})
+
+
 def _groups(hass: HomeAssistant) -> dict[str, Any]:
     twins = [e.runtime_data for e in loaded_entries(hass)]
     return {"auto": auto_groups(twins), "manual": library(hass).manual_groups()}
@@ -648,4 +702,71 @@ async def ws_group_delete(hass: HomeAssistant, connection: Any, msg: dict[str, A
 @callback
 def ws_browse(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
     """Profiles in three separate sections: my calibrations, built-in, community."""
-    connection.send_result(msg["id"], browse(library(hass), database(hass).all()))
+    db = database(hass)
+    connection.send_result(msg["id"], browse(library(hass), db.all(), db.read_only()))
+
+
+@websocket_api.websocket_command({vol.Required("type"): f"{DOMAIN}/github/status"})
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_github_status(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """Whether in-panel rating is set up and signed in (never the token)."""
+    gh = github(hass)
+    await gh.async_load()
+    connection.send_result(msg["id"], gh.status())
+
+
+async def _github_call(connection: Any, msg: dict[str, Any], coro: Any) -> None:
+    try:
+        result = await coro
+    except GitHubError as err:
+        connection.send_error(msg["id"], "github", str(err))
+        return
+    connection.send_result(msg["id"], result)
+
+
+@websocket_api.websocket_command({vol.Required("type"): f"{DOMAIN}/github/login"})
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_github_login(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """Start GitHub's device flow: the code to enter on github.com/login/device."""
+    await _github_call(connection, msg, github(hass).async_start())
+
+
+@websocket_api.websocket_command({vol.Required("type"): f"{DOMAIN}/github/poll"})
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_github_poll(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """Whether the code was entered yet."""
+    await _github_call(connection, msg, github(hass).async_poll())
+
+
+@websocket_api.websocket_command({vol.Required("type"): f"{DOMAIN}/github/logout"})
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_github_logout(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """Forget the GitHub token."""
+    gh = github(hass)
+    await gh.async_logout()
+    connection.send_result(msg["id"], gh.status())
+
+
+@websocket_api.websocket_command(
+    {vol.Required("type"): f"{DOMAIN}/github/react", vol.Required("profile_id"): str, vol.Required("up"): bool}
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_github_react(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """Thumbs up or down on a database profile's discussion."""
+    db = database(hass)
+    prof = db.get(msg["profile_id"])
+    if prof is None:
+        connection.send_error(msg["id"], "not_found", "No such profile in the database")
+        return
+    gh = github(hass)
+    await gh.async_load()
+
+    async def react() -> dict[str, Any]:
+        return {"reaction": await gh.async_react(db.summary(prof)["discussion"], msg["up"])}
+
+    await _github_call(connection, msg, react())

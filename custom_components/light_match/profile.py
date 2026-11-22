@@ -33,6 +33,7 @@ from .const import (
     WHITE_COLOR_AUTO,
     WHITE_KELVINS,
 )
+from .formats import APP_VERSION, FORMAT_VERSION, migrate
 
 CHANNEL_MODES: dict[str, int] = {"rgb": 3, "rgbw": 4, "rgbww": 5}
 MODE_ATTR: dict[str, str | None] = {
@@ -1282,6 +1283,8 @@ class Profile:
         data: dict[str, Any] = {
             "format": PROFILE_FORMAT,
             "version": PROFILE_VERSION,
+            "format_version": FORMAT_VERSION,
+            "app_version": APP_VERSION,
             "modes": modes,
             "floor": self.caps.floor,
             "cells": {key: dict(cmd) for key, cmd in sorted(cells.items())},
@@ -1306,6 +1309,7 @@ class Profile:
             raise ValueError("bad profile version") from err
         if version > PROFILE_VERSION:
             raise ValueError("profile is from a newer version of Light Match")
+        data = migrate(data)  # NewerFormatError for a newer format
         modes = data.get("modes") or {}
         cells = data.get("cells") or {}
         if not isinstance(cells, dict) or not isinstance(modes, dict):

@@ -24,6 +24,15 @@ from urllib.parse import quote
 import voluptuous as vol
 
 from .const import PROFILE_FORMAT, PROFILE_VERSION
+from .formats import (
+    CALIBRATION_SCHEMA,
+    FORMAT_VERSION,
+    NOTES,
+    NewerFormatError,
+    good_practice,
+    is_newer,
+    migrate,
+)
 from .profile import parse_cell_key, validate_command
 
 _LOGGER = logging.getLogger(__name__)
@@ -209,6 +218,10 @@ DB_PROFILE_SCHEMA = vol.All(
             vol.Optional("$schema"): str,
             vol.Required("format"): PROFILE_FORMAT,
             vol.Required("version"): vol.All(int, vol.Range(min=2, max=PROFILE_VERSION)),
+            vol.Optional("format_version"): vol.All(int, vol.Range(min=1, max=FORMAT_VERSION)),
+            vol.Optional("app_version"): vol.All(str, vol.Length(max=40)),
+            vol.Optional("calibration"): CALIBRATION_SCHEMA,
+            vol.Optional("notes"): NOTES,
             vol.Required("revision"): vol.All(int, vol.Range(min=1)),
             vol.Required("name"): vol.All(str, vol.Length(min=1)),
             vol.Required("license"): DATA_LICENSE,
@@ -251,6 +264,8 @@ INDEX_ENTRY_SCHEMA = vol.Schema(
             vol.Required("down"): vol.All(int, vol.Range(min=0)),
         },
         vol.Optional("downloads", default=0): vol.All(int, vol.Range(min=0)),
+        vol.Optional("format_version", default=1): vol.All(int, vol.Range(min=1)),
+        vol.Optional("good_practice", default=False): bool,
     },
     extra=vol.REMOVE_EXTRA,
 )
@@ -277,8 +292,35 @@ def validate_index(data: Any) -> dict[str, Any]:
 
 
 def validate_db_profile(data: Any) -> dict[str, Any]:
-    """Validate a database profile; return the cleaned copy or raise vol.Invalid."""
-    return DB_PROFILE_SCHEMA(data)
+    """Validate a database profile; return the cleaned copy (in the current format) or raise vol.Invalid."""
+    try:
+        current = migrate(data)
+    except NewerFormatError as err:
+        raise vol.Invalid(str(err)) from err
+    except ValueError as err:
+        raise vol.Invalid(str(err)) from err
+    return DB_PROFILE_SCHEMA(current)
+
+
+# What a profile of a newer format must have to be listed (read-only).
+READ_ONLY_SCHEMA = vol.Schema(
+    {
+        vol.Required("format"): PROFILE_FORMAT,
+        vol.Required("revision"): vol.All(int, vol.Range(min=1)),
+        vol.Required("name"): vol.All(str, vol.Length(min=1, max=200)),
+        vol.Required("device"): vol.Schema(
+            {vol.Required("manufacturer"): str, vol.Required("models"): [str]}, extra=vol.ALLOW_EXTRA
+        ),
+    },
+    extra=vol.ALLOW_EXTRA,
+)
+
+
+def accept_db_profile(data: Any) -> tuple[dict[str, Any], bool]:
+    """A validated profile and whether it is read-only (a newer format: listed, never used)."""
+    if is_newer(data):
+        return READ_ONLY_SCHEMA(data), True
+    return validate_db_profile(data), False
 
 
 def gamut_points(value: Any) -> tuple[tuple[float, float], ...] | None:
@@ -331,6 +373,7 @@ class ModelProfile:
     id: str
     data: dict[str, Any]
     origin: str = "bundled"  # bundled or online
+    read_only: bool = False  # a newer format than this code reads: listed, never applied
 
     @property
     def name(self) -> str:
@@ -385,6 +428,8 @@ class ModelProfile:
             ],
             "discussion": self.data.get("discussion"),
             "cells": len(self.cells),
+            "good_practice": good_practice(self.data),
+            "notes": self.data.get("notes") if isinstance(self.data.get("notes"), str) else None,
         }
 
     def match_score(self, device: DeviceInfo) -> int:
@@ -441,12 +486,18 @@ class ProfileDatabase:
         return out
 
     def all(self) -> dict[str, ModelProfile]:
-        """Every profile; an online one wins over a bundled one of a lower revision."""
-        merged = dict(self.bundled)
+        """Every usable profile; an online one wins over a bundled one of a lower revision."""
+        merged = {pid: p for pid, p in self.bundled.items() if not p.read_only}
         for pid, prof in self.online.items():
+            if prof.read_only:
+                continue
             if pid not in merged or prof.revision > merged[pid].revision:
                 merged[pid] = prof
         return merged
+
+    def read_only(self) -> list[ModelProfile]:
+        """Profiles of a newer format: shown, not applied, until Light Match is updated."""
+        return [p for p in (*self.bundled.values(), *self.online.values()) if p.read_only]
 
     def get(self, profile_id: str | None) -> ModelProfile | None:
         """A profile by id."""
@@ -455,10 +506,13 @@ class ProfileDatabase:
     def rank(self, prof: ModelProfile) -> tuple[int, ...]:
         """Order among profiles that fit equally well.
 
-        Verified first, then measured, then the community rating, then revision.
+        Verified first, then measured, then the community rating (plus one for
+        good screen conditions), then revision.
         """
         prov = prof.data["provenance"]
-        return (int(prov["verified"]), METHOD_RANK[prov["method"]], self.rating(prof.id), prof.revision)
+        # calibrated under the recommended screen conditions: worth one thumbs up
+        rating = self.rating(prof.id) + int(good_practice(prof.data))
+        return (int(prov["verified"]), METHOD_RANK[prov["method"]], rating, prof.revision)
 
     def candidates(self, device: DeviceInfo) -> list[ModelProfile]:
         """Every profile that fits a device, best first.
@@ -478,9 +532,10 @@ class ProfileDatabase:
         found = self.candidates(device)
         return found[0] if found else None
 
-    def set_online(self, profiles: dict[str, dict[str, Any]]) -> None:
-        """Replace the online layer with validated profiles."""
-        self.online = {pid: ModelProfile(pid, data, "online") for pid, data in profiles.items()}
+    def set_online(self, profiles: dict[str, dict[str, Any]], read_only: set[str] | None = None) -> None:
+        """Replace the online layer with validated profiles (``read_only``: ids of newer formats)."""
+        ro = read_only or set()
+        self.online = {pid: ModelProfile(pid, data, "online", pid in ro) for pid, data in profiles.items()}
 
 
 def trusted(prof: ModelProfile) -> bool:
@@ -530,11 +585,11 @@ def load_bundled(root: Path = PROFILES_DIR) -> dict[str, ModelProfile]:
             _LOGGER.warning("Skipping profile with a bad file name: %s", pid)
             continue
         try:
-            data = validate_db_profile(json.loads(path.read_text(encoding="utf-8")))
+            data, read_only = accept_db_profile(json.loads(path.read_text(encoding="utf-8")))
         except (OSError, ValueError, vol.Invalid) as err:
             _LOGGER.warning("Skipping invalid profile %s: %s", pid, err)
             continue
-        profiles[pid] = ModelProfile(pid, data)
+        profiles[pid] = ModelProfile(pid, data, read_only=read_only)
     return profiles
 
 

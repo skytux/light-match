@@ -63,6 +63,8 @@ def structural_entry(path: Path) -> dict:
         "method": prov.get("method"),
         "verified": bool(prov.get("verified")),
         "contributors": sorted({c["nickname"] for c in data.get("contributors", [])}),
+        "format_version": data.get("format_version", 1),
+        "good_practice": (data.get("calibration") or {}).get("screen_conditions_confirmed") is True,
     }
 
 

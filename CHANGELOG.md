@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.8.1 - 2026-11-22
+
+- Full-screen swatch: Android/browser Back, Esc and leaving full screen close it instead of leaving the panel (one history entry is added while it is open).
+- Match screen to lamp: the lamp (or the reference) shows its 100 % neutral white and the phone a full-screen white patch; set the phone brightness to match, auto-brightness off. Recorded as `calibration.screen_matched`.
+- Screen conditions note (AMOLED, Natural/sRGB, night mode, contrast/adaptive colour/True Tone/eye comfort and HDR boost off) and the box "I calibrated under these conditions" (`calibration.screen_conditions_confirmed`): a good practice badge in the panel and the index and a small ranking boost.
+- Calibration details saved per lamp and exported: screen used (prefilled from the browser, editable, never sent by itself), instrument, method, and a note of up to 500 characters (validated, escaped everywhere).
+- Profile files carry `format_version` (2) and `app_version`; format 1 files are migrated on import and database load; newer formats are shown read-only ("update Light Match to use this profile") and never applied; saved profiles can be converted to the current format.
+- Optional thumbs up/down from the panel through GitHub's device flow (token kept in Home Assistant); hidden until the release sets an OAuth client id.
+- Fix: calibration details and notes are validated together, so a bad note no longer clears the details.
+
 ## 0.8.0 - 2026-11-22
 
 - Target swatch brightness follows perceived lightness from a screen floor (default 50 %), because a lit lamp never looks black: 1 % now shows at about 55 % screen level instead of nearly black. A "Screen floor" slider sets the floor, remembered in the browser.

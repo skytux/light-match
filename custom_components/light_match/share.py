@@ -92,6 +92,9 @@ def portable_profile(
         "modes": exported["modes"],
         "cells": exported["cells"],
     }
+    for key in ("format_version", "app_version", "calibration", "notes"):
+        if exported.get(key) not in (None, "", {}):
+            profile[key] = exported[key]
     return profile
 
 

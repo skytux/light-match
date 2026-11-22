@@ -18,14 +18,27 @@ checked against `profiles/profile.schema.json`.
    Light Match panel; the panel then sends it each cell's target.
    Calibrations against any other lamp get the target `house`: fine for your
    home, but the database only takes `lm-ref-1` profiles.
-2. Put the two lamps side by side, ideally shining on the same white wall,
+2. Set up the phone screen (it shows the swatch): colour mode Natural or
+   sRGB, night mode / blue-light filter, enhanced contrast, adaptive colour,
+   True Tone, eye comfort and HDR boost all off, a screen with good colour
+   rendering (AMOLED preferred). Press **Match screen to lamp** and set the
+   phone brightness so its white patch matches the lamp at 100 %, with
+   auto-brightness off; keep it there for the whole session. Then tick *I
+   calibrated under these conditions*: the profile gets
+   `calibration.screen_conditions_confirmed: true`, a **good practice** badge
+   in the panel and the index, and a small ranking boost (worth one thumbs
+   up).
+3. Put the two lamps side by side, ideally shining on the same white wall,
    in a dark room, with the same diffuser or shade (or none).
-3. Start with the **quick 5-point mode**. Inference spreads those five cells
+4. Start with the **quick 5-point mode**. Inference spreads those five cells
    over the grid; check the result and add cells where it is off.
-4. For each cell, move the sliders until the lamp looks the same as the
+5. For each cell, move the sliders until the lamp looks the same as the
    reference: first the colour, then the brightness. Look away for a moment
    between cells; eyes adapt.
-5. Check a few targets between cells with the twin before sharing.
+6. Fill in the calibration details if you like (screen used, instrument,
+   method, a note up to 500 characters). They go into the profile's
+   `calibration` and `notes`.
+7. Check a few targets between cells with the twin before sharing.
 
 ### Sharing
 
@@ -79,6 +92,13 @@ Every profile has a Discussion in the "Lamp profiles" category. A thumbs up
 or down there is its rating, shown in the panel next to the matched profile
 (**Rate / report**). Tell in a comment whether it works for your lamp: model,
 firmware and integration.
+
+Maintainers: to enable 👍 / 👎 from inside the panel, register a GitHub OAuth
+app (Settings → Developer settings → OAuth Apps → New; any homepage and
+callback URL, e.g. the repository), tick **Enable Device Flow**, and put its
+client id (not a secret) in `CLIENT_ID` in
+`custom_components/light_match/github.py`. While it is empty the feature is
+hidden. Users sign in with the device flow and the `public_repo` scope.
 
 ## Code
 

@@ -75,6 +75,27 @@ function autoName(make, model, day = new Date()) {
   return [...parts, date, token].join("_").slice(0, 120);
 }
 
+const NOTES_MAX = 500;
+const CAL_METHODS = { by_eye: "by eye", lux_meter: "lux meter", colorimeter: "colorimeter" };
+
+// A guess at the phone or computer in use, to prefill "screen used" (editable,
+// stored only when the user saves the calibration details).
+function guessDevice(ua = "", hint = null) {
+  if (hint && hint.model) return hint.model;
+  let m = /Android [\d.]+; (?:[a-z]{2}[-_][a-z]{2}; )?([^;)]+?)(?: Build[^;)]*)?[;)]/i.exec(ua);
+  if (m && !/^K$/.test(m[1])) return m[1].trim();
+  if (/iPhone/.test(ua)) return "iPhone";
+  if (/iPad/.test(ua)) return "iPad";
+  if (hint && hint.platform) return hint.platform;
+  m = /\((Windows|Macintosh|X11; Linux|Linux)/.exec(ua);
+  return m ? m[1].replace("X11; ", "") : "";
+}
+
+function formatOf(profile) {
+  const v = profile && profile.format_version;
+  return Number.isInteger(v) && v > 0 ? v : 1;
+}
+
 function fileName(name) {
   return `${slug(name) || "profile"}.light-match.json`;
 }
@@ -128,6 +149,20 @@ class LightMatchPanel extends HTMLElement {
     this._groups = null;
     this._filter = "";
     this._applyResults = null;
+    this._github = null;
+    this._ghCode = null;
+    this._readOnly = null;
+    this._uaHint = null;
+    try {
+      if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+        navigator.userAgentData
+          .getHighEntropyValues(["model", "platform"])
+          .then((v) => (this._uaHint = v))
+          .catch(() => {});
+      }
+    } catch (err) {
+      // not available
+    }
   }
 
   _order() {
@@ -213,6 +248,9 @@ class LightMatchPanel extends HTMLElement {
     this._model = entry.model || "";
     this._name = autoName(this._make, this._model);
     this._nameEdited = false;
+    this._cal = { ...(entry.calibration || {}) };
+    this._notes = entry.notes || "";
+    this._readOnly = null;
     if (this._targets.size === 0 || (this._targets.size === 1 && this._targets.has(previous))) this._targets = new Set([entryId]);
     this._reference = this._defaultReference(entry);
     await this._loadProfile();
@@ -371,6 +409,11 @@ class LightMatchPanel extends HTMLElement {
     } catch (err) {
       this._groups = null;
     }
+    try {
+      this._github = await this._ws("github/status");
+    } catch (err) {
+      this._github = null;
+    }
   }
 
   _exportArgs() {
@@ -499,6 +542,18 @@ class LightMatchPanel extends HTMLElement {
       </div>`;
   }
 
+  _readOnlyBox() {
+    const p = this._readOnly;
+    if (!p) return "";
+    const cells = p.cells && typeof p.cells === "object" ? Object.keys(p.cells).length : 0;
+    return `<div class="readonly">
+      <p><b>${esc(p.name || "Profile")}</b> <span class="meta">${esc([p.make, p.model].filter(Boolean).join(" "))} · ${cells} cells · format ${formatOf(p)}${p.app_version ? ` · written by Light Match ${esc(p.app_version)}` : ""}</span></p>
+      ${typeof p.notes === "string" && p.notes ? `<p class="note">${esc(p.notes)}</p>` : ""}
+      <p class="bad">Made by a newer Light Match: update Light Match to use this profile. It is shown here but not applied.</p>
+      <a href="#" id="readonlyclose">Close</a>
+    </div>`;
+  }
+
   _applyResultsList() {
     const r = this._applyResults;
     if (!r) return "";
@@ -550,6 +605,7 @@ class LightMatchPanel extends HTMLElement {
       </div>`
           : ""
       }
+      ${this._readOnlyBox()}
       ${this._applyResultsList()}
       <p class="message">${esc(this._message)}</p>
     </div>`;
@@ -574,10 +630,18 @@ class LightMatchPanel extends HTMLElement {
   _libraryCard() {
     const b = this._browse;
     const what = (i) => [i.make, i.model].filter(Boolean).join(" ");
-    const mine = (i) => `<li><b>${esc(i.name)}</b> <span class="meta">${esc(what(i))}${what(i) ? " · " : ""}${i.cells} cells · ${esc(i.date || "")}${i.source ? ` · from ${esc(i.source)}` : ""}</span>
-        <span class="acts"><a href="#" data-lib-apply="${esc(i.id)}">Apply to chosen lamps</a> · <a href="#" data-lib-export="${esc(i.id)}">Export</a> · <a href="#" data-lib-json="${esc(i.id)}">Copy JSON</a> · <a href="#" data-lib-rename="${esc(i.id)}">Rename</a> · <a href="#" data-lib-delete="${esc(i.id)}">Delete</a></span></li>`;
-    const db = (i) => `<li><b>${esc(i.name)}</b> <span class="meta">${esc(i.make || "")} ${esc((i.models || []).join(", "))} · ${i.cells} cells · ${esc(METHOD_LABEL[i.method] || i.method || "")}${i.verified ? ", verified" : ""}${i.origin === "online" ? ", online" : ""}</span>
-        ${i.cells ? `<span class="acts"><a href="#" data-db-apply="${esc(i.id)}">Apply to chosen lamps</a></span>` : ""}</li>`;
+    const badges = (i) =>
+      `${i.good_practice ? ` <span class="badge">good practice</span>` : ""}${i.read_only ? ` <span class="badge old">newer format, read-only</span>` : ""}`;
+    const note = (i) => (typeof i.notes === "string" && i.notes ? `<span class="note">${esc(i.notes)}</span>` : "");
+    const mine = (i) => `<li><b>${esc(i.name)}</b>${badges(i)} <span class="meta">${esc(what(i))}${what(i) ? " · " : ""}${i.cells} cells · ${esc(i.date || "")}${i.source ? ` · from ${esc(i.source)}` : ""}${i.format_version ? ` · format ${Number(i.format_version)}` : ""}</span>${note(i)}
+        <span class="acts">${i.read_only ? `<span class="bad">Update Light Match to use this profile.</span> · ` : `<a href="#" data-lib-apply="${esc(i.id)}">Apply to chosen lamps</a> · `}<a href="#" data-lib-export="${esc(i.id)}">Export</a> · <a href="#" data-lib-json="${esc(i.id)}">Copy JSON</a> · <a href="#" data-lib-rename="${esc(i.id)}">Rename</a> · <a href="#" data-lib-delete="${esc(i.id)}">Delete</a>${i.convertible ? ` · <a href="#" data-lib-convert="${esc(i.id)}">Convert to the current format</a>` : ""}</span></li>`;
+    const gh = this._github && this._github.enabled && this._github.signed_in;
+    const rate = (i) =>
+      gh && i.discussion && !i.read_only
+        ? ` · <a href="#" data-rate-up="${esc(i.id)}" title="Thumbs up on GitHub">&#128077;</a> <a href="#" data-rate-down="${esc(i.id)}" title="Thumbs down on GitHub">&#128078;</a>`
+        : "";
+    const db = (i) => `<li><b>${esc(i.name)}</b>${badges(i)} <span class="meta">${esc(i.make || "")} ${esc((i.models || []).join(", "))} · ${i.cells} cells · ${esc(METHOD_LABEL[i.method] || i.method || "")}${i.verified ? ", verified" : ""}${i.origin === "online" ? ", online" : ""}</span>${note(i)}
+        <span class="acts">${i.read_only ? `<span class="bad">Update Light Match to use this profile.</span>` : i.cells ? `<a href="#" data-db-apply="${esc(i.id)}">Apply to chosen lamps</a>` : ""}${rate(i)}${i.discussion ? ` · <a href="${esc(i.discussion)}" target="_blank" rel="noopener">Discussion</a>` : ""}</span></li>`;
     return `<div class="card">
       <h2>Profiles</h2>
       <label>Filter by make or model<input id="filter" value="${esc(this._filter)}" placeholder="e.g. wiz, hue, ESP01"></label>
@@ -631,6 +695,14 @@ class LightMatchPanel extends HTMLElement {
         await this._ws("library/rename", { item_id: id, name: name.trim() });
         await this._loadLibrary();
         this._render();
+      } else if (kind === "convert") {
+        const res = await this._ws("library/convert", { item_id: id });
+        await this._loadLibrary();
+        this._render();
+        this._flash(`${res.profile.name} now uses format ${res.profile.format_version}.`);
+      } else if (kind === "up" || kind === "down") {
+        await this._ws("github/react", { profile_id: id, up: kind === "up" });
+        this._flash(`Your ${kind === "up" ? "thumbs up" : "thumbs down"} was added on GitHub. The rating shown here updates with the next index.`);
       } else if (kind === "delete") {
         const item = this._browse.mine.find((i) => i.id === id);
         if (!confirm(`Delete ${item ? item.name : "this profile"} from My calibrations? Lamps keep their cells.`)) return;
@@ -739,6 +811,21 @@ class LightMatchPanel extends HTMLElement {
       this._flash(`Import failed: not JSON (${err.message || err})`);
       return;
     }
+    const supported = this._entry && this._entry.format_version;
+    if (supported && formatOf(profile) > supported) {
+      this._readOnly = profile;
+      try {
+        if (this._keepLib && this._browse) {
+          await this._ws("library/save", { profile });
+          await this._loadLibrary();
+        }
+      } catch (err) {
+        // shown anyway
+      }
+      this._render();
+      this._flash("This profile is from a newer Light Match: shown, not applied.");
+      return;
+    }
     try {
       if (this._keepLib && this._browse) {
         await this._ws("library/save", { profile });
@@ -782,17 +869,131 @@ class LightMatchPanel extends HTMLElement {
   _fullScreen() {
     const cell = this._cell;
     if (!cell) return;
+    this._overlay(this._targetCss(cell), `${this._label(cell)} · tap or go back to close`);
+  }
+
+  // A full-screen colour patch. Back (Android, browser), Esc, leaving full
+  // screen and a tap all close it; it adds one history entry so Back closes
+  // the patch instead of leaving the panel. onClose(tapped) runs once.
+  _overlay(background, text, onClose) {
+    if (this._closeOverlay) this._closeOverlay("replaced");
     const div = document.createElement("div");
     div.className = "fullscreen";
-    div.style.background = this._targetCss(cell);
-    div.innerHTML = `<span>${esc(this._label(cell))} · tap to close</span>`;
-    const close = () => {
+    div.style.background = background;
+    div.innerHTML = `<span>${esc(text)}</span>`;
+    let closed = false;
+    let pushed = false;
+    const close = (how) => {
+      if (closed) return;
+      closed = true;
+      this._closeOverlay = null;
+      window.removeEventListener("popstate", onPop);
+      document.removeEventListener("fullscreenchange", onFullscreen);
+      document.removeEventListener("keydown", onKey);
       if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
       div.remove();
+      if (pushed && how !== "back" && history.state && history.state.lightMatchOverlay) history.back();
+      if (onClose) onClose(how === "tap");
     };
-    div.addEventListener("click", close);
+    const onPop = () => close("back");
+    const onFullscreen = () => {
+      if (!document.fullscreenElement) close("fullscreen");
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") close("escape");
+    };
+    try {
+      history.pushState({ ...(history.state || {}), lightMatchOverlay: true }, "");
+      pushed = true;
+    } catch (err) {
+      // no history (embedded view): tap and Esc still close
+    }
+    window.addEventListener("popstate", onPop);
+    document.addEventListener("keydown", onKey);
+    div.addEventListener("click", () => close("tap"));
+    this._closeOverlay = close;
     this.shadowRoot.appendChild(div);
-    if (div.requestFullscreen) div.requestFullscreen().catch(() => {});
+    if (div.requestFullscreen) {
+      div
+        .requestFullscreen()
+        .then(() => document.addEventListener("fullscreenchange", onFullscreen))
+        .catch(() => {});
+    }
+  }
+
+  // The neutral white at 100 % the screen is matched to.
+  _matchCell() {
+    const cells = (this._profile && this._profile.cells) || [];
+    const whites = cells.filter((c) => c.kind === "white" && c.brightness === 100).sort((a, b) => b.kelvin - a.kelvin);
+    return whites.find((c) => c.kelvin === 6500) || whites[0] || cells.find((c) => c.brightness === 100) || null;
+  }
+
+  async _matchScreen() {
+    const cell = this._matchCell();
+    try {
+      if (cell && this._reference) await this._ws("show_target", { entity_id: this._reference, key: cell.key });
+      else if (cell) await this._ws("preview", { entry_id: this._entryId, command: cell.command });
+    } catch (err) {
+      this._flash(`The lamp did not answer: ${err.message || err}`);
+    }
+    const lamp = this._reference ? "the reference lamp" : "the lamp";
+    this._overlay(
+      "rgb(255, 255, 255)",
+      `Set the screen brightness so this white matches ${lamp} at 100 % (auto-brightness off), then tap. Keep it there while you calibrate.`,
+      (tapped) => {
+        if (!tapped) return;
+        this._cal = { ...(this._cal || {}), screen_matched: true };
+        this._saveCalibration("Screen matched to the lamp. Keep the screen brightness there for this session.");
+      }
+    );
+  }
+
+  _conditionsCard() {
+    const entry = this._entry;
+    if (!entry || !("calibration" in entry)) return "";
+    const cal = this._cal || {};
+    const notes = this._notes || "";
+    const device = cal.reference_device ?? guessDevice(typeof navigator !== "undefined" ? navigator.userAgent : "", this._uaHint);
+    return `<details class="conditions" ${this._condOpen ? "open" : ""}>
+        <summary>Screen and calibration details${cal.screen_conditions_confirmed ? ` <span class="badge">good practice</span>` : ""}</summary>
+        <p class="hint">For a fair screen swatch use a screen with good colour rendering, preferably AMOLED, with colour mode Natural or sRGB (not Vivid), night mode and blue-light filter off, enhanced contrast, adaptive colour, True Tone and eye comfort off, and HDR boost off. Then match the screen brightness to the lamp at 100 % with auto-brightness off, and keep it there for the whole session.</p>
+        <div class="buttons left"><button id="matchscreen">Match screen to lamp</button>${cal.screen_matched ? `<span class="meta">matched</span>` : ""}</div>
+        <label class="check"><input type="checkbox" id="calscreen" ${cal.screen_conditions_confirmed ? "checked" : ""}> I calibrated under these conditions (screen brightness matched to the lamp at 100 %, auto-brightness off)</label>
+        <div class="pickers">
+          <label>Screen used<input id="caldevice" maxlength="80" value="${esc(device)}" placeholder="e.g. Pixel 8 (AMOLED)"></label>
+          <label>Instrument<input id="calinstrument" maxlength="80" value="${esc(cal.instrument || "")}" placeholder="lux meter or colorimeter model"></label>
+          <label>Method<select id="calmethod">${Object.entries(CAL_METHODS)
+            .map(([k, v]) => `<option value="${k}" ${(cal.method || "by_eye") === k ? "selected" : ""}>${esc(v)}</option>`)
+            .join("")}</select></label>
+        </div>
+        <label>Notes<textarea id="calnotes" rows="3" maxlength="${NOTES_MAX}" placeholder="diffuser, room, anything unusual">${esc(notes)}</textarea></label>
+        <p class="meta" id="notecount">${notes.length}/${NOTES_MAX}</p>
+        <p class="hint">Saved with this lamp's calibration and in its exports and shares. Nothing is sent anywhere by itself.</p>
+      </details>`;
+  }
+
+  async _saveCalibration(done) {
+    const $ = (sel) => this.shadowRoot.querySelector(sel);
+    const cal = { ...(this._cal || {}) };
+    if ($("#calscreen")) cal.screen_conditions_confirmed = $("#calscreen").checked;
+    if ($("#caldevice")) cal.reference_device = $("#caldevice").value.trim();
+    if ($("#calinstrument")) cal.instrument = $("#calinstrument").value.trim();
+    if ($("#calmethod")) cal.method = $("#calmethod").value;
+    if ($("#calnotes")) this._notes = $("#calnotes").value.slice(0, NOTES_MAX);
+    try {
+      const res = await this._ws("calibration/set", { entry_id: this._entryId, calibration: cal, notes: this._notes || null });
+      this._cal = res.calibration;
+      this._notes = res.notes || "";
+      const entry = this._entry;
+      if (entry) {
+        entry.calibration = res.calibration;
+        entry.notes = res.notes;
+      }
+      this._render();
+      this._flash(done || "Calibration details saved.");
+    } catch (err) {
+      this._flash(`Not saved: ${err.message || err}`);
+    }
   }
 
   _swatch(cell) {
@@ -897,7 +1098,11 @@ class LightMatchPanel extends HTMLElement {
     const who = (m.contributors || []).map((c) => c.nickname).filter(Boolean);
     return `<p class="meta">${esc(lamp)} · model profile <b>${esc(m.name)}</b> (${esc(how)}, ${m.verified ? "verified" : "unverified"}${m.cells ? `, ${m.cells} cells` : ""}${m.origin === "online" ? ", online" : ""})</p>
       <p class="meta">&#128077; ${Number(rating.up) || 0} &#128078; ${Number(rating.down) || 0} · ${Number(m.downloads) || 0} downloads${who.length ? ` · by ${esc(who.join(", "))}` : ""}${m.updated ? ` · updated ${esc(m.updated)}` : ""}
-      ${m.rate_url ? ` · <a href="${esc(m.rate_url)}" target="_blank" rel="noopener">Rate / report</a>` : ""}</p>${this._importsLine(m)}`;
+      ${m.rate_url ? ` · <a href="${esc(m.rate_url)}" target="_blank" rel="noopener">Rate / report</a>` : ""}${
+        this._github && this._github.enabled && this._github.signed_in && m.discussion
+          ? ` · <a href="#" data-rate-up="${esc(m.id)}" title="Thumbs up on GitHub">&#128077;</a> <a href="#" data-rate-down="${esc(m.id)}" title="Thumbs down on GitHub">&#128078;</a>`
+          : ""
+      }${m.good_practice ? ` · <span class="badge">good practice</span>` : ""}</p>${typeof m.notes === "string" && m.notes ? `<p class="note">${esc(m.notes)}</p>` : ""}${this._importsLine(m)}`;
   }
 
   _importsLine(m) {
@@ -924,7 +1129,56 @@ class LightMatchPanel extends HTMLElement {
       <label><input type="checkbox" id="online" ${st.online_update ? "checked" : ""}> Get newer lamp profiles from the online database</label>
       <p class="hint">Off by default. When on, Light Match downloads the profile index and newer profiles from GitHub once a day. Nothing about your lamps or your home is sent; your own cells are never changed.</p>
       ${st.online_update ? `<p class="meta">${last} · ${st.online_profiles.length} online profiles · <a href="#" id="checknow">Check now</a></p>` : ""}
+      ${this._githubLine()}
     </div>`;
+  }
+
+  _githubLine() {
+    const g = this._github;
+    if (!g || !g.enabled) return "";
+    if (g.signed_in) return `<p class="meta">Rating from here as GitHub user ${esc(g.login || "?")} · <a href="#" id="ghlogout">Sign out of GitHub</a></p>`;
+    if (this._ghCode) {
+      return `<p class="meta">Enter the code <b>${esc(this._ghCode.user_code)}</b> at <a href="${esc(this._ghCode.verification_uri)}" target="_blank" rel="noopener">${esc(this._ghCode.verification_uri)}</a>. Waiting for GitHub… · <a href="#" id="ghcancel">Cancel</a></p>`;
+    }
+    return `<p class="meta">Rate profiles with a thumbs up or down from here: <a href="#" id="ghlogin">Sign in to GitHub</a>. The sign-in is kept on your Home Assistant; reactions go to the profile's GitHub Discussion.</p>`;
+  }
+
+  async _githubLogin() {
+    try {
+      this._ghCode = await this._ws("github/login");
+      this._render();
+      const started = Date.now();
+      let wait = (this._ghCode.interval || 5) * 1000;
+      const tick = async () => {
+        if (!this._ghCode || Date.now() - started > (this._ghCode.expires_in || 900) * 1000) {
+          this._ghCode = null;
+          this._render();
+          return;
+        }
+        let res;
+        try {
+          res = await this._ws("github/poll");
+        } catch (err) {
+          this._ghCode = null;
+          this._flash(`GitHub sign-in failed: ${err.message || err}`);
+          this._render();
+          return;
+        }
+        if (res.status === "pending" || res.status === "slow_down") {
+          if (res.interval) wait = res.interval * 1000;
+          setTimeout(tick, wait);
+          return;
+        }
+        this._ghCode = null;
+        this._github = await this._ws("github/status");
+        this._render();
+        this._flash(res.status === "done" ? `Signed in to GitHub as ${res.login || "?"}.` : "GitHub sign-in not completed.");
+      };
+      setTimeout(tick, wait);
+    } catch (err) {
+      this._ghCode = null;
+      this._flash(`GitHub sign-in failed: ${err.message || err}`);
+    }
   }
 
   async _setOnline(on) {
@@ -989,7 +1243,7 @@ class LightMatchPanel extends HTMLElement {
         <div class="target">
           <button class="swatch" id="swatch" title="Show full screen" style="background:${this._targetCss(cell)}"></button>
           <div>
-            <p class="hint">Target colour and brightness as your screen can show it: full output is screen white, and the scale follows perceived lightness from the screen floor up, since a lit lamp never looks black, even at 1 %. A rough guide only: screens are not calibrated, so trust the reference lamp first. Tap the circle for full screen.</p>
+            <p class="hint">Target colour and brightness as your screen can show it: full output is screen white, and the scale follows perceived lightness from the screen floor up, since a lit lamp never looks black, even at 1 %. A rough guide only: trust the reference lamp first. For a fair swatch match the screen to the lamp first (Screen and calibration details below). Tap the circle for full screen; Back closes it.</p>
             <label class="row floor"><span>Screen floor</span><input type="range" id="screenfloor" min="0" max="90" step="5" value="${this._screenFloor}"><span>${this._screenFloor} %</span></label>
           </div>
         </div>
@@ -1008,6 +1262,7 @@ class LightMatchPanel extends HTMLElement {
           <label><input type="checkbox" id="quick" ${this._quick ? "checked" : ""}> Quick calibration (5 cells, the rest inferred)</label>
           <a href="#" id="reset">Reset this cell</a> · <a href="#" id="default">Load default</a>${cell.model_command && cell.source !== "model" ? ` · <a href="#" id="copymodel">Copy from model profile</a>` : ""}
         </div>
+        ${this._conditionsCard()}
         <p class="message">${esc(this._message)}</p>
       </div>`
           : ""
@@ -1064,6 +1319,13 @@ class LightMatchPanel extends HTMLElement {
         .plist .acts { display:block; font-size: 13px; margin-top: 2px; }
         .results { margin: 4px 0; padding-left: 18px; font-size: 13px; }
         .bad { color: var(--error-color, #db4437); }
+        .badge { display:inline-block; font-size: 11px; padding: 0 6px; border-radius: 8px; background: var(--success-color, #43a047); color: #fff; vertical-align: middle; }
+        .badge.old { background: var(--warning-color, #ffa600); }
+        .note { display:block; font-size: 13px; font-style: italic; white-space: pre-wrap; overflow-wrap: anywhere; }
+        details.conditions { margin: 12px 0; }
+        details.conditions summary { cursor: pointer; font-weight: 500; }
+        .buttons.left { justify-content: flex-start; align-items: center; gap: 8px; }
+        .readonly { border: 1px dashed var(--divider-color); padding: 8px; margin: 8px 0; }
         .row.floor { grid-template-columns: 110px 1fr 50px; }
         .file { color: var(--primary-color); text-decoration: underline; cursor: pointer; }
         .message { min-height: 1em; color: var(--primary-color); font-size: 13px; }
@@ -1207,7 +1469,7 @@ class LightMatchPanel extends HTMLElement {
         this._render();
       })
     );
-    for (const kind of ["apply", "export", "json", "rename", "delete"]) {
+    for (const kind of ["apply", "export", "json", "rename", "delete", "convert"]) {
       this.shadowRoot.querySelectorAll(`[data-lib-${kind}]`).forEach((el) =>
         el.addEventListener("click", (e) => {
           e.preventDefault();
@@ -1230,6 +1492,38 @@ class LightMatchPanel extends HTMLElement {
       );
     }
     on("#grpadd", "click", () => this._groupAction("add"));
+    on("#matchscreen", "click", () => this._matchScreen());
+    for (const sel of ["#calscreen", "#caldevice", "#calinstrument", "#calmethod", "#calnotes"]) on(sel, "change", () => this._saveCalibration());
+    on("#calnotes", "input", (e) => {
+      const n = $("#notecount");
+      if (n) n.textContent = `${e.target.value.length}/${NOTES_MAX}`;
+    });
+    const details = $("details.conditions");
+    if (details) details.addEventListener("toggle", () => (this._condOpen = details.open));
+    link("#readonlyclose", () => {
+      this._readOnly = null;
+      this._render();
+    });
+    link("#ghlogin", () => this._githubLogin());
+    link("#ghcancel", () => {
+      this._ghCode = null;
+      this._render();
+    });
+    link("#ghlogout", async () => {
+      try {
+        this._github = await this._ws("github/logout");
+      } catch (err) {
+        this._flash(`Not signed out: ${err.message || err}`);
+      }
+      this._render();
+    });
+    this.shadowRoot.querySelectorAll("[data-rate-up],[data-rate-down]").forEach((el) =>
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        const up = el.hasAttribute("data-rate-up");
+        this._libAction(up ? "up" : "down", el.getAttribute(up ? "data-rate-up" : "data-rate-down"));
+      })
+    );
     link("#pastetoggle", () => {
       this._pasteOpen = !this._pasteOpen;
       this._render();

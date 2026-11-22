@@ -49,6 +49,7 @@ from .database import (
     merge_capabilities,
     trusted,
 )
+from .formats import CAL_SCREEN, CALIBRATION_KEYS, clean_calibration, clean_notes, migrate
 from .profile import Profile, SourceCaps
 from .share import portable_profile
 
@@ -71,6 +72,9 @@ class LightMatchData:
     entry: ConfigEntry
     store: Store
     cells: dict[str, dict[str, Any]] = field(default_factory=dict)
+    # how the cells were calibrated (formats.CALIBRATION_SCHEMA) and a free note
+    calibration: dict[str, Any] = field(default_factory=dict)
+    notes: str | None = None
     entity: CalibratedLight | None = None
     _caps_attrs: dict[str, Any] = field(default_factory=dict)
     _listeners: list[Callable[[], None]] = field(default_factory=list)
@@ -89,10 +93,20 @@ class LightMatchData:
         stored = await self.store.async_load()
         if isinstance(stored, dict):
             self.cells = dict(stored.get("cells") or {})
+            try:
+                self.calibration = clean_calibration(stored.get("calibration"))
+                self.notes = clean_notes(stored.get("notes"))
+            except ValueError:
+                self.calibration, self.notes = {}, None
 
     async def async_save(self) -> None:
         """Save the profile cells and refresh the twin's state."""
-        await self.store.async_save({"cells": self.cells})
+        stored: dict[str, Any] = {"cells": self.cells}
+        if self.calibration:
+            stored["calibration"] = self.calibration
+        if self.notes:
+            stored["notes"] = self.notes
+        await self.store.async_save(stored)
         for listener in list(self._listeners):
             listener()
 
@@ -266,7 +280,22 @@ class LightMatchData:
         }
         if make:
             meta["make"] = make
+        meta.update(self.calibration_meta())
         return self.profile().to_json(model, meta=meta)
+
+    def calibration_meta(self) -> dict[str, Any]:
+        """The calibration details and notes that go into exported files."""
+        meta: dict[str, Any] = {"calibration": {"method": "by_eye", **self.calibration}}
+        meta["calibration"].setdefault(CAL_SCREEN, False)
+        if self.notes:
+            meta["notes"] = self.notes
+        return meta
+
+    async def async_set_calibration(self, calibration: Any, notes: Any) -> None:
+        """Store the calibration details and note; ValueError if not acceptable."""
+        cal, text = clean_calibration(calibration), clean_notes(notes)  # both valid, or nothing changes
+        self.calibration, self.notes = cal, text
+        await self.async_save()
 
     def share_target(self, reference: str | None = None) -> str:
         """lm-ref-1 if the cells were matched to a reference-space lamp, else house."""
@@ -292,7 +321,7 @@ class LightMatchData:
     def share(self, reference: str | None = None, **contributor: Any) -> dict[str, Any]:
         """The portable profile of the user's own cells."""
         return portable_profile(
-            self.profile().to_json(),
+            self.profile().to_json(meta=self.calibration_meta()),
             self.device_info(),
             self.share_capabilities(),
             self.share_target(reference),
@@ -305,12 +334,22 @@ class LightMatchData:
         """Import an exported profile; returns (imported, skipped).
 
         ``refuse_empty`` leaves the lamp alone (ValueError) when no cell fits it.
+        When replacing, the lamp takes the profile's calibration details and note.
         """
         profile = self.profile()
         result = profile.import_json(data, replace=not merge)
         if refuse_empty and not result[0]:
             raise ValueError("no cell of the profile fits this lamp")
         self.cells = profile.cells
+        if not merge:
+            current = migrate(data)
+            try:
+                self.calibration = clean_calibration(
+                    {k: v for k, v in (current.get("calibration") or {}).items() if k in CALIBRATION_KEYS}
+                )
+                self.notes = clean_notes(current.get("notes"))
+            except ValueError:
+                self.calibration, self.notes = {}, None
         await self.async_save()
         return result
 
@@ -318,7 +357,7 @@ class LightMatchData:
         """Reuse another twin's calibrated cells, converted like an import."""
         if not source.cells:
             raise ValueError("That lamp has no calibrated cells to copy")
-        return await self.async_import(source.profile().to_json(), merge)
+        return await self.async_import(source.profile().to_json(meta=source.calibration_meta()), merge)
 
     async def async_import_curve(self, curve: dict[Any, Any]) -> int:
         """Fill uncalibrated cells from a brightness curve (e.g. Lightener)."""

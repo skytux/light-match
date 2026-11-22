@@ -89,11 +89,31 @@ Each twin has options (**Configure** on the entry):
    it. A lit lamp never looks black, even at 1 %, so full output is screen
    white and lower levels follow perceived lightness (CIE L*) down to a
    **screen floor**, half brightness by default. Change the floor with the
-   slider under the hint; the panel remembers it in this browser.
+   slider under the hint; the panel remembers it in this browser. Tap the
+   circle for a full-screen patch; Back (Android or browser), Esc or a tap
+   closes it without leaving the panel.
+
+   **Match the screen first.** The swatch is only fair when the screen is set
+   up for it: good colour rendering (AMOLED is best), colour mode Natural or
+   sRGB (not Vivid), night mode and blue-light filter off, enhanced contrast,
+   adaptive colour, True Tone and eye comfort off, HDR boost off. Then press
+   **Match screen to lamp** in *Screen and calibration details*: the lamp
+   (or the reference lamp) shows its 100 % neutral white and the phone shows
+   a full-screen white patch. Set the phone brightness until the two match,
+   turn auto-brightness off and keep it there for the whole session. The
+   floor above is relative to this matched screen.
 5. **Save** stores the cell and moves on; **Skip** leaves it at its default.
    **Previous** goes back; **Reset this cell** returns a cell to its default.
    Click any square in the grid to jump to that cell. The bar at the top shows
    how many cells are calibrated.
+
+**Calibration details** (same section, all optional, saved with the lamp and
+included in exports and shares): the box *I calibrated under these
+conditions* (shown as a **good practice** badge, worth a small ranking boost
+in the database), the screen used (prefilled from the browser, editable,
+never sent anywhere by itself), the instrument, the method (by eye, lux meter,
+colorimeter) and a note of up to 500 characters. *Match screen to lamp* also
+records `screen_matched`.
 
 You do not need to calibrate everything. Start with the cells that look most
 wrong, typically the lowest brightness levels and the reds. Uncalibrated
@@ -187,6 +207,25 @@ issue you submit yourself.
 **Ratings.** Each profile has a GitHub Discussion; its thumbs up and down
 are the rating shown in the panel, next to the downloads, the contributors'
 nicknames and the last update. **Rate / report** opens it.
+
+**Rating from the panel** (optional): when the release has a GitHub OAuth
+app set up, the online profiles card offers **Sign in to GitHub**. It uses
+GitHub's device flow: the panel shows a code, you enter it on github.com,
+and the token is kept in this Home Assistant (`.storage/light_match.github`),
+never in the browser. It asks for the `public_repo` scope because GitHub
+needs it to add a reaction on a public repository's discussion; Light Match
+only adds or removes your thumbs up/down on the profile's discussion.
+👍 / 👎 links then appear next to profiles that have a discussion. **Sign
+out of GitHub** forgets the token (you can also revoke it in your GitHub
+settings). Without the OAuth app the feature is hidden; the Discussions link
+always works.
+
+**Format versions.** Profile files carry `format_version` (2 now; a file
+without it is format 1) and `app_version`, the Light Match release that wrote
+it. Older formats are converted on import and when loaded from the database;
+saved ones show **Convert to the current format** in *My calibrations*. A
+file of a newer format than your Light Match knows is shown, read-only, with
+"update Light Match to use this profile", and never applied.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) to calibrate and submit a profile.
 

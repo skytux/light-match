@@ -26,6 +26,49 @@
       "minimum": 2,
       "maximum": 2
     },
+    "format_version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Layout of this file; missing means 1. Light Match migrates older formats and shows newer ones read-only."
+    },
+    "app_version": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "The Light Match release that wrote the file."
+    },
+    "calibration": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "How the profile was calibrated.",
+      "properties": {
+        "method": {
+          "enum": ["spec", "imported", "by_eye", "lux_meter", "colorimeter"]
+        },
+        "screen_conditions_confirmed": {
+          "type": "boolean",
+          "description": "The calibrator confirms the recommended screen conditions (good practice badge, a small ranking boost)."
+        },
+        "screen_matched": {
+          "type": "boolean",
+          "description": "The screen brightness was matched to the lamp at 100 % before calibrating."
+        },
+        "reference_device": {
+          "type": "string",
+          "maxLength": 80,
+          "description": "The phone or screen used."
+        },
+        "instrument": {
+          "type": "string",
+          "maxLength": 80,
+          "description": "Lux meter or colorimeter, if any."
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Free text from the calibrator."
+    },
     "revision": {
       "type": "integer",
       "minimum": 1,
