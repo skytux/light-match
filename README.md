@@ -182,10 +182,16 @@ Cell keys are `color:<name>:<level>` or `white:<kelvin>:<level>`, with levels
 - Whether the sub-floor trick works depends on the lamp: it needs a lamp that
   really dims its channels at the floor brightness. It has been seen on WiZ
   RGBW bulbs; other brands may ignore weak channels or round them up.
-- Saturation is not calibrated (see above), and effects are not passed
-  through.
-- The twin exposes colour temperatures from 2200 to 6500 K on every lamp;
-  lamps with a narrower range are clamped.
+- Saturation is not calibrated (see above).
+- Effects are passed through unchanged: the twin lists the source's effects,
+  and starting one sends only the effect and a calibrated brightness. The
+  lamp's own show is not calibrated, and while it runs the twin's colour is
+  only an estimate.
+- The twin exposes colour temperatures from 2200 to 6500 K on every lamp.
+  A colour lamp whose own white range is narrower shows the whites outside
+  it (more than 100 K beyond) with its colour LEDs; those cells are
+  calibrated in the colour mode. Lamps without colour LEDs are clamped to
+  their range.
 - Lamps that only switch on and off are mirrored but cannot be calibrated.
 - The inverse mapping of an externally changed lamp is a best estimate; it
   assumes brightness grows with the target and hue goes round the circle in

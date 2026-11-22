@@ -112,7 +112,7 @@ def ws_profile(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> Non
                 "model_command": profile.model_cells.get(key),
                 "command": profile.cell_command(key),
                 "default": profile.default_command(cell["kind"], anchor, cell["brightness"]),
-                "mode": profile.mode_for(cell["kind"]),
+                "mode": profile.cell_mode(key),
             }
         )
     connection.send_result(

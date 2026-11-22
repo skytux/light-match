@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from homeassistant.components.light import LightEntityFeature
 from homeassistant.const import STATE_OFF, STATE_ON, STATE_UNAVAILABLE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
@@ -157,3 +158,40 @@ async def test_transition_follows_source_and_profile(hass: HomeAssistant, source
     assert hass.states.get(twin).attributes["supported_features"] == 0
     await _on(hass, twin, brightness=100)
     assert "transition" not in src.calls[-1][1]
+
+
+async def test_effects_pass_through(hass: HomeAssistant, sources) -> None:
+    src = sources["light.bulb_rgbw"]
+    src._attr_effect_list = ["Party", "Ocean"]
+    src._attr_effect = None
+    src._attr_supported_features |= LightEntityFeature.EFFECT
+    src.async_write_ha_state()
+    entry = await add_twin(hass, "light.bulb_rgbw", auto_floor=False, brightness_floor=26)
+    twin = twin_id(hass, entry)
+    state = hass.states.get(twin)
+    assert state.attributes["effect_list"] == ["Party", "Ocean"]
+    assert state.attributes["supported_features"] & LightEntityFeature.EFFECT
+
+    await _on(hass, twin, effect="Party", brightness=128)
+    sent = _sent(src)
+    assert sent["effect"] == "Party" and "rgbw_color" not in sent and "color_temp_kelvin" not in sent
+    assert 1 <= sent["brightness"] <= 255
+    src._attr_effect = "Party"
+    src.async_write_ha_state()
+    await hass.async_block_till_done()
+    assert hass.states.get(twin).attributes["effect"] == "Party"
+
+    # an unknown effect is ignored; a colour command goes through the profile
+    await _on(hass, twin, effect="Nope", hs_color=[0, 100], brightness=128)
+    assert "effect" not in _sent(src) and "rgbw_color" in _sent(src)
+
+
+async def test_narrow_white_uses_colour_leds(hass: HomeAssistant, sources) -> None:
+    entry = await add_twin(hass, "light.bulb_rgbw")  # the fake lamp's ct range is 2700-6500 K
+    twin = twin_id(hass, entry)
+    src = sources["light.bulb_rgbw"]
+    await _on(hass, twin, color_temp_kelvin=2200, brightness=128)
+    assert "rgbw_color" in _sent(src)
+    assert hass.states.get(twin).attributes["color_temp_kelvin"] == 2200
+    await _on(hass, twin, color_temp_kelvin=3000, brightness=128)
+    assert _sent(src)["color_temp_kelvin"] == 3000

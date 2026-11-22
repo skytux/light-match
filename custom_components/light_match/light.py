@@ -8,6 +8,8 @@ from typing import Any
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
     ATTR_COLOR_TEMP_KELVIN,
+    ATTR_EFFECT,
+    ATTR_EFFECT_LIST,
     ATTR_HS_COLOR,
     ATTR_TRANSITION,
     ColorMode,
@@ -25,6 +27,7 @@ from .profile import CHANNEL_MODES, KIND_COLOR, KIND_WHITE, MODE_ATTR, Target
 
 _LOGGER = logging.getLogger(__name__)
 DEFAULT_TARGET = Target(KIND_WHITE, 100.0, kelvin=2700)
+NO_EFFECT = {None, "off", "none", "None"}
 
 
 async def async_setup_entry(
@@ -73,6 +76,8 @@ class CalibratedLight(LightEntity):
         self._target: Target | None = None
         self._sent: dict[str, Any] | None = None
         self._sent_context: str | None = None
+        self._effects: list[str] | None = None
+        self._effect: str | None = None
 
     # -- lifecycle -----------------------------------------------------------
 
@@ -113,6 +118,9 @@ class CalibratedLight(LightEntity):
         self._attr_available = True
         attrs = dict(state.attributes)
         self._data.remember_capabilities(attrs)
+        effects = attrs.get(ATTR_EFFECT_LIST)
+        self._effects = [str(e) for e in effects] if effects else None
+        self._effect = attrs.get(ATTR_EFFECT) if self._effects else None
         self._attr_is_on = state.state == STATE_ON
         if not self._attr_is_on:
             return
@@ -132,7 +140,19 @@ class CalibratedLight(LightEntity):
         features = LightEntityFeature(0)
         if self._data.transition_supported():
             features |= LightEntityFeature.TRANSITION
+        if self._effects:
+            features |= LightEntityFeature.EFFECT
         return features
+
+    @property
+    def effect_list(self) -> list[str] | None:
+        """The source's effects, passed through unchanged."""
+        return self._effects
+
+    @property
+    def effect(self) -> str | None:
+        """The source's running effect."""
+        return self._effect
 
     @property
     def supported_color_modes(self) -> set[ColorMode]:
@@ -208,7 +228,19 @@ class CalibratedLight(LightEntity):
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Translate the uniform command and send it to the source."""
         target = self._new_target(kwargs)
+        effect = kwargs.get(ATTR_EFFECT)
+        if effect is not None and self._effects and effect in self._effects and effect not in NO_EFFECT:
+            # an effect is the lamp's own show: pass it through with a calibrated brightness only
+            command: dict[str, Any] = {ATTR_EFFECT: effect}
+            if ATTR_BRIGHTNESS in kwargs:
+                forward = self._data.profile().forward(target)
+                if "brightness" in forward:
+                    command[ATTR_BRIGHTNESS] = forward["brightness"]
+            await self.async_send_to_source(command, kwargs.get(ATTR_TRANSITION), None)
+            return
         command = self._data.profile().forward(target)
+        if effect is not None and self._effects and effect in self._effects:
+            command = {**command, ATTR_EFFECT: effect}  # "off" / "none": stop the effect
         await self.async_send_to_source(command, kwargs.get(ATTR_TRANSITION), target)
 
     async def async_send_to_source(

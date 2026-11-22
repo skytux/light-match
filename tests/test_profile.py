@@ -119,8 +119,12 @@ def test_white_defaults() -> None:
         "brightness": 51,
         "color_temp_kelvin": 4000,
     }
-    # clamped to the lamp's range
-    assert Profile(RGBW).forward(Target(KIND_WHITE, 20.0, kelvin=2200))["color_temp_kelvin"] == 2700
+    # outside a narrow ct range the colour LEDs show the white (see test_narrow_kelvin_range)
+    assert "rgbw_color" in Profile(RGBW).forward(Target(KIND_WHITE, 20.0, kelvin=2200))
+    # a ct-only lamp and the reference lamp clamp to the range
+    ct_only = SourceCaps.from_modes(["color_temp"], 2700, 6500)
+    assert Profile(ct_only).forward(Target(KIND_WHITE, 20.0, kelvin=2200))["color_temp_kelvin"] == 2700
+    assert Profile(RGBW, identity=True).forward(Target(KIND_WHITE, 20.0, kelvin=2200))["color_temp_kelvin"] == 2700
     # a lamp without colour temperature gets white from its channels, W used
     cmd = Profile(RGBW_NOCT).forward(Target(KIND_WHITE, 100.0, kelvin=6500))
     assert cmd["rgbw_color"][3] == 255
@@ -363,3 +367,37 @@ def test_nominal_command() -> None:
     assert nominal_command(Target(KIND_COLOR, 1.0, hue=30.0)) == {"brightness": 3, "hs_color": [30.0, 100.0]}
     assert nominal_command(Target(KIND_WHITE, 100.0, kelvin=2700)) == {"brightness": 255, "color_temp_kelvin": 2700}
     assert set(BRIGHTNESS_LEVELS) == {1.0, 5.0, 20.0, 50.0, 100.0}
+
+
+def test_narrow_kelvin_range() -> None:
+    profile = Profile(RGBW)
+    assert RGBW.narrow_white and not HS.narrow_white
+    assert profile.cell_mode("white:2200:50") == "rgbw" and profile.cell_mode("white:2700:50") == "color_temp"
+    warm = profile.forward(Target(KIND_WHITE, 50.0, kelvin=2200))
+    r, g, b, _w = warm["rgbw_color"]
+    assert r >= g >= b  # a warm white from the colour LEDs
+    # inside the range the lamp's own white is used, also between a colour-LED row and a ct row
+    assert profile.forward(Target(KIND_WHITE, 50.0, kelvin=2800))["color_temp_kelvin"] == 2800
+    between = profile.forward(Target(KIND_WHITE, 50.0, kelvin=2400))
+    assert "rgbw_color" in between
+    # a 2200 cell is calibrated in the colour mode; an old ct cell there is ignored
+    with pytest.raises(ValueError):
+        profile.set_cell("white:2200:50", {"brightness": 100, "color_temp_kelvin": 2700})
+    cell = profile.set_cell("white:2200:50", {"brightness": 100, "rgbw_color": [255, 120, 20, 0]})
+    assert profile.forward(Target(KIND_WHITE, 50.0, kelvin=2200)) == cell
+    old = Profile(RGBW, {"white:2200:50": {"brightness": 100, "color_temp_kelvin": 2700}})
+    assert old.cell_source("white:2200:50") != "user"
+    assert "rgbw_color" in old.forward(Target(KIND_WHITE, 50.0, kelvin=2200))
+    # export/import keeps colour-LED whites
+    copy, skipped = Profile(RGBW).convert_cells(profile.cells, {"color": "rgbw", "white": "color_temp"})
+    assert skipped == 0 and copy["white:2200:50"] == cell
+    # the state of a colour-LED white maps back to that white
+    state = {"brightness": warm["brightness"], "color_mode": "rgbw", "rgbw_color": warm["rgbw_color"],
+             "hs_color": list(color_util.color_RGB_to_hs(*color_util.color_rgbw_to_rgb(*warm["rgbw_color"])))}
+    back = profile.inverse(state)
+    assert back.kind == KIND_WHITE and back.kelvin < 2600
+    # a full-saturation orange stays a colour
+    orange = profile.forward(Target(KIND_COLOR, 50.0, hue=30.0))
+    hs = color_util.color_RGB_to_hs(*color_util.color_rgbw_to_rgb(*orange["rgbw_color"]))
+    state = {"brightness": orange["brightness"], "color_mode": "rgbw", "rgbw_color": orange["rgbw_color"], "hs_color": list(hs)}
+    assert profile.inverse(state).kind == KIND_COLOR

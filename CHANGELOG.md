@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.7.0 - 2026-11-22
+
+- Effects pass through: the twin shows the source's effect list and running
+  effect; starting an effect sends the effect with a calibrated brightness
+  only, and "off"/"none" or a colour command stops it. Unknown effects are
+  ignored.
+- Narrow colour-temperature ranges: on a lamp with colour LEDs, white rows
+  more than 100 K outside its own ct range (for example 2200 K on a
+  2700-6500 K bulb) are shown with the colour LEDs instead of being clamped,
+  and are calibrated in the colour mode. Targets between such a row and a ct
+  row use the lamp's white inside its range and a converted blend outside
+  it. The inverse mapping recognises these whites, export/import keeps
+  them, and an old clamped ct cell in such a row is ignored. The reference
+  lamp and lamps without colour LEDs still clamp.
+
 ## 0.6.0 - 2026-11-22
 
 - Imported lamp profiles: about 600 models in `profiles/imported/`, generated
