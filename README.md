@@ -188,8 +188,13 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) to calibrate and submit a profile.
 ## Sharing profiles
 
 The panel's **Export profile** downloads the lamp's calibration as a JSON
-file, optionally with the bulb model. **Import profile** loads one, either
-replacing the lamp's cells or merging them. A profile made on a lamp that is
+file, optionally with the bulb model typed in the field above it. The download
+goes through a short-lived signed link, so it also works in the companion app
+and in phone browsers. **Copy JSON** puts the same JSON on the clipboard (or
+shows it to copy by hand where there is no clipboard). **Import profile** loads
+a file and **Paste JSON** loads pasted text, either replacing the lamp's cells
+or merging them. **Copy calibration from** reuses another twin's calibrated
+cells on this lamp, with the same conversion as an import. A profile made on a lamp that is
 commanded differently is converted where possible (for example RGBW channels
 to hue/saturation); cells that cannot be converted are skipped. Calibrations
 are by eye and depend on the reference lamp, so treat a shared profile as a

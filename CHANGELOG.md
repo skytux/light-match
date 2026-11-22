@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.4 - 2026-11-22
+
+- Export and Share downloads now work in the companion app and phone browsers: the panel signs an authenticated download link (`/api/light_match/export/<entry>` and `/share/<entry>`, admins only) and follows it, as Home Assistant does for backups; the blob download stays as a fallback.
+- The lamp model for an export is an inline field instead of a prompt.
+- Copy JSON copies the exported profile to the clipboard, or shows it to copy by hand.
+- Paste JSON imports a pasted profile.
+- Copy calibration from another twin (websocket `light_match/profile/copy`), merging or replacing, with the same mode conversion as an import.
+
 ## 0.7.3 - 2026-11-22
 
 - Whites with the colour LEDs, so they can go dimmer: a new per-lamp option

@@ -290,6 +290,10 @@ class LightMatchData:
         await self.async_save()
         return result
 
+    async def async_copy_from(self, source: LightMatchData, merge: bool = False) -> tuple[int, int]:
+        """Reuse another twin's calibrated cells, converted like an import."""
+        return await self.async_import(source.profile().to_json(), merge)
+
     async def async_import_curve(self, curve: dict[Any, Any]) -> int:
         """Fill uncalibrated cells from a brightness curve (e.g. Lightener)."""
         profile = self.profile()
@@ -379,6 +383,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     from .online import OnlineUpdater  # noqa: PLC0415
     from .panel import async_register_panel  # noqa: PLC0415
     from .services import async_register_services  # noqa: PLC0415
+    from .views import async_register_views  # noqa: PLC0415
     from .websocket import async_register_websocket  # noqa: PLC0415
 
     db = await async_get_database(hass)
@@ -387,6 +392,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     await updater.async_load()
     async_register_websocket(hass)
     async_register_services(hass)
+    async_register_views(hass)
     await async_register_panel(hass)
     return True
 

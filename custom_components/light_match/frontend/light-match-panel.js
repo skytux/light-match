@@ -157,6 +157,7 @@ class LightMatchPanel extends HTMLElement {
 
   async _selectEntry(entryId) {
     this._entryId = entryId;
+    this._jsonText = "";
     const entry = this._entry;
     this._reference = this._defaultReference(entry);
     await this._loadProfile();
@@ -280,11 +281,125 @@ class LightMatchPanel extends HTMLElement {
     this._flash(all ? "All cells reset." : "Cell reset to its default.");
   }
 
+  // Phone browsers and the companion app ignore blob downloads: sign the HTTP
+  // path and follow it (as Home Assistant does for backups); blob as fallback.
+  async _downloadSigned(path, filename, getData) {
+    let signed = null;
+    try {
+      signed = (await this._hass.callWS({ type: "auth/sign_path", path, expires: 60 })).path;
+    } catch (err) {
+      signed = null;
+    }
+    if (signed) {
+      const a = document.createElement("a");
+      a.href = signed;
+      a.download = filename;
+      a.rel = "noopener";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      return;
+    }
+    download(filename, await getData());
+  }
+
+  _exportModel() {
+    return (this._model || "").trim();
+  }
+
   async _export() {
-    const entry = this._entry;
-    const model = prompt("Lamp model to put in the profile (optional):", "") || undefined;
-    const res = await this._ws("profile/export", { entry_id: this._entryId, ...(model ? { model } : {}) });
-    download(`${(model || entry.title).replace(/[^\w.-]+/g, "_")}.light-match.json`, res.profile);
+    const model = this._exportModel();
+    const name = (model || this._entry.title).replace(/[^\w.-]+/g, "_").replace(/^_+|_+$/g, "") || "profile";
+    const query = model ? `?${new URLSearchParams({ model })}` : "";
+    try {
+      await this._downloadSigned(`/api/light_match/export/${this._entryId}${query}`, `${name}.light-match.json`, async () =>
+        (await this._ws("profile/export", { entry_id: this._entryId, ...(model ? { model } : {}) })).profile
+      );
+    } catch (err) {
+      this._flash(`Export failed: ${err.message || err}`);
+    }
+  }
+
+  async _copyJson() {
+    const model = this._exportModel();
+    try {
+      const res = await this._ws("profile/export", { entry_id: this._entryId, ...(model ? { model } : {}) });
+      const text = JSON.stringify(res.profile, null, 2) + "\n";
+      try {
+        await navigator.clipboard.writeText(text);
+        this._jsonText = "";
+        this._render();
+        this._flash("Profile JSON copied to the clipboard.");
+        return;
+      } catch (err) {
+        // no clipboard (plain http, some WebViews): show it to copy by hand
+      }
+      this._jsonText = text;
+      this._render();
+      const area = this.shadowRoot.querySelector("#jsonout");
+      if (area) {
+        area.focus();
+        area.select();
+      }
+      this._flash("Copy the JSON below (the clipboard is not available here).");
+    } catch (err) {
+      this._flash(`Copy failed: ${err.message || err}`);
+    }
+  }
+
+  async _copyFrom() {
+    const from = this._copyFromId;
+    const source = this._entries.find((e) => e.entry_id === from);
+    if (!source) return;
+    const merge = Boolean(this._merge);
+    if (!merge && !confirm(`Replace every calibrated cell of ${this._entry.title} with the calibration of ${source.title}?`)) return;
+    try {
+      const res = await this._ws("profile/copy", { entry_id: this._entryId, from_entry_id: from, merge });
+      await this._loadProfile();
+      await this._goto(this._index, false);
+      this._flash(`Copied ${res.imported} cells, skipped ${res.skipped}.`);
+    } catch (err) {
+      this._flash(`Copy failed: ${err.message || err}`);
+    }
+  }
+
+  _filesCard() {
+    const others = this._entries.filter((e) => e.entry_id !== this._entryId);
+    if (!others.some((e) => e.entry_id === this._copyFromId)) this._copyFromId = others.length ? others[0].entry_id : null;
+    return `<div class="card files">
+      <h2>Export, import and copy</h2>
+      <div class="pickers">
+        <label>Lamp model to put in the export (optional)<input id="model" value="${esc(this._model || "")}" maxlength="100" placeholder="make and model"></label>
+      </div>
+      <div class="links">
+        <a href="#" id="export">Export profile</a> ·
+        <a href="#" id="copyjson">Copy JSON</a> ·
+        <a href="#" id="share">Share profile</a> ·
+        <label class="file">Import profile <input type="file" id="import" accept=".json,application/json"></label> ·
+        <a href="#" id="pastetoggle">Paste JSON</a>
+      </div>
+      <div class="links">
+        <label><input type="checkbox" id="merge" ${this._merge ? "checked" : ""}> merge with existing cells (import and copy)</label>
+      </div>
+      ${this._jsonText ? `<textarea id="jsonout" readonly rows="8">${esc(this._jsonText)}</textarea>` : ""}
+      ${
+        this._pasteOpen
+          ? `<textarea id="jsonin" rows="8" placeholder="Paste an exported Light Match profile here">${esc(this._pasteText || "")}</textarea>
+        <div class="buttons"><button id="pastego" class="primary">Import</button></div>`
+          : ""
+      }
+      ${
+        others.length
+          ? `<div class="copyfrom">
+        <label>Copy calibration from<select id="copyfrom">${others
+          .map((e) => `<option value="${esc(e.entry_id)}" ${e.entry_id === this._copyFromId ? "selected" : ""}>${esc(e.title)}</option>`)
+          .join("")}</select></label>
+        <button id="copygo">Copy</button>
+      </div>`
+          : ""
+      }
+      <p class="message">${esc(this._message)}</p>
+    </div>`;
   }
 
   _shareCard() {
@@ -328,7 +443,12 @@ class LightMatchPanel extends HTMLElement {
         notes: $("#notes").value.trim(),
         reference: this._reference || null,
       });
-      download(res.filename, res.profile);
+      const query = new URLSearchParams();
+      for (const [key, value] of Object.entries({ nickname, github, notes: $("#notes").value.trim(), reference: this._reference || "" })) {
+        if (value) query.set(key, value);
+      }
+      const qs = query.toString();
+      await this._downloadSigned(`/api/light_match/share/${this._entryId}${qs ? `?${qs}` : ""}`, res.filename, async () => res.profile);
       this._shareResult = res;
       this._render();
     } catch (err) {
@@ -337,11 +457,25 @@ class LightMatchPanel extends HTMLElement {
   }
 
   async _import(file, merge) {
+    let text;
     try {
-      const profile = JSON.parse(await file.text());
+      text = await file.text();
+    } catch (err) {
+      this._flash(`Import failed: ${err.message || err}`);
+      return;
+    }
+    await this._importText(text, merge);
+  }
+
+  async _importText(text, merge) {
+    try {
+      const profile = JSON.parse(text);
       const res = await this._ws("profile/import", { entry_id: this._entryId, profile, merge });
       await this._loadProfile();
       await this._goto(this._index, false);
+      this._pasteText = "";
+      this._pasteOpen = false;
+      this._render();
       this._flash(`Imported ${res.imported} cells, skipped ${res.skipped}.`);
     } catch (err) {
       this._flash(`Import failed: ${err.message || err}`);
@@ -350,8 +484,7 @@ class LightMatchPanel extends HTMLElement {
 
   _flash(text) {
     this._message = text;
-    const el = this.shadowRoot.querySelector(".message");
-    if (el) el.textContent = text;
+    this.shadowRoot.querySelectorAll(".message").forEach((el) => (el.textContent = text));
   }
 
   _label(cell) {
@@ -595,11 +728,8 @@ class LightMatchPanel extends HTMLElement {
       }
       ${this._shareOpen ? this._shareCard() : ""}
       <div class="card">${this._profile && this._profile.cells.length ? this._grid() : "<p>This lamp has nothing to calibrate.</p>"}</div>
+      ${this._filesCard()}
       <div class="card links">
-        <a href="#" id="export">Export profile</a> ·
-        <a href="#" id="share">Share profile</a> ·
-        <label class="file">Import profile <input type="file" id="import" accept=".json,application/json"></label>
-        <label><input type="checkbox" id="merge"> merge with existing cells</label> ·
         <a href="#" id="resetall">Reset all cells</a>${entry.model_profile && entry.model_profile.cells ? ` · <a href="#" id="copymodelall">Copy all model profile cells</a>` : ""}
       </div>
       ${this._settings ? this._onlineCard() : ""}`;
@@ -632,6 +762,9 @@ class LightMatchPanel extends HTMLElement {
         a.button.primary { background: var(--primary-color); color: var(--text-primary-color, #fff); }
         input:not([type]) { display:block; width:100%; box-sizing:border-box; margin-top:4px; padding:6px; font-size:14px; background: var(--card-background-color); color: var(--primary-text-color); border:1px solid var(--divider-color); border-radius:6px; }
         .file input { display:none; }
+        textarea { display:block; width:100%; box-sizing:border-box; margin-top:8px; padding:6px; font-family: monospace; font-size:12px; background: var(--card-background-color); color: var(--primary-text-color); border:1px solid var(--divider-color); border-radius:6px; }
+        .copyfrom { display:flex; gap: 8px; align-items:flex-end; margin-top: 12px; }
+        .copyfrom label { flex: 1; }
         .file { color: var(--primary-color); text-decoration: underline; cursor: pointer; }
         .message { min-height: 1em; color: var(--primary-color); font-size: 13px; }
         .dot { display:inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; border: 1px solid var(--divider-color); vertical-align: middle; }
@@ -716,6 +849,17 @@ class LightMatchPanel extends HTMLElement {
       this._preview(true);
     });
     link("#export", () => this._export());
+    link("#copyjson", () => this._copyJson());
+    on("#model", "input", (e) => (this._model = e.target.value));
+    on("#merge", "change", (e) => (this._merge = e.target.checked));
+    link("#pastetoggle", () => {
+      this._pasteOpen = !this._pasteOpen;
+      this._render();
+    });
+    on("#jsonin", "input", (e) => (this._pasteText = e.target.value));
+    on("#pastego", "click", () => this._importText(this._pasteText || "", Boolean(this._merge)));
+    on("#copyfrom", "change", (e) => (this._copyFromId = e.target.value));
+    on("#copygo", "click", () => this._copyFrom());
     link("#share", () => {
       this._shareOpen = true;
       this._shareResult = null;
@@ -728,7 +872,7 @@ class LightMatchPanel extends HTMLElement {
     });
     on("#import", "change", (e) => {
       const file = e.target.files[0];
-      if (file) this._import(file, $("#merge").checked);
+      if (file) this._import(file, Boolean(this._merge));
     });
     this.shadowRoot.querySelectorAll("button.cell").forEach((el) =>
       el.addEventListener("click", () => this._goto(Number(el.dataset.index)))

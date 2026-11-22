@@ -40,6 +40,7 @@ def async_register_websocket(hass: HomeAssistant) -> None:
         ws_show_target,
         ws_export,
         ws_import,
+        ws_copy_profile,
         ws_share,
         ws_copy_model,
         ws_reference,
@@ -279,6 +280,32 @@ async def ws_import(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -
         return
     try:
         imported, skipped = await data.async_import(msg["profile"], msg["merge"])
+    except ValueError as err:
+        connection.send_error(msg["id"], "invalid_format", str(err))
+        return
+    connection.send_result(msg["id"], {"imported": imported, "skipped": skipped})
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): f"{DOMAIN}/profile/copy",
+        vol.Required("entry_id"): str,
+        vol.Required("from_entry_id"): str,
+        vol.Optional("merge", default=False): bool,
+    }
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_copy_profile(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """Reuse another twin's calibration on this one."""
+    if (data := _get(hass, connection, msg)) is None:
+        return
+    source = data_for_entry(hass, msg["from_entry_id"])
+    if source is None or source is data:
+        connection.send_error(msg["id"], "not_found", "Choose another calibrated lamp to copy from")
+        return
+    try:
+        imported, skipped = await data.async_copy_from(source, msg["merge"])
     except ValueError as err:
         connection.send_error(msg["id"], "invalid_format", str(err))
         return

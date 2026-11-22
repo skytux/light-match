@@ -271,3 +271,96 @@ async def test_copy_model_and_quick_keys(hass: HomeAssistant, sources, hass_ws_c
     await client.send_json_auto_id({"type": f"{DOMAIN}/cell/copy_model", "entry_id": entry.entry_id})
     assert (await client.receive_json())["result"] == {"copied": 1}
     assert entry.runtime_data.cells["color:red:5"]["brightness"] == 9
+
+
+async def test_export_download_view(
+    hass: HomeAssistant, sources, hass_client, hass_client_no_auth, hass_access_token, hass_read_only_access_token
+) -> None:
+    from datetime import timedelta
+
+    from homeassistant.components.http.auth import async_sign_path
+
+    entry = await add_twin(hass, "light.bulb_rgbw", title="Desk lamp")
+    entry.runtime_data.cells["color:red:1"] = {"brightness": 26, "rgbw_color": [12, 0, 0, 0]}
+    path = f"/api/{DOMAIN}/export/{entry.entry_id}"
+
+    assert (await (await hass_client_no_auth()).get(path)).status == 401
+    assert (await (await hass_client(hass_read_only_access_token)).get(path)).status == 403
+    client = await hass_client()
+    assert (await client.get(f"/api/{DOMAIN}/export/nope")).status == 404
+
+    resp = await client.get(path, params={"model": "Acme Bulb 9"})
+    assert resp.status == 200
+    assert resp.headers["Content-Disposition"] == 'attachment; filename="Acme_Bulb_9.light-match.json"'
+    assert resp.content_type == "application/json"
+    body = json.loads(await resp.text())
+    assert body["format"] == "light_match_profile" and body["model"] == "Acme Bulb 9"
+    assert body["cells"] == {"color:red:1": {"brightness": 26, "rgbw_color": [12, 0, 0, 0]}}
+
+    resp = await client.get(path)
+    assert resp.headers["Content-Disposition"] == 'attachment; filename="Desk_lamp.light-match.json"'
+
+    # the panel signs the path (auth/sign_path) and opens it without a bearer token
+    token = hass.auth.async_validate_access_token(hass_access_token)
+    signed = async_sign_path(hass, f"{path}?model=X1", timedelta(seconds=60), refresh_token_id=token.id)
+    resp = await (await hass_client_no_auth()).get(signed)
+    assert resp.status == 200 and json.loads(await resp.text())["model"] == "X1"
+    # the signature covers the query
+    resp = await (await hass_client_no_auth()).get(signed.replace("model=X1", "model=X2"))
+    assert resp.status == 401
+
+
+async def test_share_download_view(hass: HomeAssistant, sources, hass_client) -> None:
+    entry = await add_twin(hass, "light.bulb_rgbw")
+    entry.runtime_data.cells["color:red:1"] = {"brightness": 26, "rgbw_color": [12, 0, 0, 0]}
+    client = await hass_client()
+    resp = await client.get(f"/api/{DOMAIN}/share/{entry.entry_id}", params={"nickname": "tester"})
+    assert resp.status == 200
+    assert resp.headers["Content-Disposition"].startswith('attachment; filename="')
+    assert resp.headers["Content-Disposition"].endswith('.json"')
+    body = json.loads(await resp.text())
+    assert body["cells"]["color:red:1"]["rgbw_color"] == [12, 0, 0, 0]
+    assert "tester" in json.dumps(body)
+    resp = await client.get(f"/api/{DOMAIN}/share/{entry.entry_id}", params={"nickname": "me@example.com"})
+    assert resp.status == 400
+
+
+async def test_copy_calibration_between_twins(hass: HomeAssistant, sources, hass_ws_client) -> None:
+    source = await add_twin(hass, "light.bulb_rgbw", title="Source")
+    target = await add_twin(hass, "light.bulb_hs", title="Target")
+    source.runtime_data.cells["color:red:5"] = {"brightness": 26, "rgbw_color": [255, 0, 0, 0]}
+    target.runtime_data.cells["color:blue:5"] = {"brightness": 30, "hs_color": [240, 100]}
+    client = await hass_ws_client(hass)
+
+    async def copy(**extra):
+        await client.send_json_auto_id(
+            {"type": f"{DOMAIN}/profile/copy", "entry_id": target.entry_id, "from_entry_id": source.entry_id, **extra}
+        )
+        return await client.receive_json()
+
+    res = await copy(merge=True)
+    assert res["result"] == {"imported": 1, "skipped": 0}
+    cells = target.runtime_data.cells
+    assert set(cells) == {"color:red:5", "color:blue:5"}
+    # rgbw converted to the hs lamp's colour mode
+    assert "hs_color" in cells["color:red:5"] and "rgbw_color" not in cells["color:red:5"]
+    assert cells["color:red:5"]["hs_color"][1] > 90
+
+    res = await copy()
+    assert res["result"] == {"imported": 1, "skipped": 0}
+    assert set(target.runtime_data.cells) == {"color:red:5"}
+
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/profile/copy", "entry_id": target.entry_id, "from_entry_id": target.entry_id}
+    )
+    assert (await client.receive_json())["error"]["code"] == "not_found"
+
+
+async def test_copy_calibration_needs_admin(hass: HomeAssistant, sources, hass_ws_client, hass_read_only_access_token) -> None:
+    source = await add_twin(hass, "light.bulb_rgbw", title="Source")
+    target = await add_twin(hass, "light.bulb_hs", title="Target")
+    client = await hass_ws_client(hass, hass_read_only_access_token)
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/profile/copy", "entry_id": target.entry_id, "from_entry_id": source.entry_id}
+    )
+    assert (await client.receive_json())["error"]["code"] == "unauthorized"
