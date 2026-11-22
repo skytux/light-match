@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Gledopto RGB+CCT 4W MR16 Zigbee Spotlight",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Gledopto",
+  "manufacturer_aliases": [],
+  "models": [
+   "GL-S-005Z"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 250,
+  "min_kelvin": 2020,
+  "max_kelvin": 6450,
+  "output_curve": [
+   [1, 0.0459],
+   [3, 0.0488],
+   [5, 0.0516],
+   [8, 0.07],
+   [13, 0.1053],
+   [20, 0.1597],
+   [26, 0.212],
+   [33, 0.2367],
+   [41, 0.2827],
+   [51, 0.3392],
+   [64, 0.4177],
+   [77, 0.4664],
+   [92, 0.5322],
+   [110, 0.6177],
+   [128, 0.6495],
+   [150, 0.7223],
+   [175, 0.8057],
+   [200, 0.8806],
+   [228, 0.9477],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

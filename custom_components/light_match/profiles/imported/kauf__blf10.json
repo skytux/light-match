@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Kauf RGBWW Smart LED Bulb A21 (10W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Kauf",
+  "manufacturer_aliases": [],
+  "models": [
+   "BLF10"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness",
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1000,
+  "min_kelvin": 2800,
+  "max_kelvin": 6620,
+  "output_curve": [
+   [1, 0.0037],
+   [3, 0.0037],
+   [5, 0.0037],
+   [8, 0.0037],
+   [13, 0.0037],
+   [20, 0.0037],
+   [26, 0.0037],
+   [33, 0.0037],
+   [41, 0.0062],
+   [51, 0.0125],
+   [64, 0.0149],
+   [77, 0.0274],
+   [92, 0.0545],
+   [110, 0.0852],
+   [128, 0.1333],
+   [150, 0.2172],
+   [175, 0.3492],
+   [200, 0.5238],
+   [228, 0.7532],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

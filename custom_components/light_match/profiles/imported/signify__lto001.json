@@ -1,0 +1,80 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue G93 E27 Filament Globe Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LTO001",
+   "9290024778",
+   "8719514301481"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 550,
+  "min_kelvin": 2200,
+  "max_kelvin": 4500,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0065],
+   [5, 0.0144],
+   [8, 0.0195],
+   [13, 0.0223],
+   [20, 0.0251],
+   [26, 0.031],
+   [33, 0.0367],
+   [41, 0.0451],
+   [51, 0.0592],
+   [64, 0.0852],
+   [77, 0.114],
+   [92, 0.1568],
+   [110, 0.2158],
+   [128, 0.2835],
+   [150, 0.3766],
+   [175, 0.5058],
+   [200, 0.6511],
+   [228, 0.8488],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

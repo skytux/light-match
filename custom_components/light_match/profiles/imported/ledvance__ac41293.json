@@ -1,0 +1,88 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "LEDVANCE SMART+ ZB Filament Edison 52 DIM 6W 824 Gold E27",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "LEDVANCE",
+  "manufacturer_aliases": [],
+  "models": [
+   "AC41293",
+   "4058075729223",
+   "EDISON60 FIL DIM T"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 680,
+  "output_curve": [
+   [27, 0.0582],
+   [33, 0.0657],
+   [41, 0.0732],
+   [51, 0.0882],
+   [64, 0.0994],
+   [77, 0.1182],
+   [92, 0.1482],
+   [110, 0.1839],
+   [128, 0.2251],
+   [150, 0.2946],
+   [175, 0.3996],
+   [200, 0.531],
+   [228, 0.7411],
+   [255, 1.0]
+  ],
+  "brightness_floor": 27
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "brightness_floor"
+    ],
+    "quality": "estimated"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Wyze Bulb Color",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Wyze",
+  "manufacturer_aliases": [
+   "WyzeLabs"
+  ],
+  "models": [
+   "WLPA19C"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1100,
+  "min_kelvin": 1800,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.086],
+   [3, 0.086],
+   [5, 0.086],
+   [8, 0.086],
+   [13, 0.086],
+   [20, 0.086],
+   [26, 0.086],
+   [33, 0.1061],
+   [41, 0.1061],
+   [51, 0.1061],
+   [64, 0.126],
+   [77, 0.126],
+   [92, 0.1822],
+   [110, 0.2608],
+   [128, 0.286],
+   [150, 0.4111],
+   [175, 0.5163],
+   [200, 0.6642],
+   [228, 0.8491],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

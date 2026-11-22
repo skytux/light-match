@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Govee Strip Light 2 Pro (5m)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Govee",
+  "manufacturer_aliases": [
+   "Shenzhen Qianyan Technology"
+  ],
+  "models": [
+   "H61F5"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1750,
+  "min_kelvin": 2000,
+  "max_kelvin": 9010,
+  "output_curve": [
+   [3, 0.1898],
+   [5, 0.198],
+   [8, 0.2102],
+   [13, 0.2295],
+   [20, 0.2509],
+   [26, 0.2723],
+   [33, 0.2975],
+   [41, 0.3158],
+   [51, 0.3478],
+   [64, 0.3934],
+   [77, 0.4351],
+   [92, 0.4911],
+   [110, 0.543],
+   [128, 0.5995],
+   [150, 0.6758],
+   [175, 0.7529],
+   [200, 0.8265],
+   [228, 0.9288],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

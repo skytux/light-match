@@ -1,0 +1,94 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Aqara LED Bulb T2 (GU10, CCT)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Aqara",
+  "manufacturer_aliases": [
+   "LUMI",
+   "Xiaomi"
+  ],
+  "models": [
+   "LB-L03E",
+   "6150",
+   "lumi.light.agl006",
+   "T2_E27_CCT",
+   "lumi.light.agl002",
+   "lumi.light.agl004",
+   "lumi.light.agl008"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 450,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0031],
+   [5, 0.0083],
+   [8, 0.0083],
+   [13, 0.0083],
+   [20, 0.0127],
+   [26, 0.0127],
+   [33, 0.0127],
+   [41, 0.0219],
+   [51, 0.0328],
+   [64, 0.0425],
+   [77, 0.0516],
+   [92, 0.0853],
+   [110, 0.1225],
+   [128, 0.1667],
+   [150, 0.2499],
+   [175, 0.3663],
+   [200, 0.5077],
+   [228, 0.7182],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

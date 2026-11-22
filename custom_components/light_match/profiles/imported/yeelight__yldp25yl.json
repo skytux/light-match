@@ -1,0 +1,80 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Yeelight Bluetooth Mesh Smart LED Bulb (Dimmable CCT, 4W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Yeelight",
+  "manufacturer_aliases": [
+   "Xiaomi",
+   "Yeelight Technology"
+  ],
+  "models": [
+   "YLDP25YL",
+   "yeelink.light.ml2",
+   "Mesh: YLDP25YL/YLDP26YL, yeelink.light.ml2"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 450,
+  "min_kelvin": 2500,
+  "max_kelvin": 20000,
+  "output_curve": [
+   [1, 0.033],
+   [3, 0.0358],
+   [5, 0.0387],
+   [8, 0.0429],
+   [13, 0.0472],
+   [20, 0.0604],
+   [26, 0.0604],
+   [33, 0.0774],
+   [41, 0.0943],
+   [51, 0.1179],
+   [64, 0.1278],
+   [77, 0.158],
+   [92, 0.1934],
+   [110, 0.2476],
+   [128, 0.3255],
+   [150, 0.4057],
+   [175, 0.5425],
+   [200, 0.625],
+   [228, 0.7976],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

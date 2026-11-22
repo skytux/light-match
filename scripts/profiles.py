@@ -114,7 +114,9 @@ def check() -> list[str]:
         schema, format_checker=jsonschema.Draft202012Validator.FORMAT_CHECKER
     )
     problems: list[str] = []
-    seen: dict[tuple[str, str, str], str] = {}
+    # Imported profiles (profiles/imported/) are checked for duplicates among
+    # themselves only: they may overlap the hand-written ones, which rank above.
+    seen: dict[tuple[str, str, str, str], str] = {}
     for path in profile_files():
         pid = profile_id_for(path)
         if not valid_profile_id(pid):
@@ -136,7 +138,8 @@ def check() -> list[str]:
         for manufacturer in manufacturers:
             for model in device["models"]:
                 for integration in integrations:
-                    key = (manufacturer, norm(model) if model != "*" else "*", integration)
+                    group = "imported" if pid.startswith("imported/") else ""
+                    key = (group, manufacturer, norm(model) if model != "*" else "*", integration)
                     if key in seen and seen[key] != pid:
                         problems.append(f"{pid}: model {model!r} is also in {seen[key]}")
                     seen[key] = pid

@@ -1,0 +1,86 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "OSRAM Gardenpole RGBW LIGHTIFY (5 poles)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "OSRAM",
+  "manufacturer_aliases": [],
+  "models": [
+   "AC0009401NJ",
+   "Gardenpole RGBW-Lightify",
+   "4058075036147"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "min_kelvin": 1500,
+  "max_kelvin": 8000,
+  "output_curve": [
+   [1, 0.0727],
+   [3, 0.0727],
+   [5, 0.0727],
+   [8, 0.0727],
+   [13, 0.0727],
+   [20, 0.0806],
+   [26, 0.0808],
+   [33, 0.088],
+   [41, 0.1005],
+   [51, 0.1097],
+   [64, 0.1176],
+   [77, 0.1409],
+   [92, 0.1605],
+   [110, 0.1896],
+   [128, 0.2254],
+   [150, 0.2903],
+   [175, 0.3841],
+   [200, 0.5247],
+   [228, 0.7376],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

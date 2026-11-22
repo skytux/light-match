@@ -1,0 +1,88 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "IKEA TRADFRI E12/E14 White Spectrum Globe Bulb (450/470 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "IKEA",
+  "manufacturer_aliases": [
+   "IKEA of Sweden"
+  ],
+  "models": [
+   "LED2101G4",
+   "TRADFRI bulb E14 WS globe 470lm",
+   "TRADFRI bulb E12 WS globe 450lm"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 470,
+  "min_kelvin": 2200,
+  "max_kelvin": 4000,
+  "output_curve": [
+   [3, 0.1766],
+   [5, 0.1793],
+   [8, 0.182],
+   [13, 0.1843],
+   [20, 0.196],
+   [26, 0.2049],
+   [33, 0.2076],
+   [41, 0.2274],
+   [51, 0.2409],
+   [64, 0.2602],
+   [77, 0.2764],
+   [92, 0.3056],
+   [110, 0.356],
+   [128, 0.4013],
+   [150, 0.4584],
+   [175, 0.5479],
+   [200, 0.6638],
+   [228, 0.8157],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

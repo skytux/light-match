@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "IKEA SLAGSIDA Under-Cabinet Light (60 cm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "IKEA",
+  "manufacturer_aliases": [
+   "IKEA of Sweden"
+  ],
+  "models": [
+   "L1616",
+   "Slagsida"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 480,
+  "output_curve": [
+   [1, 0.0115],
+   [3, 0.0115],
+   [5, 0.0144],
+   [8, 0.0144],
+   [13, 0.0144],
+   [20, 0.0144],
+   [26, 0.0144],
+   [33, 0.0144],
+   [41, 0.0144],
+   [51, 0.0144],
+   [64, 0.0245],
+   [77, 0.0489],
+   [92, 0.0662],
+   [110, 0.1022],
+   [128, 0.1468],
+   [150, 0.2273],
+   [175, 0.3396],
+   [200, 0.4906],
+   [228, 0.7151],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

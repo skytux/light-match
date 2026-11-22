@@ -1,0 +1,71 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Genio Wi-Fi Dimmable Cool White ES 9W LED GLS Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Genio",
+  "manufacturer_aliases": [],
+  "models": [
+   "I002334"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 800,
+  "output_curve": [
+   [1, 0.0026],
+   [3, 0.0184],
+   [5, 0.0184],
+   [8, 0.0263],
+   [13, 0.0473],
+   [20, 0.0762],
+   [26, 0.113],
+   [33, 0.1327],
+   [41, 0.1629],
+   [51, 0.2181],
+   [64, 0.2431],
+   [77, 0.3141],
+   [92, 0.3614],
+   [110, 0.4402],
+   [128, 0.502],
+   [150, 0.611],
+   [175, 0.6859],
+   [200, 0.795],
+   [228, 0.8975],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

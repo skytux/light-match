@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Paulmann Licht Filament LED Globe E27 806lm 7W Tunable White",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Paulmann Licht",
+  "manufacturer_aliases": [],
+  "models": [
+   "50396"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 806,
+  "min_kelvin": 2200,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [3, 0.0219],
+   [5, 0.0421],
+   [8, 0.0622],
+   [13, 0.0622],
+   [20, 0.0916],
+   [26, 0.1111],
+   [33, 0.1209],
+   [41, 0.16],
+   [51, 0.2104],
+   [64, 0.2593],
+   [77, 0.3081],
+   [92, 0.3585],
+   [110, 0.4367],
+   [128, 0.5067],
+   [150, 0.5849],
+   [175, 0.6841],
+   [200, 0.7526],
+   [228, 0.8519],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

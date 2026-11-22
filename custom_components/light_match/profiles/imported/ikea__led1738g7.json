@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "IKEA TRADFRI bulb E14 WS opal 600lm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "IKEA",
+  "manufacturer_aliases": [
+   "IKEA of Sweden"
+  ],
+  "models": [
+   "LED1738G7"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 600,
+  "min_kelvin": 2200,
+  "max_kelvin": 4000,
+  "output_curve": [
+   [1, 0.0696],
+   [3, 0.0739],
+   [5, 0.0782],
+   [8, 0.0791],
+   [13, 0.0791],
+   [20, 0.085],
+   [26, 0.0881],
+   [33, 0.0906],
+   [41, 0.0989],
+   [51, 0.1113],
+   [64, 0.128],
+   [77, 0.1406],
+   [92, 0.1533],
+   [110, 0.2077],
+   [128, 0.2723],
+   [150, 0.344],
+   [175, 0.4485],
+   [200, 0.5852],
+   [228, 0.7796],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

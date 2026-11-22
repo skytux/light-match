@@ -1,0 +1,88 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Paulmann Licht Standard LED Drop E14 470lm 5W RGBW+",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Paulmann Licht",
+  "manufacturer_aliases": [],
+  "models": [
+   "29150",
+   "29154",
+   "291.46"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 470,
+  "min_kelvin": 2200,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0139],
+   [3, 0.0173],
+   [5, 0.0206],
+   [8, 0.0279],
+   [13, 0.0418],
+   [20, 0.0591],
+   [26, 0.0808],
+   [33, 0.1014],
+   [41, 0.1226],
+   [51, 0.1476],
+   [64, 0.1866],
+   [77, 0.224],
+   [92, 0.2579],
+   [110, 0.312],
+   [128, 0.39],
+   [150, 0.4903],
+   [175, 0.6195],
+   [200, 0.7415],
+   [228, 0.8557],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

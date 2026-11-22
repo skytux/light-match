@@ -1,0 +1,82 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Innr Smart Bulb B22 White 806lm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Innr",
+  "manufacturer_aliases": [],
+  "models": [
+   "BY 265",
+   "BY 165"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 806,
+  "output_curve": [
+   [1, 0.0441],
+   [3, 0.0441],
+   [5, 0.0463],
+   [8, 0.0463],
+   [13, 0.0463],
+   [20, 0.052],
+   [26, 0.052],
+   [33, 0.0565],
+   [41, 0.0633],
+   [51, 0.0791],
+   [64, 0.0949],
+   [77, 0.1209],
+   [92, 0.1582],
+   [110, 0.2068],
+   [128, 0.278],
+   [150, 0.3593],
+   [175, 0.4746],
+   [200, 0.6215],
+   [228, 0.7898],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

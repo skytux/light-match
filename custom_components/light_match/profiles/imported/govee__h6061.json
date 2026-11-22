@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Govee Glide Hexa Light Panels (10 panels)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Govee",
+  "manufacturer_aliases": [
+   "Shenzhen Qianyan Technology"
+  ],
+  "models": [
+   "H6061"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 458,
+  "min_kelvin": 2000,
+  "max_kelvin": 9010,
+  "output_curve": [
+   [1, 0.1986],
+   [3, 0.1986],
+   [5, 0.1986],
+   [8, 0.1986],
+   [13, 0.2023],
+   [20, 0.2169],
+   [26, 0.226],
+   [33, 0.2406],
+   [41, 0.2626],
+   [51, 0.2877],
+   [64, 0.3283],
+   [77, 0.3749],
+   [92, 0.4311],
+   [110, 0.489],
+   [128, 0.5575],
+   [150, 0.6397],
+   [175, 0.7105],
+   [200, 0.8027],
+   [228, 0.8945],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Elgato Light Strip",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Elgato",
+  "manufacturer_aliases": [],
+  "models": [
+   "20LAA9901",
+   "Elgato Light Strip"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 2000,
+  "min_kelvin": 3510,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0027],
+   [3, 0.0027],
+   [5, 0.0027],
+   [8, 0.0101],
+   [13, 0.0297],
+   [20, 0.0637],
+   [26, 0.0902],
+   [33, 0.1151],
+   [41, 0.1485],
+   [51, 0.1857],
+   [64, 0.2366],
+   [77, 0.2897],
+   [92, 0.3464],
+   [110, 0.4186],
+   [128, 0.4849],
+   [150, 0.5724],
+   [175, 0.6769],
+   [200, 0.7782],
+   [228, 0.8934],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

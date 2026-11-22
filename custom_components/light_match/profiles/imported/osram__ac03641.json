@@ -1,0 +1,72 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "OSRAM LIGHTIFY Classic A60 Clear",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "OSRAM",
+  "manufacturer_aliases": [],
+  "models": [
+   "AC03641",
+   "Classic A60 W clear - LIGHTIFY"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 810,
+  "output_curve": [
+   [1, 0.1053],
+   [3, 0.1053],
+   [5, 0.1053],
+   [8, 0.1053],
+   [13, 0.1121],
+   [20, 0.1121],
+   [26, 0.1121],
+   [33, 0.1212],
+   [41, 0.1336],
+   [51, 0.1563],
+   [64, 0.1721],
+   [77, 0.1937],
+   [92, 0.214],
+   [110, 0.2458],
+   [128, 0.3001],
+   [150, 0.3681],
+   [175, 0.4689],
+   [200, 0.5946],
+   [228, 0.8075],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

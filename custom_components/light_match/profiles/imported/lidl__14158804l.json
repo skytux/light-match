@@ -1,0 +1,93 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Lidl Livarno Home LED desk lamp RGBW",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Lidl",
+  "manufacturer_aliases": [
+   "_TZ3000_oborybow",
+   "_TZ3000_qd7hej8u",
+   "_TZ3000_quqaeew6",
+   "_TZ3000_riwp3k79",
+   "_TZ3000_th6zqqy6",
+   "_TZ3210_hxtfthp5"
+  ],
+  "models": [
+   "14158804L"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 900,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0639],
+   [3, 0.0668],
+   [5, 0.0697],
+   [8, 0.0808],
+   [13, 0.1016],
+   [20, 0.1219],
+   [26, 0.1393],
+   [33, 0.168],
+   [41, 0.1843],
+   [51, 0.2565],
+   [64, 0.2991],
+   [77, 0.3451],
+   [92, 0.4006],
+   [110, 0.4509],
+   [128, 0.543],
+   [150, 0.6115],
+   [175, 0.7066],
+   [200, 0.7971],
+   [228, 0.8875],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

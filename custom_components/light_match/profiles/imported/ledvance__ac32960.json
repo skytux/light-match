@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "LEDVANCE SMART+ WiFi Filament Globe RGBW 30 4.5W E27",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "LEDVANCE",
+  "manufacturer_aliases": [],
+  "models": [
+   "AC32960",
+   "LDVWF30FILE27RGBW"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 300,
+  "min_kelvin": 2000,
+  "max_kelvin": 6670,
+  "output_curve": [
+   [1, 0.0857],
+   [3, 0.0926],
+   [5, 0.0994],
+   [8, 0.1051],
+   [13, 0.1131],
+   [20, 0.1291],
+   [26, 0.1457],
+   [33, 0.2126],
+   [41, 0.2371],
+   [51, 0.2857],
+   [64, 0.3251],
+   [77, 0.4011],
+   [92, 0.4914],
+   [110, 0.5686],
+   [128, 0.6794],
+   [150, 0.8057],
+   [175, 0.9749],
+   [200, 0.9749],
+   [228, 0.9749],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

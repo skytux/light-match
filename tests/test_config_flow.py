@@ -84,13 +84,14 @@ async def test_user_flow_shows_detected_profile(hass: HomeAssistant, sources, wi
     result = await hass.config_entries.flow.async_configure(result["flow_id"], {"source": "light.bulb_rgbw"})
     placeholders = result["description_placeholders"]
     assert placeholders["device"] == "WiZ ESP01_SHRGB_03 (test)"
-    assert placeholders["match"] == "none"  # the integration is not wiz
+    # the integration is not wiz: only the imported profile (no integration limit) fits
+    assert placeholders["match"] == "WiZ ESP01_SHRGB_03 (imported, partly calibrated, unverified)"
 
     result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": config_entries.SOURCE_USER})
     result = await hass.config_entries.flow.async_configure(result["flow_id"], {"source": "light.wiz_bulb"})
-    assert result["description_placeholders"]["match"] == "WiZ bulbs (all models) (spec-based, unverified)"
+    assert result["description_placeholders"]["match"] == "WiZ ESP01_SHRGB_03 (imported, partly calibrated, unverified)"
     result = await hass.config_entries.flow.async_configure(result["flow_id"], {"profile": "auto"})
     await hass.async_block_till_done()
     entry = hass.config_entries.async_get_entry(result["result"].entry_id)
-    assert entry.runtime_data.model_profile().id == "wiz/generic"
-    assert entry.runtime_data.floor() == 26
+    assert entry.runtime_data.model_profile().id == "imported/wiz__esp01_shrgb_03"
+    assert entry.runtime_data.floor() == 26  # from wiz/generic, merged

@@ -1,0 +1,79 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Xiaomi Mi Smart LED Bulb Essential",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Xiaomi",
+  "manufacturer_aliases": [
+   "Xiaomi Communications Co Ltd"
+  ],
+  "models": [
+   "MJDPL01YL",
+   "Mi Smart LED Bulb Essential"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 950,
+  "min_kelvin": 1700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0808],
+   [3, 0.0848],
+   [5, 0.0889],
+   [8, 0.099],
+   [13, 0.1232],
+   [20, 0.1899],
+   [26, 0.202],
+   [33, 0.2343],
+   [41, 0.2424],
+   [51, 0.303],
+   [64, 0.3192],
+   [77, 0.3879],
+   [92, 0.4323],
+   [110, 0.501],
+   [128, 0.5737],
+   [150, 0.6303],
+   [175, 0.7596],
+   [200, 0.8929],
+   [228, 0.8929],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

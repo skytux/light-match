@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Govee Strip Light with Skyline Kit",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Govee",
+  "manufacturer_aliases": [
+   "Shenzhen Qianyan Technology"
+  ],
+  "models": [
+   "H61B8"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1400,
+  "min_kelvin": 2000,
+  "max_kelvin": 9010,
+  "output_curve": [
+   [3, 0.1916],
+   [5, 0.1997],
+   [8, 0.2119],
+   [13, 0.2309],
+   [20, 0.2506],
+   [26, 0.2687],
+   [33, 0.2906],
+   [41, 0.3156],
+   [51, 0.3441],
+   [64, 0.3875],
+   [77, 0.4297],
+   [92, 0.475],
+   [110, 0.5338],
+   [128, 0.5919],
+   [150, 0.6706],
+   [175, 0.7384],
+   [200, 0.8237],
+   [228, 0.9181],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

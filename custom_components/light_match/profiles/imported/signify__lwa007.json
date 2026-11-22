@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White A19 E26 Bluetooth",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LWA007",
+   "9290022775",
+   "929002277501"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 600,
+  "output_curve": [
+   [1, 0.0738],
+   [3, 0.0748],
+   [5, 0.0754],
+   [8, 0.0759],
+   [13, 0.0769],
+   [20, 0.0822],
+   [26, 0.0874],
+   [33, 0.0958],
+   [41, 0.1068],
+   [51, 0.1282],
+   [64, 0.157],
+   [77, 0.1957],
+   [92, 0.247],
+   [110, 0.3213],
+   [128, 0.4019],
+   [150, 0.4997],
+   [175, 0.6091],
+   [200, 0.7221],
+   [228, 0.8451],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

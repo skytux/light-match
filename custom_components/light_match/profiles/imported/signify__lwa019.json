@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White Bulb A19 E26 1100lm with Bluetooth",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LWA019",
+   "9290024691"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 1100,
+  "output_curve": [
+   [1, 0.0499],
+   [3, 0.0499],
+   [5, 0.0499],
+   [8, 0.0499],
+   [13, 0.0499],
+   [20, 0.0519],
+   [26, 0.0538],
+   [33, 0.0626],
+   [41, 0.0695],
+   [51, 0.0841],
+   [64, 0.1047],
+   [77, 0.1311],
+   [92, 0.1683],
+   [110, 0.2162],
+   [128, 0.272],
+   [150, 0.3591],
+   [175, 0.4804],
+   [200, 0.6184],
+   [228, 0.7857],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

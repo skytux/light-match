@@ -1,0 +1,79 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Müller Licht tint White+Color LED Candle Bulb (E14)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Müller Licht",
+  "manufacturer_aliases": [
+   "MLI",
+   "mueller-licht"
+  ],
+  "models": [
+   "404019"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 470,
+  "min_kelvin": 1800,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0292],
+   [5, 0.0601],
+   [8, 0.0756],
+   [13, 0.0784],
+   [20, 0.0866],
+   [26, 0.0911],
+   [33, 0.1],
+   [41, 0.1168],
+   [51, 0.1392],
+   [64, 0.1622],
+   [77, 0.2024],
+   [92, 0.2024],
+   [110, 0.3271],
+   [128, 0.4086],
+   [150, 0.499],
+   [175, 0.5777],
+   [200, 0.679],
+   [228, 0.8302],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

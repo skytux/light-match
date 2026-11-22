@@ -1,0 +1,80 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White Ambiance E26 1600lm with Bluetooth",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LTA012",
+   "929002335105",
+   "9290024720"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 1600,
+  "min_kelvin": 2200,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.1299],
+   [3, 0.1299],
+   [5, 0.1299],
+   [8, 0.1306],
+   [13, 0.1328],
+   [20, 0.138],
+   [26, 0.1416],
+   [33, 0.145],
+   [41, 0.1523],
+   [51, 0.164],
+   [64, 0.1858],
+   [77, 0.2093],
+   [92, 0.2444],
+   [110, 0.293],
+   [128, 0.35],
+   [150, 0.4321],
+   [175, 0.5446],
+   [200, 0.628],
+   [228, 0.8013],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Arlec Grid Connect Smart CCT E27 Globe (12 W, 1050 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Arlec",
+  "manufacturer_aliases": [],
+  "models": [
+   "GLD312HA"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 1050,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.075],
+   [3, 0.075],
+   [5, 0.075],
+   [8, 0.0787],
+   [13, 0.0967],
+   [20, 0.1333],
+   [26, 0.1565],
+   [33, 0.1773],
+   [41, 0.2184],
+   [51, 0.2409],
+   [64, 0.3008],
+   [77, 0.35],
+   [92, 0.4054],
+   [110, 0.4763],
+   [128, 0.561],
+   [150, 0.6351],
+   [175, 0.738],
+   [200, 0.8118],
+   [228, 0.9438],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

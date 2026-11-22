@@ -1,0 +1,92 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White and Color Ambiance E27/B22 1100lm with BT",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LCA006",
+   "9290024688",
+   "9290024689"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1100,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.068],
+   [3, 0.0728],
+   [5, 0.0776],
+   [8, 0.0912],
+   [13, 0.1011],
+   [20, 0.1011],
+   [26, 0.108],
+   [33, 0.108],
+   [41, 0.112],
+   [51, 0.1307],
+   [64, 0.1325],
+   [77, 0.1632],
+   [92, 0.2115],
+   [110, 0.2195],
+   [128, 0.3112],
+   [150, 0.3949],
+   [175, 0.5125],
+   [200, 0.6403],
+   [228, 0.8237],
+   [255, 1.0]
+  ],
+  "gamut": "C"
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "deCONZ REST plugin device description files",
+    "source_url": "https://github.com/dresden-elektronik/deconz-rest-plugin/tree/master/devices/philips",
+    "licence": "BSD-3-Clause",
+    "copyright": "Copyright (c) 2017, dresden elektronik ingenieurtechnik gmbh",
+    "fields": [
+     "gamut"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

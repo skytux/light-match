@@ -1,0 +1,94 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue Signe Gradient Table Lamp",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "915005986901",
+   "9150059869",
+   "915005987001",
+   "9150059873",
+   "915005987301"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1040,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0],
+   [5, 0.0],
+   [8, 0.0],
+   [13, 0.0058],
+   [20, 0.015],
+   [26, 0.025],
+   [33, 0.0367],
+   [41, 0.0458],
+   [51, 0.0542],
+   [64, 0.0783],
+   [77, 0.1033],
+   [92, 0.145],
+   [110, 0.1942],
+   [128, 0.2633],
+   [150, 0.35],
+   [175, 0.4708],
+   [200, 0.6192],
+   [228, 0.8092],
+   [255, 1.0]
+  ],
+  "gamut": "C"
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "deCONZ REST plugin device description files",
+    "source_url": "https://github.com/dresden-elektronik/deconz-rest-plugin/tree/master/devices/philips",
+    "licence": "BSD-3-Clause",
+    "copyright": "Copyright (c) 2017, dresden elektronik ingenieurtechnik gmbh",
+    "fields": [
+     "gamut"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

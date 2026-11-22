@@ -1,0 +1,90 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "3A Smart Home Nue RGBW Downlight (9 W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "3A Smart Home",
+  "manufacturer_aliases": [
+   "3A Smart Home DE"
+  ],
+  "models": [
+   "WL-SD001-9W",
+   "LXN60-LS27-Z30",
+   "FEB56-ZCW2CLX1.0"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 800,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0268],
+   [3, 0.0268],
+   [5, 0.0268],
+   [8, 0.0311],
+   [13, 0.0628],
+   [20, 0.0977],
+   [26, 0.135],
+   [33, 0.1533],
+   [41, 0.1693],
+   [51, 0.2229],
+   [64, 0.2729],
+   [77, 0.2729],
+   [92, 0.4028],
+   [110, 0.4487],
+   [128, 0.5344],
+   [150, 0.6131],
+   [175, 0.7044],
+   [200, 0.8154],
+   [228, 0.914],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

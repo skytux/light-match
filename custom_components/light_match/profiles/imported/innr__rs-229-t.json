@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Innr Tunable White Spot Single Lens GU10 Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Innr",
+  "manufacturer_aliases": [],
+  "models": [
+   "RS 229 T"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 350,
+  "min_kelvin": 2200,
+  "max_kelvin": 5000,
+  "output_curve": [
+   [1, 0.0511],
+   [3, 0.055],
+   [5, 0.0589],
+   [8, 0.0618],
+   [13, 0.0618],
+   [20, 0.0618],
+   [26, 0.0633],
+   [33, 0.0681],
+   [41, 0.0681],
+   [51, 0.0876],
+   [64, 0.1139],
+   [77, 0.1416],
+   [92, 0.1723],
+   [110, 0.2326],
+   [128, 0.29],
+   [150, 0.3727],
+   [175, 0.4652],
+   [200, 0.6423],
+   [228, 0.7898],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

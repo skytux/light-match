@@ -1,0 +1,79 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "TP-Link Tapo Smart Wi-Fi Light Bulb, Multicolor",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "TP-Link",
+  "manufacturer_aliases": [
+   "Kasa",
+   "Tapo"
+  ],
+  "models": [
+   "L530"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 806,
+  "min_kelvin": 2500,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0275],
+   [3, 0.0409],
+   [5, 0.0543],
+   [8, 0.0599],
+   [13, 0.0692],
+   [20, 0.102],
+   [26, 0.1439],
+   [33, 0.1439],
+   [41, 0.1904],
+   [51, 0.2558],
+   [64, 0.2738],
+   [77, 0.3288],
+   [92, 0.3884],
+   [110, 0.4422],
+   [128, 0.5099],
+   [150, 0.6241],
+   [175, 0.6933],
+   [200, 0.8078],
+   [228, 0.9177],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

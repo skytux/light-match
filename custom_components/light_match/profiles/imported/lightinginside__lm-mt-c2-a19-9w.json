@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Lightinginside Matter RGBCW A19 E26 Smart Bulb (9W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Lightinginside",
+  "manufacturer_aliases": [
+   "LIGHTINGINSIDE by Launray"
+  ],
+  "models": [
+   "LM-MT-C2-A19-9W"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 800,
+  "min_kelvin": 2200,
+  "max_kelvin": 7040,
+  "output_curve": [
+   [1, 0.0086],
+   [3, 0.0183],
+   [5, 0.0281],
+   [8, 0.0389],
+   [13, 0.055],
+   [20, 0.0826],
+   [26, 0.11],
+   [33, 0.1452],
+   [41, 0.1748],
+   [51, 0.22],
+   [64, 0.2645],
+   [77, 0.309],
+   [92, 0.3748],
+   [110, 0.4518],
+   [128, 0.5161],
+   [150, 0.6203],
+   [175, 0.699],
+   [200, 0.7998],
+   [228, 0.9071],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

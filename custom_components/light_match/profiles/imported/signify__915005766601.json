@@ -1,0 +1,97 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue Centura",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "915005766601",
+   "5045148P7",
+   "5045131P7",
+   "9150057666",
+   "915005766701",
+   "929003045301",
+   "929003045401",
+   "929003045501_01",
+   "929003045501_02",
+   "929003045501_03",
+   "929003047401",
+   "929003047501",
+   "929003045501"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 350,
+  "min_kelvin": 2000,
+  "max_kelvin": 6670,
+  "output_curve": [
+   [21, 0.0581],
+   [26, 0.0814],
+   [33, 0.0814],
+   [41, 0.0814],
+   [51, 0.1047],
+   [64, 0.1233],
+   [77, 0.1488],
+   [92, 0.1744],
+   [110, 0.2186],
+   [128, 0.2837],
+   [150, 0.3558],
+   [175, 0.4465],
+   [200, 0.5884],
+   [228, 0.7837],
+   [255, 1.0]
+  ],
+  "brightness_floor": 21
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "brightness_floor"
+    ],
+    "quality": "estimated"
+   }
+  ]
+ }
+}

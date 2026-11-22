@@ -1,0 +1,71 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Innr Smart Bulb White E27 780lm (2700K)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Innr",
+  "manufacturer_aliases": [],
+  "models": [
+   "RB 266"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 780,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0342],
+   [5, 0.0367],
+   [8, 0.0367],
+   [13, 0.0367],
+   [20, 0.0367],
+   [26, 0.0465],
+   [33, 0.0526],
+   [41, 0.0648],
+   [51, 0.077],
+   [64, 0.1051],
+   [77, 0.132],
+   [92, 0.1663],
+   [110, 0.2298],
+   [128, 0.2971],
+   [150, 0.3888],
+   [175, 0.5232],
+   [200, 0.654],
+   [228, 0.8557],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

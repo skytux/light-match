@@ -1,0 +1,93 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White and Color Ambiance A19 800lm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LCA005",
+   "046677548483",
+   "9290022266A",
+   "929002226611"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 800,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0762],
+   [3, 0.0775],
+   [5, 0.0788],
+   [8, 0.0788],
+   [13, 0.0788],
+   [20, 0.0821],
+   [26, 0.0844],
+   [33, 0.0907],
+   [41, 0.096],
+   [51, 0.1076],
+   [64, 0.1258],
+   [77, 0.1523],
+   [92, 0.1828],
+   [110, 0.2308],
+   [128, 0.2884],
+   [150, 0.3715],
+   [175, 0.4834],
+   [200, 0.6185],
+   [228, 0.7977],
+   [255, 1.0]
+  ],
+  "gamut": "C"
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "diyHue BridgeEmulator light types",
+    "source_url": "https://github.com/diyhue/diyHue/blob/master/BridgeEmulator/lights/light_types.py",
+    "licence": "Apache-2.0",
+    "copyright": "Copyright the diyHue contributors",
+    "fields": [
+     "gamut"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

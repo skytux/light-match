@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "IKEA TRADFRI bulb E27 opal 1000lm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "IKEA",
+  "manufacturer_aliases": [
+   "IKEA of Sweden"
+  ],
+  "models": [
+   "LED1623G12",
+   "TRADFRI bulb E27 opal 1000lm",
+   "TRADFRI bulb E27 W opal 1000lm"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 1000,
+  "output_curve": [
+   [3, 0.06],
+   [5, 0.0608],
+   [8, 0.0616],
+   [13, 0.0657],
+   [20, 0.0707],
+   [26, 0.0756],
+   [33, 0.0822],
+   [41, 0.0896],
+   [51, 0.1002],
+   [64, 0.1167],
+   [77, 0.1348],
+   [92, 0.1569],
+   [110, 0.1915],
+   [128, 0.2317],
+   [150, 0.304],
+   [175, 0.4084],
+   [200, 0.5497],
+   [228, 0.7866],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "MeLiTec LED Pendant Light (19W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "MeLiTec",
+  "manufacturer_aliases": [
+   "LightZone"
+  ],
+  "models": [
+   "DP15"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 1200,
+  "min_kelvin": 2700,
+  "max_kelvin": 6490,
+  "output_curve": [
+   [36, 0.0112],
+   [41, 0.0133],
+   [51, 0.0175],
+   [64, 0.0295],
+   [77, 0.0432],
+   [92, 0.0634],
+   [110, 0.1014],
+   [128, 0.1487],
+   [150, 0.238],
+   [175, 0.3375],
+   [200, 0.5358],
+   [228, 0.7582],
+   [255, 1.0]
+  ],
+  "brightness_floor": 36
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "brightness_floor"
+    ],
+    "quality": "estimated"
+   }
+  ]
+ }
+}

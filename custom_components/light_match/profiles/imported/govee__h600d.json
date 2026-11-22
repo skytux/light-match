@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Govee RGBWW Smart Light Bulb GU10",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Govee",
+  "manufacturer_aliases": [
+   "Shenzhen Qianyan Technology"
+  ],
+  "models": [
+   "H600D"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 400,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [3, 0.0365],
+   [5, 0.0414],
+   [8, 0.0487],
+   [13, 0.0827],
+   [20, 0.1022],
+   [26, 0.127],
+   [33, 0.163],
+   [41, 0.1932],
+   [51, 0.218],
+   [64, 0.2725],
+   [77, 0.3139],
+   [92, 0.3679],
+   [110, 0.4506],
+   [128, 0.5182],
+   [150, 0.5985],
+   [175, 0.6954],
+   [200, 0.7903],
+   [228, 0.8954],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

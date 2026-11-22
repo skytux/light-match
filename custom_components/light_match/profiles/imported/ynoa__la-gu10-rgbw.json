@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Ynoa Smart LED GU10 RGBW Bulb (4.8W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Ynoa",
+  "manufacturer_aliases": [],
+  "models": [
+   "LA-GU10-RGBW",
+   "ZBT-RGBWLight-M0000"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 350,
+  "min_kelvin": 1900,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.058],
+   [3, 0.0897],
+   [5, 0.1214],
+   [8, 0.1383],
+   [13, 0.1398],
+   [20, 0.1398],
+   [26, 0.1451],
+   [33, 0.1493],
+   [41, 0.1609],
+   [51, 0.1715],
+   [64, 0.1947],
+   [77, 0.219],
+   [92, 0.2565],
+   [110, 0.3034],
+   [128, 0.3689],
+   [150, 0.4369],
+   [175, 0.5388],
+   [200, 0.6602],
+   [228, 0.8243],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

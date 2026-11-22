@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Innr Smart Bulb Colour E27 1200lm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Innr",
+  "manufacturer_aliases": [],
+  "models": [
+   "RB 287 C"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1210,
+  "min_kelvin": 1800,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0077],
+   [3, 0.0077],
+   [5, 0.0077],
+   [8, 0.0077],
+   [13, 0.009],
+   [20, 0.009],
+   [26, 0.0135],
+   [33, 0.0146],
+   [41, 0.0298],
+   [51, 0.0394],
+   [64, 0.0671],
+   [77, 0.095],
+   [92, 0.1356],
+   [110, 0.195],
+   [128, 0.2585],
+   [150, 0.3508],
+   [175, 0.4744],
+   [200, 0.6215],
+   [228, 0.8048],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

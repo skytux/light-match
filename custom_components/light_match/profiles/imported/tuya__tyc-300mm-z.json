@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Tuya RGB+CCT Ceiling Light 24W",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Tuya",
+  "manufacturer_aliases": [],
+  "models": [
+   "TYC-300mm-Z"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0827],
+   [5, 0.1674],
+   [8, 0.2188],
+   [13, 0.2401],
+   [20, 0.2646],
+   [26, 0.2866],
+   [33, 0.3158],
+   [41, 0.3412],
+   [51, 0.3776],
+   [64, 0.4226],
+   [77, 0.4718],
+   [92, 0.5413],
+   [110, 0.6159],
+   [128, 0.6966],
+   [150, 0.8066],
+   [175, 0.9371],
+   [200, 0.9957],
+   [228, 0.9957],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

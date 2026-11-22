@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "IKEA FLOALT panel WS 30x30",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "IKEA",
+  "manufacturer_aliases": [
+   "IKEA of Sweden"
+  ],
+  "models": [
+   "L1527",
+   "FLOALT panel WS 30x30"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 670,
+  "min_kelvin": 2200,
+  "max_kelvin": 4000,
+  "output_curve": [
+   [1, 0.0996],
+   [3, 0.1003],
+   [5, 0.101],
+   [8, 0.1041],
+   [13, 0.1101],
+   [20, 0.1128],
+   [26, 0.1163],
+   [33, 0.1285],
+   [41, 0.1295],
+   [51, 0.1445],
+   [64, 0.1605],
+   [77, 0.1778],
+   [92, 0.2021],
+   [110, 0.2374],
+   [128, 0.2828],
+   [150, 0.3519],
+   [175, 0.4596],
+   [200, 0.5975],
+   [228, 0.8009],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

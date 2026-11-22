@@ -1,0 +1,71 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Sengled Smart LED with Motion Sensor PAR38 Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Sengled",
+  "manufacturer_aliases": [],
+  "models": [
+   "E13-N11"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 1200,
+  "output_curve": [
+   [1, 0.0917],
+   [3, 0.1083],
+   [5, 0.1083],
+   [8, 0.125],
+   [13, 0.125],
+   [20, 0.1583],
+   [26, 0.1833],
+   [33, 0.2083],
+   [41, 0.225],
+   [51, 0.2667],
+   [64, 0.3083],
+   [77, 0.3417],
+   [92, 0.4],
+   [110, 0.4667],
+   [128, 0.525],
+   [150, 0.6],
+   [175, 0.6917],
+   [200, 0.7917],
+   [228, 0.8917],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

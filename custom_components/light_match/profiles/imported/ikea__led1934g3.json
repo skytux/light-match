@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "IKEA TRADFRI bulb E27 WW clear 250lm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "IKEA",
+  "manufacturer_aliases": [
+   "IKEA of Sweden"
+  ],
+  "models": [
+   "LED1934G3",
+   "LED1934G3_E27"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 250,
+  "output_curve": [
+   [1, 0.03],
+   [3, 0.0974],
+   [5, 0.0974],
+   [8, 0.1086],
+   [13, 0.1236],
+   [20, 0.1236],
+   [26, 0.1536],
+   [33, 0.1536],
+   [41, 0.1536],
+   [51, 0.1536],
+   [64, 0.161],
+   [77, 0.161],
+   [92, 0.161],
+   [110, 0.1873],
+   [128, 0.2547],
+   [150, 0.367],
+   [175, 0.4082],
+   [200, 0.5693],
+   [228, 0.7266],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

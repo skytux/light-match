@@ -1,0 +1,92 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Lidl Livarno Home Smart LED Mood Light",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Lidl",
+  "manufacturer_aliases": [
+   "_TZ3000_oborybow",
+   "_TZ3000_qd7hej8u",
+   "_TZ3000_quqaeew6",
+   "_TZ3000_riwp3k79",
+   "_TZ3000_th6zqqy6",
+   "_TZ3210_hxtfthp5"
+  ],
+  "models": [
+   "14156506L",
+   "IAN-365267_2101"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.1038],
+   [3, 0.1038],
+   [5, 0.1038],
+   [8, 0.1038],
+   [13, 0.1038],
+   [20, 0.1201],
+   [26, 0.1306],
+   [33, 0.1546],
+   [41, 0.1844],
+   [51, 0.2112],
+   [64, 0.2581],
+   [77, 0.3155],
+   [92, 0.391],
+   [110, 0.4591],
+   [128, 0.5416],
+   [150, 0.6227],
+   [175, 0.7096],
+   [200, 0.7968],
+   [228, 0.8862],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

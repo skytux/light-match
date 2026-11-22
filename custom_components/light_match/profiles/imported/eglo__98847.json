@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "EGLO FUEVA-Z Surface-Mounted Light (285mm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "EGLO",
+  "manufacturer_aliases": [
+   "AwoX"
+  ],
+  "models": [
+   "98847",
+   "33957",
+   "FUEVA-Z"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 2500,
+  "min_kelvin": 2200,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [8, 0.0229],
+   [13, 0.0267],
+   [20, 0.0267],
+   [26, 0.0301],
+   [33, 0.0315],
+   [41, 0.0375],
+   [51, 0.0395],
+   [64, 0.0593],
+   [77, 0.0712],
+   [92, 0.1009],
+   [110, 0.1367],
+   [128, 0.1853],
+   [150, 0.2545],
+   [175, 0.3744],
+   [200, 0.5225],
+   [228, 0.7365],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

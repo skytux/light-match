@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Govee A21 Smart LED Light Bulb E26 1600lm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Govee",
+  "manufacturer_aliases": [
+   "Shenzhen Qianyan Technology"
+  ],
+  "models": [
+   "H1401"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1600,
+  "min_kelvin": 2000,
+  "max_kelvin": 9010,
+  "output_curve": [
+   [1, 0.0079],
+   [3, 0.0142],
+   [5, 0.0205],
+   [8, 0.0315],
+   [13, 0.0496],
+   [20, 0.078],
+   [26, 0.0866],
+   [33, 0.1165],
+   [41, 0.1614],
+   [51, 0.1772],
+   [64, 0.2189],
+   [77, 0.2677],
+   [92, 0.3252],
+   [110, 0.374],
+   [128, 0.4646],
+   [150, 0.5331],
+   [175, 0.6449],
+   [200, 0.7362],
+   [228, 0.852],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

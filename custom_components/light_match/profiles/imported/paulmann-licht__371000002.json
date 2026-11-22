@@ -1,0 +1,81 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Paulmann Licht Amaris RGBW LED Panels 595x295mm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Paulmann Licht",
+  "manufacturer_aliases": [],
+  "models": [
+   "371000002"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1800,
+  "min_kelvin": 1540,
+  "max_kelvin": 7140,
+  "output_curve": [
+   [31, 0.039],
+   [33, 0.0405],
+   [41, 0.0488],
+   [51, 0.0584],
+   [64, 0.0709],
+   [77, 0.0872],
+   [92, 0.1172],
+   [110, 0.1504],
+   [128, 0.2001],
+   [150, 0.2839],
+   [175, 0.3833],
+   [200, 0.4931],
+   [228, 0.692],
+   [255, 1.0]
+  ],
+  "brightness_floor": 31
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "brightness_floor"
+    ],
+    "quality": "estimated"
+   }
+  ]
+ }
+}

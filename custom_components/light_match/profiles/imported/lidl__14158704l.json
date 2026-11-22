@@ -1,0 +1,91 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Lidl Livarno Home LED floor lamp, RGBW",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Lidl",
+  "manufacturer_aliases": [
+   "_TZ3000_oborybow",
+   "_TZ3000_qd7hej8u",
+   "_TZ3000_quqaeew6",
+   "_TZ3000_riwp3k79",
+   "_TZ3000_th6zqqy6",
+   "_TZ3210_hxtfthp5"
+  ],
+  "models": [
+   "14158704L"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0918],
+   [3, 0.095],
+   [5, 0.0982],
+   [8, 0.1062],
+   [13, 0.123],
+   [20, 0.1449],
+   [26, 0.1617],
+   [33, 0.1892],
+   [41, 0.2136],
+   [51, 0.2415],
+   [64, 0.2858],
+   [77, 0.3305],
+   [92, 0.3812],
+   [110, 0.4535],
+   [128, 0.5174],
+   [150, 0.5952],
+   [175, 0.6854],
+   [200, 0.782],
+   [228, 0.8902],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

@@ -25,7 +25,7 @@
           "name": {"type": "string"},
           "manufacturer": {"type": "string"},
           "models": {"type": "array", "items": {"type": "string"}},
-          "method": {"enum": ["spec", "by_eye", "lux_meter", "colorimeter"]},
+          "method": {"enum": ["spec", "imported", "by_eye", "lux_meter", "colorimeter"]},
           "verified": {"type": "boolean"},
           "contributors": {"type": "array", "items": {"type": "string"}, "description": "Nicknames only."},
           "updated": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},

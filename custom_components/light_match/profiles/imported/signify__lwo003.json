@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White Filament Bulb G125 E27 w/ BT",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LWO003",
+   "8719514279131"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 550,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0016],
+   [5, 0.0065],
+   [8, 0.0065],
+   [13, 0.0065],
+   [20, 0.0097],
+   [26, 0.0162],
+   [33, 0.0243],
+   [41, 0.0259],
+   [51, 0.0502],
+   [64, 0.0728],
+   [77, 0.0939],
+   [92, 0.1343],
+   [110, 0.1796],
+   [128, 0.2492],
+   [150, 0.3382],
+   [175, 0.4563],
+   [200, 0.5971],
+   [228, 0.7896],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

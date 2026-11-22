@@ -1,0 +1,87 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Gledopto RGB+CCT 5W GU10 Zigbee Spotlight",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Gledopto",
+  "manufacturer_aliases": [],
+  "models": [
+   "GL-S-007Z",
+   "GL-S-007Z(lk)"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 300,
+  "min_kelvin": 2020,
+  "max_kelvin": 6450,
+  "output_curve": [
+   [1, 0.0116],
+   [3, 0.0135],
+   [5, 0.0153],
+   [8, 0.02],
+   [13, 0.0265],
+   [20, 0.0408],
+   [26, 0.0626],
+   [33, 0.0789],
+   [41, 0.1044],
+   [51, 0.1415],
+   [64, 0.1777],
+   [77, 0.2232],
+   [92, 0.2835],
+   [110, 0.3596],
+   [128, 0.445],
+   [150, 0.5629],
+   [175, 0.6896],
+   [200, 0.8705],
+   [228, 0.9735],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

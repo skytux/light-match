@@ -1,0 +1,87 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "LEDVANCE SMART+ ZB CLA60 RGBW",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "LEDVANCE",
+  "manufacturer_aliases": [],
+  "models": [
+   "CLA60 RGBW Z3",
+   "AC03647"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 810,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0667],
+   [3, 0.0667],
+   [5, 0.0667],
+   [8, 0.0667],
+   [13, 0.0689],
+   [20, 0.0767],
+   [26, 0.0833],
+   [33, 0.0833],
+   [41, 0.0889],
+   [51, 0.1056],
+   [64, 0.1256],
+   [77, 0.1367],
+   [92, 0.1678],
+   [110, 0.2078],
+   [128, 0.2533],
+   [150, 0.3178],
+   [175, 0.4189],
+   [200, 0.5544],
+   [228, 0.7556],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

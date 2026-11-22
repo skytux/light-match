@@ -1,0 +1,71 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Innr Smart Filament Bulb Warm-White E27",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Innr",
+  "manufacturer_aliases": [],
+  "models": [
+   "RF 262"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 550,
+  "output_curve": [
+   [1, 0.0096],
+   [3, 0.0159],
+   [5, 0.0159],
+   [8, 0.0159],
+   [13, 0.0175],
+   [20, 0.0271],
+   [26, 0.0447],
+   [33, 0.0447],
+   [41, 0.0447],
+   [51, 0.059],
+   [64, 0.0797],
+   [77, 0.1037],
+   [92, 0.1435],
+   [110, 0.2121],
+   [128, 0.2775],
+   [150, 0.3652],
+   [175, 0.4641],
+   [200, 0.6332],
+   [228, 0.8246],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

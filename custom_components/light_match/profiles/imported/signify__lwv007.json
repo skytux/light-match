@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue Smart Bulb Edison ST72 E27 7W",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LWV007",
+   "9290030523"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 580,
+  "output_curve": [
+   [1, 0.0162],
+   [3, 0.0427],
+   [5, 0.0427],
+   [8, 0.0427],
+   [13, 0.0427],
+   [20, 0.0427],
+   [26, 0.0427],
+   [33, 0.0457],
+   [41, 0.0604],
+   [51, 0.081],
+   [64, 0.0913],
+   [77, 0.1163],
+   [92, 0.1458],
+   [110, 0.2032],
+   [128, 0.2695],
+   [150, 0.3638],
+   [175, 0.4831],
+   [200, 0.6289],
+   [228, 0.8085],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

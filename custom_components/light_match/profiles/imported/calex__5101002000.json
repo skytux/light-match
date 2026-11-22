@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Calex Smart LED Filament Lamp E27 G95 CCT Gold (7W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Calex",
+  "manufacturer_aliases": [
+   "Tuya"
+  ],
+  "models": [
+   "5101002000",
+   "G95 Gold"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 806,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.1239],
+   [3, 0.1418],
+   [5, 0.1597],
+   [8, 0.1776],
+   [13, 0.1972],
+   [20, 0.1983],
+   [26, 0.2186],
+   [33, 0.2303],
+   [41, 0.2513],
+   [51, 0.3081],
+   [64, 0.3429],
+   [77, 0.3704],
+   [92, 0.4341],
+   [110, 0.4991],
+   [128, 0.5642],
+   [150, 0.6368],
+   [175, 0.7267],
+   [200, 0.8041],
+   [228, 0.8905],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Yeelight LED Bulb (White, 600 lm, 4000 K, 8W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Yeelight",
+  "manufacturer_aliases": [
+   "Xiaomi",
+   "Yeelight Technology"
+  ],
+  "models": [
+   "YLDP01YL",
+   "mono1"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 600,
+  "output_curve": [
+   [3, 0.0],
+   [5, 0.0],
+   [8, 0.1111],
+   [13, 0.1111],
+   [20, 0.1111],
+   [26, 0.1111],
+   [33, 0.1806],
+   [41, 0.1806],
+   [51, 0.2361],
+   [64, 0.2361],
+   [77, 0.2917],
+   [92, 0.375],
+   [110, 0.4444],
+   [128, 0.5139],
+   [150, 0.5694],
+   [175, 0.6157],
+   [200, 0.7778],
+   [228, 0.9398],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

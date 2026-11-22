@@ -1,0 +1,92 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "IKEA TRADFRI bulb E14 WS 470lm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "IKEA",
+  "manufacturer_aliases": [
+   "IKEA of Sweden"
+  ],
+  "models": [
+   "LED1835C6",
+   "TRADFRI bulb E14 WS 470lm",
+   "LED1903C5/LED1835C6",
+   "TRADFRI bulb E12 WS 450lm",
+   "TRADFRI bulb E17 WS 440lm",
+   "TRADFRI bulb E17 WS candle 440lm"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 470,
+  "min_kelvin": 2200,
+  "max_kelvin": 4000,
+  "output_curve": [
+   [1, 0.0401],
+   [3, 0.0477],
+   [5, 0.0553],
+   [8, 0.0599],
+   [13, 0.0687],
+   [20, 0.0786],
+   [26, 0.0786],
+   [33, 0.0912],
+   [41, 0.1088],
+   [51, 0.1145],
+   [64, 0.1359],
+   [77, 0.1469],
+   [92, 0.1695],
+   [110, 0.1935],
+   [128, 0.2431],
+   [150, 0.3107],
+   [175, 0.3893],
+   [200, 0.5378],
+   [228, 0.7385],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

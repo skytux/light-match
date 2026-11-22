@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Malmbergs Sirius III",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Malmbergs",
+  "manufacturer_aliases": [],
+  "models": [
+   "9970020"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 3720,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0964],
+   [3, 0.1021],
+   [5, 0.1079],
+   [8, 0.1196],
+   [13, 0.1381],
+   [20, 0.161],
+   [26, 0.1821],
+   [33, 0.2038],
+   [41, 0.2299],
+   [51, 0.2673],
+   [64, 0.3146],
+   [77, 0.3644],
+   [92, 0.4151],
+   [110, 0.4796],
+   [128, 0.5472],
+   [150, 0.6258],
+   [175, 0.7125],
+   [200, 0.8041],
+   [228, 0.9024],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

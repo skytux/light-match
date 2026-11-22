@@ -1,0 +1,108 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White and Color Ambiance LightStrip plus",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LCL001",
+   "9290022691",
+   "LCL006",
+   "8718699703424",
+   "LCL007"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1700,
+  "min_kelvin": 2000,
+  "max_kelvin": 6670,
+  "output_curve": [
+   [36, 0.0],
+   [41, 0.0098],
+   [51, 0.0241],
+   [64, 0.0392],
+   [77, 0.068],
+   [92, 0.1203],
+   [110, 0.1699],
+   [128, 0.2357],
+   [150, 0.3338],
+   [175, 0.4543],
+   [200, 0.6032],
+   [228, 0.794],
+   [255, 1.0]
+  ],
+  "brightness_floor": 36,
+  "gamut": "C"
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "brightness_floor"
+    ],
+    "quality": "estimated"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   },
+   {
+    "source": "deCONZ REST plugin device description files",
+    "source_url": "https://github.com/dresden-elektronik/deconz-rest-plugin/tree/master/devices/philips",
+    "licence": "BSD-3-Clause",
+    "copyright": "Copyright (c) 2017, dresden elektronik ingenieurtechnik gmbh",
+    "fields": [
+     "gamut"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

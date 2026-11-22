@@ -1,0 +1,93 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Lidl Livarno Lux GU10 4.5W RGBCT Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Lidl",
+  "manufacturer_aliases": [
+   "_TZ3000_oborybow",
+   "_TZ3000_qd7hej8u",
+   "_TZ3000_quqaeew6",
+   "_TZ3000_riwp3k79",
+   "_TZ3000_th6zqqy6",
+   "_TZ3210_hxtfthp5"
+  ],
+  "models": [
+   "HG06106A"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 250,
+  "min_kelvin": 2000,
+  "max_kelvin": 6670,
+  "output_curve": [
+   [1, 0.1122],
+   [3, 0.1141],
+   [5, 0.1161],
+   [8, 0.1278],
+   [13, 0.1449],
+   [20, 0.1756],
+   [26, 0.1902],
+   [33, 0.2176],
+   [41, 0.2439],
+   [51, 0.2683],
+   [64, 0.3327],
+   [77, 0.3683],
+   [92, 0.4234],
+   [110, 0.4859],
+   [128, 0.5512],
+   [150, 0.6176],
+   [175, 0.7156],
+   [200, 0.7932],
+   [228, 0.8839],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

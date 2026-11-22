@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "WiZ Tunable White GU10 Bulb (4.7 W, 345 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "WiZ",
+  "manufacturer_aliases": [],
+  "models": [
+   "9290024483A"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 345,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0732],
+   [3, 0.0829],
+   [5, 0.0927],
+   [8, 0.0927],
+   [13, 0.0927],
+   [20, 0.1049],
+   [26, 0.1049],
+   [33, 0.1049],
+   [41, 0.1341],
+   [51, 0.1585],
+   [64, 0.2195],
+   [77, 0.261],
+   [92, 0.3317],
+   [110, 0.361],
+   [128, 0.4561],
+   [150, 0.5829],
+   [175, 0.6927],
+   [200, 0.8268],
+   [228, 0.961],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,83 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Lidl Livarno Home E14 6.5W RGB+CCT Candle Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Lidl",
+  "manufacturer_aliases": [
+   "_TZ3000_oborybow",
+   "_TZ3000_qd7hej8u",
+   "_TZ3000_quqaeew6",
+   "_TZ3000_riwp3k79",
+   "_TZ3000_th6zqqy6",
+   "_TZ3210_hxtfthp5"
+  ],
+  "models": [
+   "HG08131B"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 470,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0409],
+   [3, 0.045],
+   [5, 0.0491],
+   [8, 0.0614],
+   [13, 0.0839],
+   [20, 0.113],
+   [26, 0.1407],
+   [33, 0.1683],
+   [41, 0.1944],
+   [51, 0.243],
+   [64, 0.2926],
+   [77, 0.3488],
+   [92, 0.4056],
+   [110, 0.4808],
+   [128, 0.5417],
+   [150, 0.623],
+   [175, 0.7223],
+   [200, 0.8066],
+   [228, 0.9079],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

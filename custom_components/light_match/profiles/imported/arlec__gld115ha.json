@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Arlec Grid Connect Smart R80 CCT E27 Globe (9.5 W, 806 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Arlec",
+  "manufacturer_aliases": [],
+  "models": [
+   "GLD115HA"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 806,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.1175],
+   [3, 0.1217],
+   [5, 0.126],
+   [8, 0.137],
+   [13, 0.137],
+   [20, 0.1495],
+   [26, 0.1986],
+   [33, 0.2073],
+   [41, 0.262],
+   [51, 0.2844],
+   [64, 0.3264],
+   [77, 0.388],
+   [92, 0.4454],
+   [110, 0.4778],
+   [128, 0.5276],
+   [150, 0.6059],
+   [175, 0.6949],
+   [200, 0.7998],
+   [228, 0.8947],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

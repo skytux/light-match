@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "TP-Link Tapo Smart Wi-Fi Light Bulb, Dimmable 806lm (2700K)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "TP-Link",
+  "manufacturer_aliases": [
+   "Kasa",
+   "Tapo"
+  ],
+  "models": [
+   "L510"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 806,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0204],
+   [5, 0.034],
+   [8, 0.0408],
+   [13, 0.0612],
+   [20, 0.0884],
+   [26, 0.1061],
+   [33, 0.1429],
+   [41, 0.1633],
+   [51, 0.2136],
+   [64, 0.2449],
+   [77, 0.302],
+   [92, 0.3605],
+   [110, 0.4354],
+   [128, 0.4898],
+   [150, 0.5782],
+   [175, 0.6912],
+   [200, 0.7646],
+   [228, 0.8776],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,80 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Yeelight Bluetooth Mesh Smart LED Bulb (E27, Tunable White, 5W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Yeelight",
+  "manufacturer_aliases": [
+   "Xiaomi",
+   "Yeelight Technology"
+  ],
+  "models": [
+   "MJDP09YL",
+   "yeelink.light.mbulb3",
+   "Mesh: MJDP09YL, yeelink.light.mbulb3"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 500,
+  "min_kelvin": 2500,
+  "max_kelvin": 20000,
+  "output_curve": [
+   [1, 0.0502],
+   [3, 0.0502],
+   [5, 0.0502],
+   [8, 0.0502],
+   [13, 0.0562],
+   [20, 0.0627],
+   [26, 0.0627],
+   [33, 0.0679],
+   [41, 0.0964],
+   [51, 0.1245],
+   [64, 0.1269],
+   [77, 0.1908],
+   [92, 0.212],
+   [110, 0.308],
+   [128, 0.3414],
+   [150, 0.4639],
+   [175, 0.551],
+   [200, 0.661],
+   [228, 0.8598],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

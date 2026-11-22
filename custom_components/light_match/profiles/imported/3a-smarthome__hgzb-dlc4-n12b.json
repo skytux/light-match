@@ -1,0 +1,79 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "3A Smart Home Nue RGBW Downlight (12 W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "3A Smart Home",
+  "manufacturer_aliases": [
+   "3A Smart Home DE"
+  ],
+  "models": [
+   "HGZB-DLC4-N12B",
+   "LXT56-LS27LX1.7"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 800,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0029],
+   [3, 0.0223],
+   [5, 0.0417],
+   [8, 0.0499],
+   [13, 0.051],
+   [20, 0.0539],
+   [26, 0.0539],
+   [33, 0.064],
+   [41, 0.0679],
+   [51, 0.0737],
+   [64, 0.0875],
+   [77, 0.1055],
+   [92, 0.1453],
+   [110, 0.1876],
+   [128, 0.2475],
+   [150, 0.3377],
+   [175, 0.4656],
+   [200, 0.6155],
+   [228, 0.8144],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

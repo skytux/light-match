@@ -1,0 +1,79 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Müller Licht tint White+Color LED Spot (GU10)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Müller Licht",
+  "manufacturer_aliases": [
+   "MLI",
+   "mueller-licht"
+  ],
+  "models": [
+   "404005"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 350,
+  "min_kelvin": 2000,
+  "max_kelvin": 6670,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0],
+   [5, 0.0],
+   [8, 0.0],
+   [13, 0.0],
+   [20, 0.0],
+   [26, 0.0],
+   [33, 0.0],
+   [41, 0.0],
+   [51, 0.0],
+   [64, 0.0],
+   [77, 0.0],
+   [92, 0.0031],
+   [110, 0.0576],
+   [128, 0.1231],
+   [150, 0.2176],
+   [175, 0.3522],
+   [200, 0.5129],
+   [228, 0.7365],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "LIFX Color A19 1100 lm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "LIFX",
+  "manufacturer_aliases": [],
+  "models": [
+   "LHLA19E26US",
+   "LIFX A19 US",
+   "LIFX Color A19 1100lm"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1100,
+  "min_kelvin": 1500,
+  "max_kelvin": 9010,
+  "output_curve": [
+   [1, 0.0191],
+   [3, 0.023],
+   [5, 0.0268],
+   [8, 0.0268],
+   [13, 0.0268],
+   [20, 0.0268],
+   [26, 0.0383],
+   [33, 0.045],
+   [41, 0.0526],
+   [51, 0.067],
+   [64, 0.0919],
+   [77, 0.1273],
+   [92, 0.1761],
+   [110, 0.2507],
+   [128, 0.3493],
+   [150, 0.4909],
+   [175, 0.6536],
+   [200, 0.844],
+   [228, 0.9981],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

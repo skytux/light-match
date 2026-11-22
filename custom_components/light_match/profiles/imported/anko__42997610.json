@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Anko Smart String Lights",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Anko",
+  "manufacturer_aliases": [],
+  "models": [
+   "42997610"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0],
+   [5, 0.0],
+   [8, 0.0118],
+   [13, 0.0335],
+   [20, 0.0335],
+   [26, 0.0345],
+   [33, 0.0463],
+   [41, 0.0591],
+   [51, 0.069],
+   [64, 0.1182],
+   [77, 0.1606],
+   [92, 0.2049],
+   [110, 0.2463],
+   [128, 0.3754],
+   [150, 0.4493],
+   [175, 0.5576],
+   [200, 0.6847],
+   [228, 0.8719],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

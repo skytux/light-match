@@ -1,0 +1,89 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue Play Gradient Light Tube Large",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "915005988201",
+   "915005988101",
+   "9150059882"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1800,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [8, 0.0128],
+   [13, 0.0128],
+   [20, 0.0154],
+   [26, 0.0221],
+   [33, 0.0322],
+   [41, 0.0386],
+   [51, 0.0504],
+   [64, 0.0751],
+   [77, 0.1044],
+   [92, 0.1407],
+   [110, 0.1971],
+   [128, 0.2708],
+   [150, 0.3622],
+   [175, 0.4972],
+   [200, 0.642],
+   [228, 0.8285],
+   [255, 1.0]
+  ],
+  "gamut": "C"
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "deCONZ REST plugin device description files",
+    "source_url": "https://github.com/dresden-elektronik/deconz-rest-plugin/tree/master/devices/philips",
+    "licence": "BSD-3-Clause",
+    "copyright": "Copyright (c) 2017, dresden elektronik ingenieurtechnik gmbh",
+    "fields": [
+     "gamut"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Lexman ENKI RGBW E27 Globe Bulb 14W",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Lexman",
+  "manufacturer_aliases": [
+   "ADEO"
+  ],
+  "models": [
+   "IG-CDZOTAAG014RA-MAN",
+   "ZBEK-2"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1521,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0155],
+   [5, 0.031],
+   [8, 0.0388],
+   [13, 0.0388],
+   [20, 0.045],
+   [26, 0.0465],
+   [33, 0.0496],
+   [41, 0.062],
+   [51, 0.0698],
+   [64, 0.0946],
+   [77, 0.1178],
+   [92, 0.1566],
+   [110, 0.2062],
+   [128, 0.2667],
+   [150, 0.3535],
+   [175, 0.476],
+   [200, 0.6155],
+   [228, 0.7953],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

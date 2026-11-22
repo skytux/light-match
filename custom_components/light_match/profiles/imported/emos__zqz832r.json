@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Emos GoSmart MR16 GU10 RGB+CCT Bulb (4.8W, 400 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Emos",
+  "manufacturer_aliases": [],
+  "models": [
+   "ZQZ832R"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 400,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0475],
+   [3, 0.0587],
+   [5, 0.07],
+   [8, 0.0773],
+   [13, 0.0903],
+   [20, 0.1197],
+   [26, 0.1339],
+   [33, 0.1749],
+   [41, 0.2009],
+   [51, 0.2376],
+   [64, 0.2812],
+   [77, 0.327],
+   [92, 0.4039],
+   [110, 0.4579],
+   [128, 0.5283],
+   [150, 0.6117],
+   [175, 0.7102],
+   [200, 0.8069],
+   [228, 0.911],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

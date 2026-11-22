@@ -1,0 +1,102 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White and Color Ambiance BR30 (1st Gen)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LCT002",
+   "9290002579A",
+   "LCT011"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 630,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.189],
+   [3, 0.1943],
+   [5, 0.1997],
+   [8, 0.2037],
+   [13, 0.2037],
+   [20, 0.2037],
+   [26, 0.2224],
+   [33, 0.2224],
+   [41, 0.2274],
+   [51, 0.2274],
+   [64, 0.2375],
+   [77, 0.2375],
+   [92, 0.2518],
+   [110, 0.2836],
+   [128, 0.3833],
+   [150, 0.4304],
+   [175, 0.5067],
+   [200, 0.6642],
+   [228, 0.8595],
+   [255, 1.0]
+  ],
+  "gamut": "B"
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   },
+   {
+    "source": "deCONZ REST plugin device description files",
+    "source_url": "https://github.com/dresden-elektronik/deconz-rest-plugin/tree/master/devices/philips",
+    "licence": "BSD-3-Clause",
+    "copyright": "Copyright (c) 2017, dresden elektronik ingenieurtechnik gmbh",
+    "fields": [
+     "gamut"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

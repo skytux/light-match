@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Arlec Grid Connect Smart RGB+CCT B22 Globe (12 W, 1050 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Arlec",
+  "manufacturer_aliases": [],
+  "models": [
+   "GLD130HA",
+   "GLD130P3HA"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1050,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0485],
+   [3, 0.0607],
+   [5, 0.073],
+   [8, 0.0834],
+   [13, 0.0992],
+   [20, 0.129],
+   [26, 0.159],
+   [33, 0.184],
+   [41, 0.2165],
+   [51, 0.2453],
+   [64, 0.3193],
+   [77, 0.359],
+   [92, 0.4262],
+   [110, 0.4961],
+   [128, 0.5678],
+   [150, 0.6527],
+   [175, 0.7382],
+   [200, 0.825],
+   [228, 0.9184],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

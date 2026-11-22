@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Gledopto Zigbee 6W anti-glare downlight RGB+CCT (pro)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Gledopto",
+  "manufacturer_aliases": [],
+  "models": [
+   "GL-D-006P"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "min_kelvin": 2020,
+  "max_kelvin": 6330,
+  "output_curve": [
+   [1, 0.0052],
+   [3, 0.0066],
+   [5, 0.008],
+   [8, 0.0122],
+   [13, 0.0244],
+   [20, 0.0419],
+   [26, 0.0524],
+   [33, 0.0733],
+   [41, 0.0925],
+   [51, 0.1082],
+   [64, 0.1407],
+   [77, 0.1693],
+   [92, 0.2119],
+   [110, 0.2677],
+   [128, 0.3211],
+   [150, 0.3937],
+   [175, 0.5096],
+   [200, 0.7068],
+   [228, 0.8939],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,86 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "MOES Zigbee RGB+CCT LED Bulb (GU10, 5W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "MOES",
+  "manufacturer_aliases": [],
+  "models": [
+   "ZB-TD5-RCW-GU10"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 345,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.1267],
+   [3, 0.132],
+   [5, 0.1373],
+   [8, 0.1462],
+   [13, 0.1671],
+   [20, 0.1969],
+   [26, 0.2289],
+   [33, 0.256],
+   [41, 0.2889],
+   [51, 0.3267],
+   [64, 0.3809],
+   [77, 0.4267],
+   [92, 0.4778],
+   [110, 0.5373],
+   [128, 0.5987],
+   [150, 0.6636],
+   [175, 0.7444],
+   [200, 0.8244],
+   [228, 0.9173],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

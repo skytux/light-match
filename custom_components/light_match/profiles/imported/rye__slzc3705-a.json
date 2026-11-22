@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Rye 5W 450 lm E12 RGBCCT Candle Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Rye",
+  "manufacturer_aliases": [],
+  "models": [
+   "SLZC3705-A",
+   "Candlebra",
+   "RYE Candlebra"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 450,
+  "min_kelvin": 3000,
+  "max_kelvin": 5990,
+  "output_curve": [
+   [1, 0.0889],
+   [3, 0.0889],
+   [5, 0.0889],
+   [8, 0.0889],
+   [13, 0.0889],
+   [20, 0.0889],
+   [26, 0.0889],
+   [33, 0.0889],
+   [41, 0.0889],
+   [51, 0.0889],
+   [64, 0.0889],
+   [77, 0.0889],
+   [92, 0.0889],
+   [110, 0.1506],
+   [128, 0.2283],
+   [150, 0.3861],
+   [175, 0.5706],
+   [200, 0.7283],
+   [228, 0.9783],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "WiZ 3.5-inch Recessed Downlight (8 W, 800 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "WiZ",
+  "manufacturer_aliases": [],
+  "models": [
+   "929003294819",
+   "WIZ294819"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 800,
+  "min_kelvin": 2200,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.107],
+   [3, 0.107],
+   [5, 0.107],
+   [8, 0.107],
+   [13, 0.107],
+   [20, 0.107],
+   [26, 0.107],
+   [33, 0.1152],
+   [41, 0.1361],
+   [51, 0.1664],
+   [64, 0.2061],
+   [77, 0.2515],
+   [92, 0.3062],
+   [110, 0.3908],
+   [128, 0.4616],
+   [150, 0.5839],
+   [175, 0.7229],
+   [200, 0.8343],
+   [228, 0.9387],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

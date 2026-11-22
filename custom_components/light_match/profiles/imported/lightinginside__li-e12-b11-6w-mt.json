@@ -1,0 +1,79 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Lightinginside Matter Candelabra Smart Light 6W 500LM E12 RGBCW",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Lightinginside",
+  "manufacturer_aliases": [
+   "LIGHTINGINSIDE by Launray"
+  ],
+  "models": [
+   "LI-E12-B11-6W-MT",
+   "4100"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 500,
+  "min_kelvin": 2200,
+  "max_kelvin": 7040,
+  "output_curve": [
+   [1, 0.013],
+   [3, 0.0252],
+   [5, 0.0373],
+   [8, 0.0469],
+   [13, 0.0677],
+   [20, 0.1119],
+   [26, 0.1236],
+   [33, 0.1592],
+   [41, 0.1692],
+   [51, 0.2213],
+   [64, 0.272],
+   [77, 0.3137],
+   [92, 0.3701],
+   [110, 0.4521],
+   [128, 0.5067],
+   [150, 0.5987],
+   [175, 0.6993],
+   [200, 0.8004],
+   [228, 0.9067],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

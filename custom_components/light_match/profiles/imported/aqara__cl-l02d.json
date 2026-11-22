@@ -1,0 +1,59 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Aqara Ceiling Light T1M",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Aqara",
+  "manufacturer_aliases": [
+   "LUMI",
+   "Xiaomi"
+  ],
+  "models": [
+   "CL-L02D",
+   "lumi.light.acn032",
+   "lumi.light.acn031"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 3450,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

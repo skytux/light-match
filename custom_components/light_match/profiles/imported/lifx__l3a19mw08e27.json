@@ -1,0 +1,73 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "LIFX Mini White",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "LIFX",
+  "manufacturer_aliases": [],
+  "models": [
+   "L3A19MW08E27",
+   "LIFX Mini White",
+   "LIFX Mini W"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 800,
+  "output_curve": [
+   [1, 0.0119],
+   [3, 0.0143],
+   [5, 0.0143],
+   [8, 0.0238],
+   [13, 0.0309],
+   [20, 0.0451],
+   [26, 0.0451],
+   [33, 0.0451],
+   [41, 0.0618],
+   [51, 0.0855],
+   [64, 0.0903],
+   [77, 0.1176],
+   [92, 0.1603],
+   [110, 0.2019],
+   [128, 0.2506],
+   [150, 0.3409],
+   [175, 0.4656],
+   [200, 0.5962],
+   [228, 0.7755],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

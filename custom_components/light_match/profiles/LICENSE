@@ -14,3 +14,11 @@ they chose.
 Submitting a profile to the database means you agree to license it under
 CC BY 4.0. The Light Match code itself is licensed under the GNU General
 Public License version 2 or later (see LICENSE in the repository root).
+
+Imported profiles (imported/*.json) were generated from public databases
+under the MIT, BSD-2-Clause, BSD-3-Clause and Apache-2.0 licences. The
+compilation is offered under CC BY 4.0 as above, and the data taken from
+each source also stays under that source's licence: its copyright notice
+and licence text are in imported/licenses/, listed in imported/NOTICE.md,
+and every imported profile names its sources in provenance.imports. Keep
+those notices when you redistribute the imported profiles.

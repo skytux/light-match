@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "eWeLight RGBCW 5W GU10 Smart Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "eWeLight",
+  "manufacturer_aliases": [],
+  "models": [
+   "2APYC-JL01"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 400,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0208],
+   [3, 0.0218],
+   [5, 0.0229],
+   [8, 0.0265],
+   [13, 0.0374],
+   [20, 0.0571],
+   [26, 0.0571],
+   [33, 0.0748],
+   [41, 0.1013],
+   [51, 0.1325],
+   [64, 0.1506],
+   [77, 0.2104],
+   [92, 0.2587],
+   [110, 0.3055],
+   [128, 0.3906],
+   [150, 0.4717],
+   [175, 0.5839],
+   [200, 0.7112],
+   [228, 0.866],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "TP-Link Tapo Smart Wi-Fi Light Strip",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "TP-Link",
+  "manufacturer_aliases": [
+   "Kasa",
+   "Tapo"
+  ],
+  "models": [
+   "L900"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness",
+   "hs"
+  ],
+  "lumens": 400,
+  "output_curve": [
+   [1, 0.0187],
+   [3, 0.0211],
+   [5, 0.03],
+   [8, 0.0414],
+   [13, 0.0649],
+   [20, 0.0852],
+   [26, 0.1088],
+   [33, 0.1412],
+   [41, 0.1729],
+   [51, 0.2151],
+   [64, 0.2646],
+   [77, 0.3206],
+   [92, 0.3758],
+   [110, 0.4513],
+   [128, 0.5292],
+   [150, 0.6136],
+   [175, 0.707],
+   [200, 0.8028],
+   [228, 0.9099],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

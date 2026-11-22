@@ -1,0 +1,73 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "WiZ Philips Wiz Neo Smart WiFi LED Downlight  15W (Round) (Tuneable White)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "WiZ",
+  "manufacturer_aliases": [],
+  "models": [
+   "929003824501"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0185],
+   [3, 0.0302],
+   [5, 0.0418],
+   [8, 0.049],
+   [13, 0.0507],
+   [20, 0.0507],
+   [26, 0.0649],
+   [33, 0.0649],
+   [41, 0.0649],
+   [51, 0.0999],
+   [64, 0.1399],
+   [77, 0.2107],
+   [92, 0.2236],
+   [110, 0.3079],
+   [128, 0.358],
+   [150, 0.5586],
+   [175, 0.648],
+   [200, 0.7749],
+   [228, 0.8858],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

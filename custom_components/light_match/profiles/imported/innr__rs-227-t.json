@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Innr Smart Spot Comfort",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Innr",
+  "manufacturer_aliases": [],
+  "models": [
+   "RS 227 T"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 420,
+  "min_kelvin": 2200,
+  "max_kelvin": 5000,
+  "output_curve": [
+   [1, 0.0161],
+   [3, 0.018],
+   [5, 0.0198],
+   [8, 0.0217],
+   [13, 0.023],
+   [20, 0.0323],
+   [26, 0.0323],
+   [33, 0.0419],
+   [41, 0.0484],
+   [51, 0.0599],
+   [64, 0.0959],
+   [77, 0.1198],
+   [92, 0.1664],
+   [110, 0.2009],
+   [128, 0.2696],
+   [150, 0.3433],
+   [175, 0.4627],
+   [200, 0.6134],
+   [228, 0.8],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

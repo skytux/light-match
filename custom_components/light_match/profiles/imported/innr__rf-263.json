@@ -1,0 +1,71 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Innr Smart Filament Bulb E27 Vintage (2200K)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Innr",
+  "manufacturer_aliases": [],
+  "models": [
+   "RF 263"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 350,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.04],
+   [5, 0.1914],
+   [8, 0.1914],
+   [13, 0.1914],
+   [20, 0.1914],
+   [26, 0.1914],
+   [33, 0.1914],
+   [41, 0.1914],
+   [51, 0.1914],
+   [64, 0.1914],
+   [77, 0.1914],
+   [92, 0.1914],
+   [110, 0.2286],
+   [128, 0.3057],
+   [150, 0.3629],
+   [175, 0.5],
+   [200, 0.64],
+   [228, 0.7914],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

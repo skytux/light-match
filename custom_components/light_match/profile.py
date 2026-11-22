@@ -64,6 +64,43 @@ class SourceCaps:
     gamut: tuple[tuple[float, float], ...] | None = None  # xy corners red, green, blue
     subfloor: bool = True  # the lamp dims its channels at the floor brightness
     channel_gain: tuple[float, ...] | None = None  # relative output per channel
+    # Estimated relative output by brightness, ((brightness, output), ...)
+    output_curve: tuple[tuple[float, float], ...] | None = None
+
+    def curve_level(self, level: float) -> float | None:
+        """The brightness (0-255) that gives the lm-ref-1 output of a level (%), from the curve.
+
+        The target output is luminance(L* = level). The curve's lowest
+        reading is treated as light-independent draw (a power reading has
+        driver overhead) and subtracted. Where the curve is flat or too low to
+        trust (below its first rising point after the flat start), the
+        brightness is scaled linearly down to 0, joined continuously; the
+        floor logic then handles anything below the lamp's floor. None when
+        there is no usable curve.
+        """
+        curve = self.output_curve
+        if not curve or len(curve) < 2:
+            return None
+        base = curve[0][1]
+        span = curve[-1][1] - base
+        if span <= _EPS:
+            return None
+        points = [(b, (y - base) / span) for b, y in curve]
+        rising = [i for i in range(1, len(points)) if points[i][1] > _EPS]
+        if not rising:
+            return None
+        # the first trustworthy point: the second one after the flat start, if there is one
+        first = rising[min(1, len(rising) - 1)]
+        b_rel, y_rel = points[first]
+        level = max(0.0, min(100.0, level))
+        y = luminance(level)
+        if y <= y_rel:
+            l_rel = lightness(y_rel)
+            return b_rel * level / l_rel if l_rel > _EPS else b_rel
+        for (b0, y0), (b1, y1) in zip(points[first - 1 :], points[first:], strict=False):
+            if y0 <= y <= y1:
+                return b0 + (b1 - b0) * ((y - y0) / (y1 - y0) if y1 - y0 > _EPS else 1.0)
+        return 255.0
 
     @classmethod
     def from_modes(
@@ -755,10 +792,18 @@ class Profile:
     def _subfloor(self) -> bool:
         return self.fallback == BEHAVIOUR_SMART and not self.identity and self.caps.subfloor
 
+    def _default_level(self, level: float) -> float:
+        """The default brightness (0-255) for a level: the output curve when known, else linear."""
+        if self.fallback == BEHAVIOUR_SMART and not self.identity:
+            from_curve = self.caps.curve_level(level)
+            if from_curve is not None:
+                return from_curve
+        return level * 255 / 100
+
     def _default_point(self, kind: str, anchor: float, level: float) -> Point:
         caps = self.caps
         mode = self.mode_for(kind)
-        target_level = level * 255 / 100
+        target_level = self._default_level(level)
         if mode is None:
             return Point("brightness", target_level)
         if kind == KIND_COLOR:

@@ -1,0 +1,85 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "EGLO connect.z G125 E27 LED Filament Bulb (4W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "EGLO",
+  "manufacturer_aliases": [
+   "AwoX"
+  ],
+  "models": [
+   "110288",
+   "ESMLFzm_w6_Dimm",
+   "12226"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 150,
+  "output_curve": [
+   [1, 0.0077],
+   [3, 0.0077],
+   [5, 0.0077],
+   [8, 0.0077],
+   [13, 0.0077],
+   [20, 0.0077],
+   [26, 0.0077],
+   [33, 0.0257],
+   [41, 0.0257],
+   [51, 0.0334],
+   [64, 0.0566],
+   [77, 0.09],
+   [92, 0.126],
+   [110, 0.1799],
+   [128, 0.2442],
+   [150, 0.3445],
+   [175, 0.4704],
+   [200, 0.617],
+   [228, 0.7892],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

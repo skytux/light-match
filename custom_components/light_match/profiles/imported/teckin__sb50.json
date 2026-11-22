@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Teckin Smart Wi-Fi RGB LED Light Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Teckin",
+  "manufacturer_aliases": [],
+  "models": [
+   "SB50"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 800,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0],
+   [5, 0.001],
+   [8, 0.0015],
+   [13, 0.0015],
+   [20, 0.0015],
+   [26, 0.0037],
+   [33, 0.0059],
+   [41, 0.0059],
+   [51, 0.011],
+   [64, 0.0261],
+   [77, 0.0518],
+   [92, 0.0855],
+   [110, 0.1473],
+   [128, 0.2259],
+   [150, 0.3617],
+   [175, 0.5575],
+   [200, 0.8093],
+   [228, 0.9668],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Xiaomi Philips Smart LED Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Xiaomi",
+  "manufacturer_aliases": [
+   "Xiaomi Communications Co Ltd"
+  ],
+  "models": [
+   "9290020093",
+   "philips.light.hbulb"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 806,
+  "output_curve": [
+   [1, 0.0736],
+   [3, 0.0798],
+   [5, 0.0798],
+   [8, 0.0982],
+   [13, 0.1227],
+   [20, 0.1534],
+   [26, 0.184],
+   [33, 0.2086],
+   [41, 0.2577],
+   [51, 0.2883],
+   [64, 0.3681],
+   [77, 0.411],
+   [92, 0.454],
+   [110, 0.4969],
+   [128, 0.5644],
+   [150, 0.6319],
+   [175, 0.7239],
+   [200, 0.8037],
+   [228, 0.908],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

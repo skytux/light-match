@@ -1,0 +1,86 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Third Reality Smart Color Bulb ZL1",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Third Reality",
+  "manufacturer_aliases": [
+   "Third Reality, Inc"
+  ],
+  "models": [
+   "3RCB01057Z"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 800,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [5, 0.0194],
+   [8, 0.0317],
+   [13, 0.0501],
+   [20, 0.0775],
+   [26, 0.107],
+   [33, 0.1344],
+   [41, 0.1688],
+   [51, 0.2056],
+   [64, 0.2567],
+   [77, 0.3094],
+   [92, 0.3736],
+   [110, 0.4455],
+   [128, 0.5119],
+   [150, 0.5969],
+   [175, 0.6937],
+   [200, 0.7918],
+   [228, 0.9034],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

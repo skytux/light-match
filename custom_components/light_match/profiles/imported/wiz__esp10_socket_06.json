@@ -1,0 +1,36 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "WiZ ESP10_SOCKET_06",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "WiZ",
+  "manufacturer_aliases": [],
+  "models": [
+   "ESP10_SOCKET_06"
+  ]
+ },
+ "capabilities": {
+  "min_kelvin": 2700,
+  "max_kelvin": 2700
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Imported, unverified: white range only.",
+  "imports": [
+   {
+    "source": "pywizlight test fixtures",
+    "source_url": "https://github.com/sbidy/pywizlight/blob/master/pywizlight/tests/fake_bulb.py",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2020 Stephan Traub",
+    "fields": [
+     "max_kelvin",
+     "min_kelvin"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

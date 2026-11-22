@@ -1,0 +1,86 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Athom 15W E27 RGBCCT Bulb for ESPHome (1400 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Athom",
+  "manufacturer_aliases": [
+   "Athom_Technology",
+   "China Athom Technology"
+  ],
+  "models": [
+   "LB01-15W-E27",
+   "rgbct-light",
+   "Athom RGBCCT Bulb"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1400,
+  "min_kelvin": 3000,
+  "max_kelvin": 6020,
+  "output_curve": [
+   [26, 0.0024],
+   [33, 0.0024],
+   [41, 0.0024],
+   [51, 0.0024],
+   [64, 0.0032],
+   [77, 0.0055],
+   [92, 0.0093],
+   [110, 0.0263],
+   [128, 0.0517],
+   [150, 0.0861],
+   [175, 0.1778],
+   [200, 0.5183],
+   [228, 0.7396],
+   [255, 1.0]
+  ],
+  "brightness_floor": 26
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "brightness_floor"
+    ],
+    "quality": "estimated"
+   }
+  ]
+ }
+}

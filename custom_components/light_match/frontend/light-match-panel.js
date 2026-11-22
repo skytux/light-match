@@ -28,7 +28,7 @@ function download(filename, data) {
 }
 
 const SOURCE_LABEL = { user: "calibrated", model: "from the model profile", default: "default", inferred: "inferred" };
-const METHOD_LABEL = { spec: "spec-based", by_eye: "calibrated by eye", lux_meter: "lux meter", colorimeter: "colorimeter" };
+const METHOD_LABEL = { spec: "spec-based", by_eye: "calibrated by eye", lux_meter: "lux meter", colorimeter: "colorimeter", imported: "imported (partly calibrated, unverified)" };
 const CHANNEL_NAMES = {
   rgb: ["Red", "Green", "Blue"],
   rgbw: ["Red", "Green", "Blue", "White"],
@@ -398,7 +398,21 @@ class LightMatchPanel extends HTMLElement {
     const who = (m.contributors || []).map((c) => c.nickname).filter(Boolean);
     return `<p class="meta">${esc(lamp)} · model profile <b>${esc(m.name)}</b> (${esc(how)}, ${m.verified ? "verified" : "unverified"}${m.cells ? `, ${m.cells} cells` : ""}${m.origin === "online" ? ", online" : ""})</p>
       <p class="meta">&#128077; ${Number(rating.up) || 0} &#128078; ${Number(rating.down) || 0} · ${Number(m.downloads) || 0} downloads${who.length ? ` · by ${esc(who.join(", "))}` : ""}${m.updated ? ` · updated ${esc(m.updated)}` : ""}
-      ${m.rate_url ? ` · <a href="${esc(m.rate_url)}" target="_blank" rel="noopener">Rate / report</a>` : ""}</p>`;
+      ${m.rate_url ? ` · <a href="${esc(m.rate_url)}" target="_blank" rel="noopener">Rate / report</a>` : ""}</p>${this._importsLine(m)}`;
+  }
+
+  _importsLine(m) {
+    const seen = new Map();
+    for (const i of m.imports || []) {
+      const key = i.source + "|" + i.licence;
+      const q = seen.get(key) || { src: i, quality: new Set() };
+      q.quality.add(i.quality);
+      seen.set(key, q);
+    }
+    if (!seen.size) return "";
+    const parts = [...seen.values()].map(({ src, quality }) =>
+      `<a href="${esc(src.source_url)}" target="_blank" rel="noopener">${esc(src.source)}</a> (${esc(src.licence)}; ${esc([...quality].join(", "))})`);
+    return `<p class="meta">Data from ${parts.join(", ")}. Capabilities and an estimated brightness curve only; calibrate to refine.</p>`;
   }
 
   _onlineCard() {

@@ -1,0 +1,83 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "GE Link PAR38 Bright White Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "GE",
+  "manufacturer_aliases": [
+   "GE_Appliances"
+  ],
+  "models": [
+   "PSB38-BW30"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 900,
+  "output_curve": [
+   [1, 0.0543],
+   [3, 0.0698],
+   [5, 0.0698],
+   [8, 0.093],
+   [13, 0.1008],
+   [20, 0.124],
+   [26, 0.1473],
+   [33, 0.186],
+   [41, 0.2093],
+   [51, 0.2481],
+   [64, 0.2946],
+   [77, 0.3411],
+   [92, 0.3798],
+   [110, 0.4496],
+   [128, 0.5271],
+   [150, 0.6124],
+   [175, 0.6977],
+   [200, 0.7907],
+   [228, 0.8915],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

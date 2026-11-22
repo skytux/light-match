@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Genio Wi-Fi Dimmable RGB+CCT 9W LED Downlight",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Genio",
+  "manufacturer_aliases": [],
+  "models": [
+   "I002741"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 850,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.1206],
+   [3, 0.1206],
+   [5, 0.1206],
+   [8, 0.1285],
+   [13, 0.1539],
+   [20, 0.1888],
+   [26, 0.1888],
+   [33, 0.2305],
+   [41, 0.2762],
+   [51, 0.3005],
+   [64, 0.3297],
+   [77, 0.3812],
+   [92, 0.4434],
+   [110, 0.5149],
+   [128, 0.5795],
+   [150, 0.636],
+   [175, 0.7496],
+   [200, 0.8381],
+   [228, 0.912],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

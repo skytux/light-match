@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Lindby Dimmable RGBW LED Bulb, E27 (10W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Lindby",
+  "manufacturer_aliases": [
+   "tuya"
+  ],
+  "models": [
+   "9971013"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1050,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.1121],
+   [3, 0.1154],
+   [5, 0.1188],
+   [8, 0.1416],
+   [13, 0.1683],
+   [20, 0.2013],
+   [26, 0.2347],
+   [33, 0.2347],
+   [41, 0.2748],
+   [51, 0.2939],
+   [64, 0.3362],
+   [77, 0.3915],
+   [92, 0.4216],
+   [110, 0.4968],
+   [128, 0.5662],
+   [150, 0.6275],
+   [175, 0.7336],
+   [200, 0.8254],
+   [228, 0.9066],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

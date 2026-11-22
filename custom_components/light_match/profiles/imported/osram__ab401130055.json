@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "OSRAM LIGHTIFY Surface Light Tunable White",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "OSRAM",
+  "manufacturer_aliases": [],
+  "models": [
+   "AB401130055",
+   "Surface Light TW",
+   "ZLO-CeilingTW-OS"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 1800,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0892],
+   [3, 0.0907],
+   [5, 0.0922],
+   [8, 0.0922],
+   [13, 0.0922],
+   [20, 0.1078],
+   [26, 0.1394],
+   [33, 0.1636],
+   [41, 0.197],
+   [51, 0.2416],
+   [64, 0.2836],
+   [77, 0.3071],
+   [92, 0.3684],
+   [110, 0.4543],
+   [128, 0.519],
+   [150, 0.6074],
+   [175, 0.677],
+   [200, 0.803],
+   [228, 0.8498],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

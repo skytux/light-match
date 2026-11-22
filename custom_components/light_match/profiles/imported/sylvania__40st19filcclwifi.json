@@ -1,0 +1,42 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Sylvania SMART+ WiFi RGBW Color Filament ST19 LED Bulb (7W, 2000K)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Sylvania",
+  "manufacturer_aliases": [],
+  "models": [
+   "40ST19FILCCLWIFI",
+   "bmvlf3o8idpnobqe"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness",
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 500
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   }
+  ]
+ }
+}

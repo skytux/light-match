@@ -114,6 +114,23 @@ channels scaled down. For example a WiZ RGBW bulb asked for red at 1 % gets
 brightness 26 with red channel 25 instead of red 255: it shows a fraction of
 its floor brightness instead of staying at 10 %.
 
+**Imported profiles.** About 600 lamp models come with an imported profile
+(`profiles/imported/`), generated from public, permissively licensed
+databases: the Powercalc profile library, zigbee-herdsman-converters,
+deCONZ, diyHue, pywizlight and python-yeelight. They are *partly calibrated,
+imported and unverified*: model ids, colour modes, kelvin range, lumens,
+Hue gamut, and for Powercalc lamps an estimated brightness curve and
+sometimes a brightness floor. They never hold colour cells. The curve comes
+from power readings, not light (quality "power-proxy"): the lowest reading
+is treated as driver overhead and the default brightness is set so the
+lamp's output follows the reference space (brightness % = L\*). What the
+lamp itself reports (kelvin range, colour modes, a gamut attribute) wins
+over imported and spec data; a measured or verified community profile wins
+over everything, and fields missing from the best profile are filled from
+the next one. Each profile lists its sources, licences and the quality of
+each field in `provenance.imports`. To regenerate them: `tools/import/run.sh`
+(containers only).
+
 **State.** When the source reports the command the twin just sent, the twin
 shows the look it was asked for. When the source changes another way, the
 twin inverse-maps the source state through the profile to find the closest
@@ -207,3 +224,9 @@ the panel's JavaScript with `node --check`.
 ## Licence
 
 GPL-2.0-or-later. Copyright (C) 2026 Lou H. See [LICENSE](LICENSE).
+
+The lamp profile data is CC BY 4.0 (see
+[profiles/LICENSE](custom_components/light_match/profiles/LICENSE)).
+Imported profiles also keep the MIT, BSD-2-Clause, BSD-3-Clause and
+Apache-2.0 notices of the databases they come from, in
+[profiles/imported/](custom_components/light_match/profiles/imported/NOTICE.md).

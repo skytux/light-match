@@ -1,0 +1,81 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue Being Ceiling Light",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LTC001",
+   "3261030P6",
+   "3261048P6",
+   "3261030P7"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 2400,
+  "min_kelvin": 2040,
+  "max_kelvin": 6670,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0],
+   [5, 0.0],
+   [8, 0.0],
+   [13, 0.0002],
+   [20, 0.0065],
+   [26, 0.0153],
+   [33, 0.029],
+   [41, 0.0309],
+   [51, 0.0575],
+   [64, 0.0948],
+   [77, 0.1151],
+   [92, 0.1525],
+   [110, 0.2138],
+   [128, 0.2772],
+   [150, 0.359],
+   [175, 0.5335],
+   [200, 0.8004],
+   [228, 0.9323],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

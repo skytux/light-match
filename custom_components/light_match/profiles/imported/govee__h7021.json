@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Govee RGBIC Warm White Smart Outdoor String Lights (96ft)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Govee",
+  "manufacturer_aliases": [
+   "Shenzhen Qianyan Technology"
+  ],
+  "models": [
+   "H7021"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1500,
+  "min_kelvin": 2000,
+  "max_kelvin": 9010,
+  "output_curve": [
+   [1, 0.029],
+   [3, 0.0309],
+   [5, 0.0329],
+   [8, 0.0435],
+   [13, 0.0638],
+   [20, 0.0879],
+   [26, 0.1063],
+   [33, 0.1304],
+   [41, 0.1643],
+   [51, 0.2029],
+   [64, 0.2425],
+   [77, 0.2889],
+   [92, 0.3575],
+   [110, 0.4203],
+   [128, 0.4918],
+   [150, 0.5855],
+   [175, 0.6812],
+   [200, 0.7729],
+   [228, 0.8792],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

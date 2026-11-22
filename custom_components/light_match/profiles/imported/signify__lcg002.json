@@ -1,0 +1,112 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White and Color Ambiance GU10 Bluetooth",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LCG002",
+   "5060730P7_02",
+   "5060730P7_03",
+   "5060730P7_04",
+   "5060730P7_05",
+   "5060731P7_02",
+   "5060731P7_03",
+   "5060731P7_04",
+   "5060731P7_05",
+   "5060830P7_02",
+   "5060830P7_03",
+   "5060830P7_04",
+   "5060831P7_02",
+   "5060831P7_03",
+   "5060831P7_04",
+   "5061030P7_02",
+   "5061030P7_03",
+   "5061031P7_02",
+   "5061031P7_03",
+   "5062348P7",
+   "5062448P7",
+   "9290019531",
+   "5061031P7"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 350,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.031],
+   [3, 0.031],
+   [5, 0.031],
+   [8, 0.031],
+   [13, 0.0543],
+   [20, 0.0543],
+   [26, 0.0543],
+   [33, 0.0543],
+   [41, 0.0714],
+   [51, 0.0714],
+   [64, 0.09],
+   [77, 0.1014],
+   [92, 0.1014],
+   [110, 0.2105],
+   [128, 0.2105],
+   [150, 0.2976],
+   [175, 0.4262],
+   [200, 0.5857],
+   [228, 0.7429],
+   [255, 1.0]
+  ],
+  "gamut": "C"
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "deCONZ REST plugin device description files",
+    "source_url": "https://github.com/dresden-elektronik/deconz-rest-plugin/tree/master/devices/philips",
+    "licence": "BSD-3-Clause",
+    "copyright": "Copyright (c) 2017, dresden elektronik ingenieurtechnik gmbh",
+    "fields": [
+     "gamut"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

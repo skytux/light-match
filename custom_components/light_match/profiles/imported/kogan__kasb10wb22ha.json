@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Kogan SmarterHome 10W White Smart Bulb (B22)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Kogan",
+  "manufacturer_aliases": [],
+  "models": [
+   "KASB10WB22HA"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 1050,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.1034],
+   [3, 0.1057],
+   [5, 0.108],
+   [8, 0.1207],
+   [13, 0.1402],
+   [20, 0.1575],
+   [26, 0.1897],
+   [33, 0.2092],
+   [41, 0.2356],
+   [51, 0.2874],
+   [64, 0.3253],
+   [77, 0.3713],
+   [92, 0.4172],
+   [110, 0.4897],
+   [128, 0.5471],
+   [150, 0.6161],
+   [175, 0.7115],
+   [200, 0.8011],
+   [228, 0.9034],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

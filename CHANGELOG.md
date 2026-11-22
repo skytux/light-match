@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.6.0 - 2026-11-22
+
+- Imported lamp profiles: about 600 models in `profiles/imported/`, generated
+  by `tools/import/` (all in containers) from the Powercalc profile library
+  (MIT), zigbee-herdsman-converters (MIT), deCONZ device files
+  (BSD-3-Clause), diyHue light types (Apache-2.0), pywizlight fixtures (MIT)
+  and python-yeelight model specs (BSD-2-Clause). They are partly
+  calibrated, imported and unverified: model ids and aliases, colour modes,
+  kelvin range, lumens, Hue gamut (deCONZ wins over diyHue on
+  disagreement), and from Powercalc's power tables an estimated output curve
+  (standby subtracted, normalised, quality "power-proxy") and a brightness
+  floor where the power stays flat at the bottom (quality "estimated"). No
+  cells, no author emails. Each source's licence and copyright ship in
+  `profiles/imported/licenses/` with a NOTICE; each profile lists its
+  sources in `provenance.imports`.
+- New method "imported" (ranked between spec and by eye), the
+  `provenance.imports` list and `capabilities.output_curve`, in the runtime
+  schema and `profile.schema.json`.
+- Measured or verified community profiles now rank first, then the closest
+  match; capabilities are merged across all matching profiles, best first,
+  so an imported profile combines with a hand-written one (Hue gamut C
+  subfloor, WiZ floor).
+- What the lamp reports (kelvin range, colour modes, a gamut attribute)
+  wins over spec and imported data; only measured or verified profiles
+  override it.
+- Default brightness follows the output curve when one is known (smart
+  behaviour only); the panel names the import sources and licences, and the
+  config flow lists only the imported profiles that fit the lamp.
+
 ## 0.5.0 - 2026-11-22
 
 - Optional online update of the profile database, off by default: a

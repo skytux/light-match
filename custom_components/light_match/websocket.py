@@ -225,8 +225,8 @@ async def ws_show_target(hass: HomeAssistant, connection: Any, msg: dict[str, An
             else:
                 await _turn_on(hass, twin.source, command, connection, msg)
         else:
-            model = database(hass).match(device_info_for(hass, msg["entity_id"]))
-            if model is not None and model.data.get("reference"):
+            found = database(hass).candidates(device_info_for(hass, msg["entity_id"]))
+            if any(p.data.get("reference") for p in found):
                 command = reference_command(target)
             else:
                 command = nominal_command(target)

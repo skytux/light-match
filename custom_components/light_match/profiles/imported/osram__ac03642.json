@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "OSRAM SMART+ Classic E27 Tunable White",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "OSRAM",
+  "manufacturer_aliases": [],
+  "models": [
+   "AC03642",
+   "CLA60 TW",
+   "CLA60 TW OSRAM"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 810,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.026],
+   [3, 0.026],
+   [5, 0.026],
+   [8, 0.026],
+   [13, 0.026],
+   [20, 0.026],
+   [26, 0.026],
+   [33, 0.026],
+   [41, 0.039],
+   [51, 0.039],
+   [64, 0.039],
+   [77, 0.039],
+   [92, 0.1356],
+   [110, 0.1356],
+   [128, 0.2078],
+   [150, 0.2771],
+   [175, 0.3135],
+   [200, 0.4948],
+   [228, 0.6694],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

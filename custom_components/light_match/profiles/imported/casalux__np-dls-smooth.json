@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Casalux LED Light Column Smooth (12W, 600 lm, RGBCT) - ESPHome Conversion",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Casalux",
+  "manufacturer_aliases": [],
+  "models": [
+   "NP-DLS-Smooth",
+   "led_column_rgbct_103cm_600lm"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 600,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0099],
+   [3, 0.0099],
+   [5, 0.0099],
+   [8, 0.0099],
+   [13, 0.0099],
+   [20, 0.0123],
+   [26, 0.0123],
+   [33, 0.0176],
+   [41, 0.0176],
+   [51, 0.0176],
+   [64, 0.0329],
+   [77, 0.0368],
+   [92, 0.0648],
+   [110, 0.0928],
+   [128, 0.148],
+   [150, 0.2282],
+   [175, 0.3411],
+   [200, 0.4814],
+   [228, 0.7345],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,88 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "EGLO TOTARI-Z Ceiling Light (380mm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "EGLO",
+  "manufacturer_aliases": [
+   "AwoX"
+  ],
+  "models": [
+   "900084",
+   "Totari-Z 380"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 2160,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0238],
+   [3, 0.0258],
+   [5, 0.0278],
+   [8, 0.0288],
+   [13, 0.0306],
+   [20, 0.0357],
+   [26, 0.0382],
+   [33, 0.0436],
+   [41, 0.0502],
+   [51, 0.0583],
+   [64, 0.0688],
+   [77, 0.0873],
+   [92, 0.1118],
+   [110, 0.1557],
+   [128, 0.2048],
+   [150, 0.2836],
+   [175, 0.3962],
+   [200, 0.5431],
+   [228, 0.75],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

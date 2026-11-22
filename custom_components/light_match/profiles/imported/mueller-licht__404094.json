@@ -1,0 +1,87 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Müller Licht tint Amela White+Ambiance Ceiling Light (30 cm, 16W)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Müller Licht",
+  "manufacturer_aliases": [
+   "MLI",
+   "mueller-licht"
+  ],
+  "models": [
+   "404094",
+   "45727",
+   "404094 (16W)"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 2200,
+  "min_kelvin": 1800,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [16, 0.0659],
+   [20, 0.0735],
+   [26, 0.0927],
+   [33, 0.119],
+   [41, 0.1446],
+   [51, 0.187],
+   [64, 0.2309],
+   [77, 0.2823],
+   [92, 0.3358],
+   [110, 0.4116],
+   [128, 0.4695],
+   [150, 0.5649],
+   [175, 0.6603],
+   [200, 0.7663],
+   [228, 0.8886],
+   [255, 1.0]
+  ],
+  "brightness_floor": 16
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "brightness_floor"
+    ],
+    "quality": "estimated"
+   }
+  ]
+ }
+}

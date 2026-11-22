@@ -43,11 +43,25 @@ def db() -> ProfileDatabase:
     return ProfileDatabase(bundled=load_bundled(), loaded=True)
 
 
-def test_bundled_profiles_load(db: ProfileDatabase) -> None:
-    assert set(db.bundled) == {
+@pytest.fixture(scope="module")
+def hand_db(db: ProfileDatabase) -> ProfileDatabase:
+    """The hand-written profiles only (no profiles/imported/)."""
+    return ProfileDatabase(
+        bundled={pid: p for pid, p in db.bundled.items() if not pid.startswith("imported/")}, loaded=True
+    )
+
+
+def test_bundled_profiles_load(db: ProfileDatabase, hand_db: ProfileDatabase) -> None:
+    assert set(hand_db.bundled) == {
         "wiz/generic", "signify/hue-gamut-a", "signify/hue-gamut-b", "signify/hue-gamut-c",
     }
-    for prof in db.bundled.values():
+    imported = [p for pid, p in db.bundled.items() if pid.startswith("imported/")]
+    assert len(imported) > 400
+    for prof in imported:
+        prov = prof.data["provenance"]
+        assert prov["method"] == "imported" and prov["verified"] is False and prov["imports"]
+        assert not prof.cells
+    for prof in hand_db.bundled.values():
         prov = prof.data["provenance"]
         # seeds come only from public specs, unverified, with sources
         assert prov["method"] == "spec" and prov["verified"] is False and prov["sources"]
@@ -76,8 +90,8 @@ def test_database_script_finds_no_problems() -> None:
         (DeviceInfo(), None),
     ],
 )
-def test_matching(db: ProfileDatabase, device: DeviceInfo, expected: str | None) -> None:
-    found = db.match(device)
+def test_matching(hand_db: ProfileDatabase, device: DeviceInfo, expected: str | None) -> None:
+    found = hand_db.match(device)
     assert (found.id if found else None) == expected
 
 

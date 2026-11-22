@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Oz Smart Things RGBW Zigbee Downlight 10W",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Oz Smart Things",
+  "manufacturer_aliases": [],
+  "models": [
+   "DL41-03-10-R-ZB"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 800,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.1169],
+   [3, 0.1214],
+   [5, 0.1259],
+   [8, 0.1352],
+   [13, 0.1526],
+   [20, 0.1762],
+   [26, 0.1979],
+   [33, 0.2252],
+   [41, 0.2533],
+   [51, 0.2903],
+   [64, 0.3399],
+   [77, 0.3865],
+   [92, 0.4355],
+   [110, 0.4993],
+   [128, 0.56],
+   [150, 0.6363],
+   [175, 0.7227],
+   [200, 0.8066],
+   [228, 0.9034],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

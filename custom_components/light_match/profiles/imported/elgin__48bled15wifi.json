@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Elgin Smart Color 15W",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Elgin",
+  "manufacturer_aliases": [],
+  "models": [
+   "48BLED15WIFI",
+   "mewijv1m7csjp6an"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1200,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [3, 0.1176],
+   [5, 0.1333],
+   [8, 0.1569],
+   [13, 0.1569],
+   [20, 0.2008],
+   [26, 0.2102],
+   [33, 0.251],
+   [41, 0.2651],
+   [51, 0.3012],
+   [64, 0.3451],
+   [77, 0.3906],
+   [92, 0.4329],
+   [110, 0.5122],
+   [128, 0.5647],
+   [150, 0.64],
+   [175, 0.7263],
+   [200, 0.8188],
+   [228, 0.9098],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

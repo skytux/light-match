@@ -1,0 +1,89 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Athom 7W E27 RGBCCT Bulb for ESPHome (600 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Athom",
+  "manufacturer_aliases": [
+   "Athom_Technology",
+   "China Athom Technology"
+  ],
+  "models": [
+   "LB01-7W-E27",
+   "rgbww-light",
+   "athom.rgbww-light",
+   "Athom RGBCW Bulb"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 600,
+  "min_kelvin": 3000,
+  "max_kelvin": 5990,
+  "output_curve": [
+   [16, 0.0072],
+   [20, 0.011],
+   [26, 0.012],
+   [33, 0.012],
+   [41, 0.0156],
+   [51, 0.0156],
+   [64, 0.024],
+   [77, 0.0367],
+   [92, 0.0615],
+   [110, 0.0972],
+   [128, 0.1489],
+   [150, 0.224],
+   [175, 0.3357],
+   [200, 0.4888],
+   [228, 0.7414],
+   [255, 1.0]
+  ],
+  "brightness_floor": 16
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "brightness_floor"
+    ],
+    "quality": "estimated"
+   }
+  ]
+ }
+}

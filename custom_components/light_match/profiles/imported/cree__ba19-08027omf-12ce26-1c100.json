@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Cree Connected 60W Equivalent Soft White A19 Dimmable LED Bulb (11.5W, 815 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Cree",
+  "manufacturer_aliases": [
+   "Tuya"
+  ],
+  "models": [
+   "BA19-08027OMF-12CE26-1C100",
+   "B00TN589ZG",
+   "Connected A-19 60W Equivalent"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 815,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0557],
+   [5, 0.0557],
+   [8, 0.0557],
+   [13, 0.072],
+   [20, 0.0883],
+   [26, 0.0883],
+   [33, 0.1036],
+   [41, 0.1036],
+   [51, 0.12],
+   [64, 0.1363],
+   [77, 0.1516],
+   [92, 0.2236],
+   [110, 0.3282],
+   [128, 0.4395],
+   [150, 0.5681],
+   [175, 0.6958],
+   [200, 0.7917],
+   [228, 0.904],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

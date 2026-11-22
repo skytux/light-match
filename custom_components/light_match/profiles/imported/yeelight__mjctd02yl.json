@@ -1,0 +1,79 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Yeelight Mi Bedside Lamp 2",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Yeelight",
+  "manufacturer_aliases": [
+   "Xiaomi",
+   "Yeelight Technology"
+  ],
+  "models": [
+   "MJCTD02YL"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 400,
+  "min_kelvin": 1700,
+  "max_kelvin": 6580,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0726],
+   [5, 0.148],
+   [8, 0.2017],
+   [13, 0.244],
+   [20, 0.2737],
+   [26, 0.2737],
+   [33, 0.2737],
+   [41, 0.2857],
+   [51, 0.3029],
+   [64, 0.3451],
+   [77, 0.5051],
+   [92, 0.5051],
+   [110, 0.512],
+   [128, 0.636],
+   [150, 0.7834],
+   [175, 0.7834],
+   [200, 0.7834],
+   [228, 0.7966],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

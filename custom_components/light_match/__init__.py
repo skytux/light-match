@@ -43,6 +43,8 @@ from .database import (
     ProfileDatabase,
     gamut_points,
     load_bundled,
+    merge_capabilities,
+    trusted,
 )
 from .profile import Profile, SourceCaps
 from .share import portable_profile
@@ -112,6 +114,10 @@ class LightMatchData:
                 "min_color_temp_kelvin": attrs.get("min_color_temp_kelvin"),
                 "max_color_temp_kelvin": attrs.get("max_color_temp_kelvin"),
             }
+            # some integrations expose the colour gamut; use it when they do
+            for key in ("gamut_type", "gamut"):
+                if attrs.get(key) is not None:
+                    self._caps_attrs[key] = attrs[key]
 
     def _registry_entry(self) -> er.RegistryEntry | None:
         return er.async_get(self.hass).async_get(self.source)
@@ -120,27 +126,36 @@ class LightMatchData:
         """How Home Assistant identifies the source lamp."""
         return device_info_for(self.hass, self.source)
 
-    def model_profile(self) -> ModelProfile | None:
-        """The model profile in use: chosen in the options, or matched."""
+    def model_profiles(self) -> list[ModelProfile]:
+        """The model profiles in use, best first: the chosen or best match, then other matches."""
         choice = self.option(CONF_PROFILE) or PROFILE_AUTO
         if choice == PROFILE_NONE:
-            return None
+            return []
         db = database(self.hass)
-        if choice != PROFILE_AUTO:
-            return db.get(choice)
-        return db.match(self.device_info())
+        found = db.candidates(self.device_info())
+        if choice == PROFILE_AUTO:
+            return found
+        chosen = db.get(choice)
+        return [chosen, *(p for p in found if p.id != chosen.id)] if chosen else []
+
+    def model_profile(self) -> ModelProfile | None:
+        """The model profile in use: chosen in the options, or matched."""
+        found = self.model_profiles()
+        return found[0] if found else None
+
+    def model_capabilities(self) -> tuple[dict[str, Any], dict[str, ModelProfile]]:
+        """Capabilities of every matching profile, best first, and where each came from."""
+        return merge_capabilities(self.model_profiles())
 
     def floor(self) -> int:
-        """The source's brightness floor (0-255): configured or from the model profile."""
+        """The source's brightness floor (0-255): configured or from the model profiles."""
         if not self.option(CONF_AUTO_FLOOR):
             return int(self.option(CONF_FLOOR) or 0)
-        model = self.model_profile()
-        return int(model.capabilities.get("brightness_floor", 0)) if model else 0
+        return int(self.model_capabilities()[0].get("brightness_floor", 0))
 
     def transition_supported(self) -> bool:
         """Whether transitions are passed to the source."""
-        model = self.model_profile()
-        override = model.capabilities.get("transition") if model else None
+        override = self.model_capabilities()[0].get("transition")
         if override is not None:
             return bool(override)
         state = self.hass.states.get(self.source)
@@ -159,18 +174,31 @@ class LightMatchData:
         if not attrs:
             reg = self._registry_entry()
             attrs = dict(reg.capabilities or {}) if reg else {}
-        model = self.model_profile()
-        mcaps = model.capabilities if model else {}
+        mcaps, origin = self.model_capabilities()
+
+        def measured(key: str) -> bool:
+            return key in origin and trusted(origin[key])
+
+        # What the lamp reports wins over spec sheets and imported data;
+        # only a measured or verified community profile overrides it.
         modes = attrs.get("supported_color_modes") or mcaps.get("color_modes")
+        lo, hi = attrs.get("min_color_temp_kelvin"), attrs.get("max_color_temp_kelvin")
+        if measured("min_kelvin") or not (lo and hi):
+            lo, hi = mcaps.get("min_kelvin") or lo, mcaps.get("max_kelvin") or hi
+        gamut = gamut_points(mcaps.get("gamut")) if measured("gamut") else None
+        if gamut is None:
+            gamut = _runtime_gamut(attrs) or gamut_points(mcaps.get("gamut"))
         gain = mcaps.get("channel_gain")
+        curve = mcaps.get("output_curve")
         return SourceCaps.from_modes(
             modes,
-            mcaps.get("min_kelvin") or attrs.get("min_color_temp_kelvin"),
-            mcaps.get("max_kelvin") or attrs.get("max_color_temp_kelvin"),
+            lo,
+            hi,
             self.floor(),
-            gamut=gamut_points(mcaps.get("gamut")),
+            gamut=gamut,
             subfloor=mcaps.get("subfloor") != SUBFLOOR_NONE,
             channel_gain=tuple(gain) if gain else None,
+            output_curve=tuple((float(b), float(y)) for b, y in curve) if curve else None,
         )
 
     def profile(self) -> Profile:
@@ -182,8 +210,8 @@ class LightMatchData:
             fallback=behaviour,
             identity=behaviour == BEHAVIOUR_REFERENCE,
         )
-        model = self.model_profile()
-        if model is not None and model.cells:
+        model = next((p for p in self.model_profiles() if p.cells), None)
+        if model is not None:
             profile.model_cells, _ = profile.convert_cells(model.cells, model.modes)
         return profile
 
@@ -225,8 +253,8 @@ class LightMatchData:
             return TARGET_HOUSE
         twin = data_for_entity(self.hass, ref)
         source = twin.source if twin is not None else ref
-        model = database(self.hass).match(device_info_for(self.hass, source))
-        return TARGET_REFERENCE if model is not None and model.data.get("reference") else TARGET_HOUSE
+        found = database(self.hass).candidates(device_info_for(self.hass, source))
+        return TARGET_REFERENCE if any(p.data.get("reference") for p in found) else TARGET_HOUSE
 
     def share_capabilities(self) -> dict[str, Any]:
         """What Home Assistant knows of the lamp, for a shared profile."""
@@ -283,6 +311,20 @@ async def async_get_database(hass: HomeAssistant) -> ProfileDatabase:
 def online_updater(hass: HomeAssistant) -> OnlineUpdater:
     """The online updater (created at setup)."""
     return hass.data[DOMAIN]["online"]
+
+
+def _runtime_gamut(attrs: dict[str, Any]) -> tuple[tuple[float, float], ...] | None:
+    """A colour gamut the integration exposes, if any (a letter or corner points)."""
+    for key in ("gamut_type", "gamut"):
+        value = attrs.get(key)
+        if isinstance(value, str) and value.upper() in ("A", "B", "C"):
+            return gamut_points(value.upper())
+        if isinstance(value, (list, tuple)) and len(value) == 3:
+            try:
+                return tuple((float(p[0]), float(p[1])) for p in value)
+            except (TypeError, ValueError, IndexError):
+                continue
+    return None
 
 
 def device_info_for(hass: HomeAssistant, entity_id: str) -> DeviceInfo:

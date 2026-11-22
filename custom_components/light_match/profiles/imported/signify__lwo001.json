@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White Filament Bulb G93 E27 w/ BT",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LWO001",
+   "8718699688882",
+   "9290022414"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 550,
+  "output_curve": [
+   [1, 0.0198],
+   [3, 0.0198],
+   [5, 0.0198],
+   [8, 0.0198],
+   [13, 0.0198],
+   [20, 0.0314],
+   [26, 0.0314],
+   [33, 0.0347],
+   [41, 0.0479],
+   [51, 0.0627],
+   [64, 0.0726],
+   [77, 0.1007],
+   [92, 0.1485],
+   [110, 0.1815],
+   [128, 0.2376],
+   [150, 0.3317],
+   [175, 0.4637],
+   [200, 0.6007],
+   [228, 0.7921],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Zengge Wi-Fi RGB+CCT LED Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Zengge",
+  "manufacturer_aliases": [],
+  "models": [
+   "AK001-ZJ2104",
+   "Bulb RGBCW (0x35)"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0354],
+   [3, 0.0414],
+   [5, 0.0475],
+   [8, 0.0599],
+   [13, 0.068],
+   [20, 0.0912],
+   [26, 0.1296],
+   [33, 0.166],
+   [41, 0.197],
+   [51, 0.2374],
+   [64, 0.2758],
+   [77, 0.3411],
+   [92, 0.4],
+   [110, 0.4613],
+   [128, 0.5374],
+   [150, 0.6189],
+   [175, 0.7178],
+   [200, 0.8061],
+   [228, 0.9094],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

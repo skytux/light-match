@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Cree Connected Max A19 Tunable White Smart Bulb (7.5W, 800 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Cree",
+  "manufacturer_aliases": [
+   "Tuya"
+  ],
+  "models": [
+   "CMA19-60W-AL-9TW-GL",
+   "c0raacap0zsw7gq8"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 800,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.051],
+   [3, 0.0592],
+   [5, 0.0675],
+   [8, 0.078],
+   [13, 0.0971],
+   [20, 0.1306],
+   [26, 0.1513],
+   [33, 0.1809],
+   [41, 0.2102],
+   [51, 0.2516],
+   [64, 0.314],
+   [77, 0.365],
+   [92, 0.4223],
+   [110, 0.4869],
+   [128, 0.5618],
+   [150, 0.6522],
+   [175, 0.7462],
+   [200, 0.8446],
+   [228, 0.936],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

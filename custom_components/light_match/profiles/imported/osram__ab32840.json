@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "OSRAM LIGHTIFY Classic B40 Tunable White (6W, E14)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "OSRAM",
+  "manufacturer_aliases": [],
+  "models": [
+   "AB32840",
+   "Classic B40 TW - LIGHTIFY"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 470,
+  "min_kelvin": 2700,
+  "max_kelvin": 6670,
+  "output_curve": [
+   [1, 0.0682],
+   [3, 0.0696],
+   [5, 0.071],
+   [8, 0.071],
+   [13, 0.071],
+   [20, 0.071],
+   [26, 0.0717],
+   [33, 0.0811],
+   [41, 0.0927],
+   [51, 0.1031],
+   [64, 0.1192],
+   [77, 0.1364],
+   [92, 0.1643],
+   [110, 0.1962],
+   [128, 0.2395],
+   [150, 0.3028],
+   [175, 0.415],
+   [200, 0.535],
+   [228, 0.7448],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

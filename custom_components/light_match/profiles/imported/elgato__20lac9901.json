@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Elgato Ring Light",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Elgato",
+  "manufacturer_aliases": [],
+  "models": [
+   "20LAC9901",
+   "Elgato Ring Light"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 2500,
+  "min_kelvin": 2910,
+  "max_kelvin": 6990,
+  "output_curve": [
+   [1, 0.0044],
+   [3, 0.0081],
+   [5, 0.0119],
+   [8, 0.0184],
+   [13, 0.0332],
+   [20, 0.0568],
+   [26, 0.0765],
+   [33, 0.1057],
+   [41, 0.1318],
+   [51, 0.1632],
+   [64, 0.2041],
+   [77, 0.2415],
+   [92, 0.266],
+   [110, 0.2982],
+   [128, 0.3408],
+   [150, 0.5579],
+   [175, 0.6699],
+   [200, 0.7704],
+   [228, 0.8882],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

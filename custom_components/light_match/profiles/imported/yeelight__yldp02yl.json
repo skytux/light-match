@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Yeelight LED Bulb (Color, E27)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Yeelight",
+  "manufacturer_aliases": [
+   "Xiaomi",
+   "Yeelight Technology"
+  ],
+  "models": [
+   "YLDP02YL"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 600,
+  "min_kelvin": 1700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [3, 0.0994],
+   [5, 0.1043],
+   [8, 0.1118],
+   [13, 0.1491],
+   [20, 0.1569],
+   [26, 0.1607],
+   [33, 0.1905],
+   [41, 0.2385],
+   [51, 0.2836],
+   [64, 0.3313],
+   [77, 0.3814],
+   [92, 0.4406],
+   [110, 0.4882],
+   [128, 0.5528],
+   [150, 0.612],
+   [175, 0.7002],
+   [200, 0.7793],
+   [228, 0.8965],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

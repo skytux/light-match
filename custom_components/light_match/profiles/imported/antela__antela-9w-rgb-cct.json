@@ -1,0 +1,79 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Antela RGB+CCT Bulb 9W",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Antela",
+  "manufacturer_aliases": [
+   "Tuya"
+  ],
+  "models": [
+   "ANTELA-9W-RGB+CCT",
+   "bf0f80ef7db65f56bfwkpm"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 806,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.077],
+   [3, 0.0785],
+   [5, 0.0799],
+   [8, 0.0951],
+   [13, 0.1201],
+   [20, 0.1377],
+   [26, 0.1576],
+   [33, 0.1887],
+   [41, 0.2214],
+   [51, 0.2491],
+   [64, 0.303],
+   [77, 0.3516],
+   [92, 0.4079],
+   [110, 0.4797],
+   [128, 0.5425],
+   [150, 0.6332],
+   [175, 0.7148],
+   [200, 0.8108],
+   [228, 0.9083],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

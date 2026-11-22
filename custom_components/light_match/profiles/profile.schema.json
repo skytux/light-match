@@ -205,6 +205,29 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 100000
+        },
+        "output_curve": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 64,
+          "description": "Estimated relative light output by brightness: [[brightness 1-255, output 0-1], ...], brightness rising, output not falling. Imported curves come from power readings (quality power-proxy).",
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "prefixItems": [
+              {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 255
+              },
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            ]
+          }
         }
       }
     },
@@ -219,6 +242,7 @@
         "method": {
           "enum": [
             "spec",
+            "imported",
             "by_eye",
             "lux_meter",
             "colorimeter"
@@ -237,6 +261,61 @@
         },
         "notes": {
           "type": "string"
+        },
+        "imports": {
+          "type": "array",
+          "description": "For imported profiles: every public database the data came from, with its licence and what was taken.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source",
+              "source_url",
+              "licence",
+              "copyright",
+              "fields",
+              "quality"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https?://"
+              },
+              "licence": {
+                "enum": [
+                  "MIT",
+                  "BSD-2-Clause",
+                  "BSD-3-Clause",
+                  "Apache-2.0"
+                ]
+              },
+              "copyright": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fields": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "quality": {
+                "enum": [
+                  "measured-by-source",
+                  "spec",
+                  "power-proxy",
+                  "estimated",
+                  "derived"
+                ]
+              }
+            }
+          }
         }
       }
     },

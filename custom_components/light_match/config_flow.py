@@ -29,7 +29,8 @@ from .const import (
 def _describe(prof: Any) -> str:
     prov = prof.data["provenance"]
     method = {"spec": "spec-based", "by_eye": "calibrated by eye", "lux_meter": "measured with a lux meter",
-              "colorimeter": "measured with a colorimeter"}[prov["method"]]
+              "colorimeter": "measured with a colorimeter",
+              "imported": "imported, partly calibrated"}[prov["method"]]
     verified = "verified" if prov["verified"] else "unverified"
     return f"{prof.name} ({method}, {verified})"
 
@@ -46,9 +47,13 @@ async def _profile_selector(hass: Any, source: str) -> tuple[selector.SelectSele
         selector.SelectOptionDict(value=PROFILE_AUTO, label=auto_label),
         selector.SelectOptionDict(value=PROFILE_NONE, label="No model profile"),
     ]
+    # every profile that fits this lamp, then the hand-written rest; imported
+    # profiles of other models are left out (there are hundreds)
+    fitting = {prof.id for prof in db.candidates(device)}
     options += [
         selector.SelectOptionDict(value=pid, label=_describe(prof))
         for pid, prof in sorted(db.all().items())
+        if pid in fitting or prof.data["provenance"]["method"] != "imported"
     ]
     dev = " ".join(v for v in (device.manufacturer, device.model, device.model_id) if v) or "unknown"
     if device.integration:

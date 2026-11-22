@@ -1,0 +1,73 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "IKEA TRADFRI bulb GU10 W 400lm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "IKEA",
+  "manufacturer_aliases": [
+   "IKEA of Sweden"
+  ],
+  "models": [
+   "LED1650R5",
+   "TRADFRI bulb GU10 W 400lm"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 400,
+  "output_curve": [
+   [3, 0.0665],
+   [5, 0.0665],
+   [8, 0.0665],
+   [13, 0.0722],
+   [20, 0.0722],
+   [26, 0.0817],
+   [33, 0.0932],
+   [41, 0.0932],
+   [51, 0.1046],
+   [64, 0.1217],
+   [77, 0.1464],
+   [92, 0.1996],
+   [110, 0.2091],
+   [128, 0.2605],
+   [150, 0.3232],
+   [175, 0.4189],
+   [200, 0.5589],
+   [228, 0.7864],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

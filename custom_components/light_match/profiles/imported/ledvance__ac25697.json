@@ -1,0 +1,87 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "LEDVANCE SMART+ ZB CLA60 60 9W E27",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "LEDVANCE",
+  "manufacturer_aliases": [],
+  "models": [
+   "AC25697",
+   "A60 RGBW Value II"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 806,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0211],
+   [3, 0.0285],
+   [5, 0.0358],
+   [8, 0.0445],
+   [13, 0.0589],
+   [20, 0.0837],
+   [26, 0.1113],
+   [33, 0.1282],
+   [41, 0.1704],
+   [51, 0.2042],
+   [64, 0.2532],
+   [77, 0.3059],
+   [92, 0.3682],
+   [110, 0.4386],
+   [128, 0.502],
+   [150, 0.5848],
+   [175, 0.6797],
+   [200, 0.7834],
+   [228, 0.887],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   },
+   {
+    "source": "zigbee-herdsman-converters (Zigbee2MQTT)",
+    "source_url": "https://github.com/Koenkk/zigbee-herdsman-converters",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2018 Koen Kanters",
+    "fields": [
+     "models"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

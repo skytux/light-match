@@ -1,0 +1,75 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Gledopto CCT 7W E27 G95 Zigbee Filament Bulb",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Gledopto",
+  "manufacturer_aliases": [],
+  "models": [
+   "GL-B-004P"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 800,
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0048],
+   [3, 0.0188],
+   [5, 0.0329],
+   [8, 0.0489],
+   [13, 0.0687],
+   [20, 0.1026],
+   [26, 0.1026],
+   [33, 0.1272],
+   [41, 0.1613],
+   [51, 0.1773],
+   [64, 0.2585],
+   [77, 0.3131],
+   [92, 0.3521],
+   [110, 0.4131],
+   [128, 0.5109],
+   [150, 0.5856],
+   [175, 0.7013],
+   [200, 0.8013],
+   [228, 0.8923],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

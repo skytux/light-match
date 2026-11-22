@@ -1,0 +1,76 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White E14 SES Candle 470lm w/ BT",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LWE002",
+   "8718699671211",
+   "9290020399"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness"
+  ],
+  "lumens": 470,
+  "output_curve": [
+   [1, 0.0684],
+   [3, 0.0684],
+   [5, 0.0765],
+   [8, 0.0765],
+   [13, 0.0765],
+   [20, 0.0785],
+   [26, 0.0785],
+   [33, 0.0805],
+   [41, 0.0825],
+   [51, 0.1006],
+   [64, 0.1066],
+   [77, 0.1388],
+   [92, 0.1791],
+   [110, 0.2294],
+   [128, 0.2757],
+   [150, 0.3561],
+   [175, 0.4708],
+   [200, 0.6177],
+   [228, 0.7767],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

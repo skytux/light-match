@@ -36,7 +36,14 @@ METHOD_SPEC = "spec"
 METHOD_BY_EYE = "by_eye"
 METHOD_LUX = "lux_meter"
 METHOD_COLORIMETER = "colorimeter"
-METHODS = [METHOD_SPEC, METHOD_BY_EYE, METHOD_LUX, METHOD_COLORIMETER]
+METHOD_IMPORTED = "imported"  # generated from a public database: partly calibrated, unverified
+METHODS = [METHOD_SPEC, METHOD_IMPORTED, METHOD_BY_EYE, METHOD_LUX, METHOD_COLORIMETER]
+MEASURED_METHODS = {METHOD_BY_EYE, METHOD_LUX, METHOD_COLORIMETER}
+# Licences of the sources imported data may come from (SPDX ids).
+IMPORT_LICENCES = ["MIT", "BSD-2-Clause", "BSD-3-Clause", "Apache-2.0"]
+# How good an imported field is: measured by the source (e.g. a power meter
+# sweep), a published spec, derived from power ("power-proxy") or estimated.
+IMPORT_QUALITIES = ["measured-by-source", "spec", "power-proxy", "estimated", "derived"]
 
 SUBFLOOR_CHANNEL_SCALE = "channel_scale"
 SUBFLOOR_NONE = "none"
@@ -46,7 +53,7 @@ CONTRIBUTOR_ROLES = ["calibrated", "measured", "verified", "edited"]
 # A contributor is credited by a nickname they choose; never a real name or email.
 _NICK_RE = r"^[^@<>\s][^@<>]{0,38}[^@<>\s]$|^[^@<>\s]$"
 _GITHUB_RE = r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$"
-METHOD_RANK = {METHOD_COLORIMETER: 3, METHOD_LUX: 3, METHOD_BY_EYE: 2, METHOD_SPEC: 1}
+METHOD_RANK = {METHOD_COLORIMETER: 4, METHOD_LUX: 4, METHOD_BY_EYE: 3, METHOD_IMPORTED: 2, METHOD_SPEC: 1}
 
 DISCUSSIONS_URL = "https://github.com/skytux/ha-light-match/discussions/categories/lamp-profiles"
 
@@ -80,6 +87,22 @@ GAMUT_SCHEMA = vol.Any(
     vol.Schema({vol.Required("red"): _xy, vol.Required("green"): _xy, vol.Required("blue"): _xy}),
 )
 
+def _output_curve(value: Any) -> list[list[float]]:
+    """[[brightness 1-255, relative output 0-1], ...]: brightness rising, output not falling."""
+    points = vol.Schema(vol.All([vol.All([vol.Coerce(float)], vol.Length(min=2, max=2))], vol.Length(min=2, max=64)))(
+        value
+    )
+    for b, y in points:
+        if not (1 <= b <= 255 and 0 <= y <= 1):
+            raise vol.Invalid("curve points are [brightness 1-255, output 0-1]")
+    for (b0, y0), (b1, y1) in zip(points, points[1:], strict=False):
+        if b1 <= b0 or y1 < y0:
+            raise vol.Invalid("curve brightness must rise and output must not fall")
+    if points[-1][1] <= points[0][1]:
+        raise vol.Invalid("curve output must rise")
+    return points
+
+
 CAPABILITIES_SCHEMA = vol.Schema(
     {
         vol.Optional("color_modes"): [vol.In(COLOR_MODES)],
@@ -93,6 +116,19 @@ CAPABILITIES_SCHEMA = vol.Schema(
         ),
         vol.Optional("transition"): vol.Any(None, bool),
         vol.Optional("lumens"): vol.All(int, vol.Range(min=1, max=100000)),
+        # Estimated relative light output by brightness (imported: from power readings).
+        vol.Optional("output_curve"): _output_curve,
+    }
+)
+
+IMPORT_SCHEMA = vol.Schema(
+    {
+        vol.Required("source"): vol.All(str, vol.Length(min=1)),
+        vol.Required("source_url"): vol.Url(),
+        vol.Required("licence"): vol.In(IMPORT_LICENCES),
+        vol.Required("copyright"): vol.All(str, vol.Length(min=1)),
+        vol.Required("fields"): vol.All([str], vol.Length(min=1)),
+        vol.Required("quality"): vol.In(IMPORT_QUALITIES),
     }
 )
 
@@ -112,6 +148,7 @@ PROVENANCE_SCHEMA = vol.Schema(
         vol.Optional("sources", default=list): [vol.Url()],
         vol.Required("verified"): bool,
         vol.Optional("notes"): str,
+        vol.Optional("imports", default=list): [IMPORT_SCHEMA],
     }
 )
 
@@ -136,8 +173,15 @@ def _provenance_rules(data: dict[str, Any]) -> dict[str, Any]:
     prov = data["provenance"]
     if prov["method"] == METHOD_SPEC and not prov["sources"]:
         raise vol.Invalid("a spec-based profile must cite its sources")
-    if prov["method"] == METHOD_SPEC and data.get("cells"):
-        raise vol.Invalid("a spec-based profile has no calibrated cells")
+    if prov["method"] in (METHOD_SPEC, METHOD_IMPORTED) and data.get("cells"):
+        raise vol.Invalid(f"a {prov['method']} profile has no calibrated cells")
+    if prov["method"] == METHOD_IMPORTED:
+        if not prov["imports"]:
+            raise vol.Invalid("an imported profile must list its sources in provenance.imports")
+        if prov["verified"]:
+            raise vol.Invalid("an imported profile is unverified")
+    elif prov["imports"]:
+        raise vol.Invalid("provenance.imports is only for imported profiles")
     caps = data.get("capabilities") or {}
     if "min_kelvin" in caps and "max_kelvin" in caps and caps["min_kelvin"] > caps["max_kelvin"]:
         raise vol.Invalid("min_kelvin is above max_kelvin")
@@ -327,6 +371,10 @@ class ModelProfile:
             "verified": prov["verified"],
             "reference": bool(self.data.get("reference")),
             "sources": list(prov.get("sources") or []),
+            "imports": [
+                {k: i[k] for k in ("source", "source_url", "licence", "quality", "fields")}
+                for i in prov.get("imports") or []
+            ],
             "license": self.data["license"],
             "contributors": [
                 {k: c[k] for k in ("nickname", "github", "role", "date") if k in c}
@@ -410,10 +458,16 @@ class ProfileDatabase:
         return (int(prov["verified"]), METHOD_RANK[prov["method"]], self.rating(prof.id), prof.revision)
 
     def candidates(self, device: DeviceInfo) -> list[ModelProfile]:
-        """Every profile that fits a device, best first."""
+        """Every profile that fits a device, best first.
+
+        Measured or verified community profiles come first (even generic
+        ones), then the closest match, then :meth:`rank`; so an imported
+        profile beats a spec one for the same model, and a measured one beats
+        both.
+        """
         scored = [(prof.match_score(device), prof) for prof in self.all().values()]
         scored = [(score, prof) for score, prof in scored if score]
-        scored.sort(key=lambda sp: (-sp[0], tuple(-v for v in self.rank(sp[1])), sp[1].id))
+        scored.sort(key=lambda sp: (-trusted(sp[1]), -sp[0], tuple(-v for v in self.rank(sp[1])), sp[1].id))
         return [prof for _, prof in scored]
 
     def match(self, device: DeviceInfo) -> ModelProfile | None:
@@ -424,6 +478,38 @@ class ProfileDatabase:
     def set_online(self, profiles: dict[str, dict[str, Any]]) -> None:
         """Replace the online layer with validated profiles."""
         self.online = {pid: ModelProfile(pid, data, "online") for pid, data in profiles.items()}
+
+
+def trusted(prof: ModelProfile) -> bool:
+    """A measured or verified profile (not a spec sheet or an import)."""
+    prov = prof.data["provenance"]
+    return bool(prov["verified"]) or prov["method"] in MEASURED_METHODS
+
+
+# Capabilities taken together from one profile.
+_CAP_GROUPS = (("min_kelvin", "max_kelvin"),)
+
+
+def merge_capabilities(profiles: list[ModelProfile]) -> tuple[dict[str, Any], dict[str, ModelProfile]]:
+    """Capabilities of several profiles, best first: each field from the first that has it.
+
+    Returns the merged capabilities and, per field, the profile it came from.
+    The kelvin range is taken as a pair.
+    """
+    caps: dict[str, Any] = {}
+    origin: dict[str, ModelProfile] = {}
+    grouped = {k: g for g in _CAP_GROUPS for k in g}
+    for prof in profiles:
+        own = prof.capabilities
+        for key in own:
+            if key in caps:
+                continue
+            group = grouped.get(key, (key,))
+            if not all(k in own for k in group) or any(k in caps for k in group):
+                continue
+            for k in group:
+                caps[k], origin[k] = own[k], prof
+    return caps, origin
 
 
 def profile_id_for(path: Path, root: Path = PROFILES_DIR) -> str:

@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Sylvania SMART+ WiFi RGBW Color Filament A19 LED Bulb (7W, 2000K)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Sylvania",
+  "manufacturer_aliases": [],
+  "models": [
+   "40A19FILCCLWIFI",
+   "k2nagch3coapc6yd"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness",
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 500,
+  "min_kelvin": 2000,
+  "max_kelvin": 2000,
+  "output_curve": [
+   [1, 0.1454],
+   [3, 0.1454],
+   [5, 0.1454],
+   [8, 0.1564],
+   [13, 0.1806],
+   [20, 0.2078],
+   [26, 0.231],
+   [33, 0.2572],
+   [41, 0.2908],
+   [51, 0.3183],
+   [64, 0.3787],
+   [77, 0.4129],
+   [92, 0.4714],
+   [110, 0.526],
+   [128, 0.591],
+   [150, 0.6585],
+   [175, 0.7519],
+   [200, 0.8297],
+   [228, 0.9286],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

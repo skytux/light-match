@@ -1,0 +1,81 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Signify Hue White and Color Ambiance E27 1100lm",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Signify",
+  "manufacturer_aliases": [
+   "Philips",
+   "Signify Netherlands B.V."
+  ],
+  "models": [
+   "LCA011",
+   "9290038535H",
+   "8720169364066"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1100,
+  "min_kelvin": 1000,
+  "max_kelvin": 20000,
+  "output_curve": [
+   [1, 0.0558],
+   [3, 0.0597],
+   [5, 0.0636],
+   [8, 0.0636],
+   [13, 0.0636],
+   [20, 0.0675],
+   [26, 0.0777],
+   [33, 0.0811],
+   [41, 0.0947],
+   [51, 0.0995],
+   [64, 0.1252],
+   [77, 0.1476],
+   [92, 0.1786],
+   [110, 0.2199],
+   [128, 0.2772],
+   [150, 0.3568],
+   [175, 0.449],
+   [200, 0.5738],
+   [228, 0.7621],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

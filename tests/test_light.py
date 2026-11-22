@@ -129,8 +129,10 @@ async def test_user_hidden_source_is_left_alone(hass: HomeAssistant, sources) ->
 
 async def test_floor_from_model_profile(hass: HomeAssistant, sources, wiz_device) -> None:
     entry = await add_twin(hass, "light.wiz_bulb")
+    # the imported profile of the model ranks first; the floor comes from the
+    # generic WiZ profile, merged in because the imported one has none
     assert entry.runtime_data.floor() == 26
-    assert entry.runtime_data.model_profile().id == "wiz/generic"
+    assert [p.id for p in entry.runtime_data.model_profiles()] == ["imported/wiz__esp01_shrgb_03", "wiz/generic"]
     manual = await add_twin(hass, "light.bulb_hs", title="Manual", auto_floor=False, brightness_floor=12)
     assert manual.runtime_data.floor() == 12
     other = await add_twin(hass, "light.bulb_rgbw", title="Other")

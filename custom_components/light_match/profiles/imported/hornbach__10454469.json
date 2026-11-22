@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Hornbach FLAIR Viyu A60 E27 CCT Bulb (8.5W, 806 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Hornbach",
+  "manufacturer_aliases": [
+   "HORNBACH Baumarkt AG"
+  ],
+  "models": [
+   "10454469",
+   "VIYU_A60_806_CCT_10454469"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp"
+  ],
+  "lumens": 806,
+  "min_kelvin": 2200,
+  "max_kelvin": 5000,
+  "output_curve": [
+   [3, 0.0379],
+   [5, 0.0379],
+   [8, 0.0379],
+   [13, 0.0384],
+   [20, 0.0386],
+   [26, 0.044],
+   [33, 0.0467],
+   [41, 0.0583],
+   [51, 0.0736],
+   [64, 0.0911],
+   [77, 0.1154],
+   [92, 0.1458],
+   [110, 0.2002],
+   [128, 0.2608],
+   [150, 0.3497],
+   [175, 0.4678],
+   [200, 0.6087],
+   [228, 0.7922],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

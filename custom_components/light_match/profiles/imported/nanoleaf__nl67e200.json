@@ -1,0 +1,77 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Nanoleaf Essentials Matter over Thread Smart Bulb (A60/E27)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Nanoleaf",
+  "manufacturer_aliases": [],
+  "models": [
+   "NL67E200",
+   "Essentials A19/A60"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 806,
+  "min_kelvin": 2130,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0166],
+   [3, 0.0166],
+   [5, 0.0166],
+   [8, 0.0176],
+   [13, 0.0239],
+   [20, 0.0239],
+   [26, 0.0239],
+   [33, 0.0303],
+   [41, 0.0369],
+   [51, 0.0522],
+   [64, 0.069],
+   [77, 0.0943],
+   [92, 0.1338],
+   [110, 0.199],
+   [128, 0.2578],
+   [150, 0.3536],
+   [175, 0.4912],
+   [200, 0.6155],
+   [228, 0.8015],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

@@ -1,0 +1,79 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Govee RGBICW Smart Floor Lamp Basic",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Govee",
+  "manufacturer_aliases": [
+   "Shenzhen Qianyan Technology"
+  ],
+  "models": [
+   "H6076"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "brightness",
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 1566,
+  "min_kelvin": 2000,
+  "max_kelvin": 9010,
+  "output_curve": [
+   [1, 0.0049],
+   [3, 0.0213],
+   [5, 0.0377],
+   [8, 0.0472],
+   [13, 0.0516],
+   [20, 0.0653],
+   [26, 0.0891],
+   [33, 0.1131],
+   [41, 0.1449],
+   [51, 0.187],
+   [64, 0.218],
+   [77, 0.2718],
+   [92, 0.3309],
+   [110, 0.4094],
+   [128, 0.4822],
+   [150, 0.5769],
+   [175, 0.6779],
+   [200, 0.7817],
+   [228, 0.8912],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

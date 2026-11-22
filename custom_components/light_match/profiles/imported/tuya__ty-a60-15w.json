@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Tuya A60 RGB+CCT Bulb 15W",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Tuya",
+  "manufacturer_aliases": [],
+  "models": [
+   "TY-A60-15W"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "min_kelvin": 2000,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0726],
+   [5, 0.1509],
+   [8, 0.1945],
+   [13, 0.2096],
+   [20, 0.2355],
+   [26, 0.2548],
+   [33, 0.2783],
+   [41, 0.3094],
+   [51, 0.3447],
+   [64, 0.4002],
+   [77, 0.446],
+   [92, 0.5092],
+   [110, 0.587],
+   [128, 0.6658],
+   [150, 0.7534],
+   [175, 0.8785],
+   [200, 0.9977],
+   [228, 0.9977],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

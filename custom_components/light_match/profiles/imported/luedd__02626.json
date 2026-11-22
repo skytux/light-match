@@ -1,0 +1,79 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Luedd Smart RGBW GU10 Bulb (5W, 350 lm, 2200-4000K)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Luedd",
+  "manufacturer_aliases": [
+   "tuya"
+  ],
+  "models": [
+   "02626",
+   "LUEDD Smart GU10 5W 2200-4000K + RGB"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 350,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.1494],
+   [3, 0.1597],
+   [5, 0.1701],
+   [8, 0.1797],
+   [13, 0.1965],
+   [20, 0.2571],
+   [26, 0.2571],
+   [33, 0.287],
+   [41, 0.2922],
+   [51, 0.3268],
+   [64, 0.3701],
+   [77, 0.4078],
+   [92, 0.4619],
+   [110, 0.5082],
+   [128, 0.5805],
+   [150, 0.6515],
+   [175, 0.7281],
+   [200, 0.8069],
+   [228, 0.8978],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

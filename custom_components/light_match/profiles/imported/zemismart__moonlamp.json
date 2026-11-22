@@ -1,0 +1,74 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Zemismart Moon Lamp (ESPHome)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Zemismart",
+  "manufacturer_aliases": [],
+  "models": [
+   "moonlamp"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "min_kelvin": 2700,
+  "max_kelvin": 6020,
+  "output_curve": [
+   [1, 0.0],
+   [3, 0.0],
+   [5, 0.0],
+   [8, 0.0],
+   [13, 0.0],
+   [20, 0.0357],
+   [26, 0.0357],
+   [33, 0.0357],
+   [41, 0.0357],
+   [51, 0.0357],
+   [64, 0.0714],
+   [77, 0.0714],
+   [92, 0.1],
+   [110, 0.1429],
+   [128, 0.1929],
+   [150, 0.3143],
+   [175, 0.4286],
+   [200, 0.5643],
+   [228, 0.75],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

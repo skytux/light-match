@@ -1,0 +1,41 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "LIFX Smart Wi-Fi RGBW LED Bulb (A21, 1600 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "LIFX",
+  "manufacturer_aliases": [],
+  "models": [
+   "LFXA211600RGBW",
+   "LIFX A21 1600lm US",
+   "LIFX A21"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "hs"
+  ],
+  "lumens": 1600
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   }
+  ]
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "Yeelight ceiling18",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "Yeelight",
+  "manufacturer_aliases": [
+   "Yeelight Technology",
+   "Xiaomi"
+  ],
+  "models": [
+   "ceiling18"
+  ]
+ },
+ "capabilities": {
+  "min_kelvin": 2700,
+  "max_kelvin": 6500
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Imported, unverified: white range only.",
+  "imports": [
+   {
+    "source": "python-yeelight model specs",
+    "source_url": "https://gitlab.com/stavros/python-yeelight/-/blob/master/yeelight/main.py",
+    "licence": "BSD-2-Clause",
+    "copyright": "Copyright (c) 2016, Stavros Korokithakis",
+    "fields": [
+     "max_kelvin",
+     "min_kelvin"
+    ],
+    "quality": "spec"
+   }
+  ]
+ }
+}

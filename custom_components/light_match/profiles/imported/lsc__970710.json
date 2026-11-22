@@ -1,0 +1,79 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "LSC RGB-CCT Reflector Bulb, GU10 (4.9W, 380 lm)",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "LSC",
+  "manufacturer_aliases": [
+   "Tuya"
+  ],
+  "models": [
+   "970710",
+   "PAR16-GL-WIFILIC-TY-RGBCW"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 380,
+  "min_kelvin": 2700,
+  "max_kelvin": 6540,
+  "output_curve": [
+   [1, 0.0446],
+   [3, 0.0521],
+   [5, 0.0596],
+   [8, 0.0756],
+   [13, 0.0958],
+   [20, 0.1155],
+   [26, 0.1455],
+   [33, 0.1535],
+   [41, 0.1784],
+   [51, 0.216],
+   [64, 0.2662],
+   [77, 0.3277],
+   [92, 0.3934],
+   [110, 0.4676],
+   [128, 0.5103],
+   [150, 0.5737],
+   [175, 0.6638],
+   [200, 0.77],
+   [228, 0.8592],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}

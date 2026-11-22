@@ -1,0 +1,78 @@
+{
+ "format": "light_match_profile",
+ "version": 2,
+ "revision": 1,
+ "name": "LEDVANCE SMART+ WiFi Planon Frameless 600x600mm RGB + TW",
+ "license": "CC-BY-4.0",
+ "device": {
+  "manufacturer": "LEDVANCE",
+  "manufacturer_aliases": [],
+  "models": [
+   "AC26447",
+   "4058075484474",
+   "40580754884474"
+  ]
+ },
+ "capabilities": {
+  "color_modes": [
+   "color_temp",
+   "hs"
+  ],
+  "lumens": 3400,
+  "min_kelvin": 3000,
+  "max_kelvin": 3110,
+  "output_curve": [
+   [1, 0.076],
+   [3, 0.0826],
+   [5, 0.0891],
+   [8, 0.099],
+   [13, 0.1165],
+   [20, 0.1413],
+   [26, 0.1565],
+   [33, 0.1842],
+   [41, 0.2146],
+   [51, 0.2504],
+   [64, 0.2936],
+   [77, 0.3416],
+   [92, 0.397],
+   [110, 0.4617],
+   [128, 0.5288],
+   [150, 0.6083],
+   [175, 0.701],
+   [200, 0.7923],
+   [228, 0.8969],
+   [255, 1.0]
+  ]
+ },
+ "provenance": {
+  "method": "imported",
+  "verified": false,
+  "notes": "Partly calibrated: imported, unverified. Capabilities and an estimated brightness curve only; the curve comes from electrical power, not light.",
+  "imports": [
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "color_modes",
+     "lumens",
+     "max_kelvin",
+     "min_kelvin",
+     "models"
+    ],
+    "quality": "measured-by-source"
+   },
+   {
+    "source": "Powercalc profile library",
+    "source_url": "https://github.com/bramstroker/homeassistant-powercalc/tree/master/profile_library",
+    "licence": "MIT",
+    "copyright": "Copyright (c) 2021 Bram Gerritsen",
+    "fields": [
+     "output_curve"
+    ],
+    "quality": "power-proxy"
+   }
+  ]
+ }
+}
