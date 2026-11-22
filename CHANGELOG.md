@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.3.0 - 2026-11-22
+
+- Shared reference space `lm-ref-1` (`reference.py`, `docs/reference-space.md`):
+  colour cells are the saturated sRGB colour of their hue as CIE xy, white
+  cells the Planckian locus, and the brightness percentage is perceived
+  lightness of the lamp's own maximum. Every target lies inside Hue gamut C,
+  so a Hue gamut C colour lamp is the stand-in reference when calibrating by
+  eye; such a reference lamp is sent `xy_color` targets. The panel shows each
+  cell's target xy and relative output.
+- Profiles matched against any other lamp are marked `house`: the personal
+  "match my reference lamp" layer, which works at home but is not portable.
+- Share profile in the panel: builds the profile in the database format with
+  your own cells, the lamp's make, model and integration as the device
+  registry reports them, what Home Assistant knows of its capabilities, the
+  method (by eye, unverified), the CC BY 4.0 licence and, if you give one, your
+  nickname (remembered in the browser, marked as public). It downloads the
+  file and opens a prefilled "new lamp profile" GitHub issue, with the JSON in
+  the link when it fits. No entity ids, names or addresses go into the file.
+- Websocket commands `light_match/profile/share` and `light_match/reference`.
+
 ## 0.2.0 - 2026-11-22
 
 - Lamp profile database by manufacturer and model:

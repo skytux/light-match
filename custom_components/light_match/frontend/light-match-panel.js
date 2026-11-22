@@ -2,6 +2,31 @@
 // Talks to the integration over the websocket API (light_match/*).
 
 const LEVELS = [1, 5, 20, 50, 100];
+function storageGet(key) {
+  try {
+    return localStorage.getItem(key) || "";
+  } catch (e) {
+    return "";
+  }
+}
+
+function storageSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (e) {
+    /* private mode: nothing remembered */
+  }
+}
+
+function download(filename, data) {
+  const blob = new Blob([JSON.stringify(data, null, 2) + "\n"], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
 const SOURCE_LABEL = { user: "calibrated", model: "from the model profile", default: "default", inferred: "inferred" };
 const METHOD_LABEL = { spec: "spec-based", by_eye: "calibrated by eye", lux_meter: "lux meter", colorimeter: "colorimeter" };
 const CHANNEL_NAMES = {
@@ -163,12 +188,56 @@ class LightMatchPanel extends HTMLElement {
     const entry = this._entry;
     const model = prompt("Lamp model to put in the profile (optional):", "") || undefined;
     const res = await this._ws("profile/export", { entry_id: this._entryId, ...(model ? { model } : {}) });
-    const blob = new Blob([JSON.stringify(res.profile, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${(model || entry.title).replace(/[^\w.-]+/g, "_")}.light-match.json`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    download(`${(model || entry.title).replace(/[^\w.-]+/g, "_")}.light-match.json`, res.profile);
+  }
+
+  _shareCard() {
+    const nick = esc(storageGet("light_match_nickname"));
+    const gh = esc(storageGet("light_match_github"));
+    const r = this._shareResult;
+    let result = "";
+    if (r) {
+      const where = r.target === "lm-ref-1"
+        ? "Calibrated against a reference lamp (Hue gamut C), so it can go into the shared database."
+        : "<b>Calibrated against a lamp of your own (target \"house\")</b>: it works in your home, but the database only takes profiles matched to a reference lamp (a Hue colour lamp with gamut C). Choose such a lamp as the reference and calibrate again to share it.";
+      result = `<p class="meta">${r.cells} cells · ${where}</p>
+        <p class="meta">${r.json_in_url ? "The profile is filled into the issue." : `The profile is too long for the link: attach the downloaded file ${esc(r.filename)} to the issue.`}</p>
+        <div class="buttons"><a class="button primary" href="${esc(r.url)}" target="_blank" rel="noopener">Open the GitHub issue</a></div>`;
+    }
+    return `<div class="card">
+      <h2>Share this profile</h2>
+      <p class="hint">Creates the profile file with your own cells and the lamp's make and model, and opens a prefilled GitHub issue to add it to the lamp database. Nothing is sent until you submit the issue on GitHub yourself.</p>
+      <div class="pickers">
+        <label>Nickname (optional, <b>public</b>)<input id="nick" value="${nick}" maxlength="40" placeholder="how to credit you"></label>
+        <label>GitHub name (optional, public)<input id="gh" value="${gh}" maxlength="39"></label>
+      </div>
+      <label>Notes (optional, public)<input id="notes" maxlength="300" placeholder="e.g. bulb bought 2024, compared in daylight"></label>
+      <p class="meta">Your nickname is stored in the file and shown with the profile. Do not use your real name or email unless you want them public. Profiles are shared under CC BY 4.0: submitting one means you agree to that licence.</p>
+      <div class="buttons"><button id="sharego" class="primary">Create profile</button><button id="shareclose">Close</button></div>
+      ${result}
+    </div>`;
+  }
+
+  async _share() {
+    const $ = (sel) => this.shadowRoot.querySelector(sel);
+    const nickname = $("#nick").value.trim();
+    const github = $("#gh").value.trim();
+    storageSet("light_match_nickname", nickname);
+    storageSet("light_match_github", github);
+    try {
+      const res = await this._ws("profile/share", {
+        entry_id: this._entryId,
+        nickname,
+        github,
+        notes: $("#notes").value.trim(),
+        reference: this._reference || null,
+      });
+      download(res.filename, res.profile);
+      this._shareResult = res;
+      this._render();
+    } catch (err) {
+      this._flash(`Share failed: ${err.message || err}`);
+    }
   }
 
   async _import(file, merge) {
@@ -320,6 +389,7 @@ class LightMatchPanel extends HTMLElement {
           ? `<div class="card">
         <h2><span class="dot big" style="background:${this._swatch(cell)}"></span>${esc(this._label(cell))}
           <small>${esc(SOURCE_LABEL[cell.source] || cell.source)} · ${this._index + 1}/${this._profile.cells.length}</small></h2>
+        <p class="meta">Target in lm-ref-1: xy ${cell.target ? cell.target.xy.join(", ") : "-"} · ${cell.target ? (cell.target.relative_output * 100).toPrecision(2) : "-"} % of full output</p>
         <p class="hint">Make the lamp under test look like the reference, then Save. Changes are sent to the lamp live.</p>
         ${this._sliders()}
         <p class="cmd">${esc(JSON.stringify(this._command))}</p>
@@ -337,9 +407,11 @@ class LightMatchPanel extends HTMLElement {
       </div>`
           : ""
       }
+      ${this._shareOpen ? this._shareCard() : ""}
       <div class="card">${this._profile && this._profile.cells.length ? this._grid() : "<p>This lamp has nothing to calibrate.</p>"}</div>
       <div class="card links">
         <a href="#" id="export">Export profile</a> ·
+        <a href="#" id="share">Share profile</a> ·
         <label class="file">Import profile <input type="file" id="import" accept=".json,application/json"></label>
         <label><input type="checkbox" id="merge"> merge with existing cells</label> ·
         <a href="#" id="resetall">Reset all cells</a>
@@ -369,6 +441,9 @@ class LightMatchPanel extends HTMLElement {
         .links { font-size: 13px; margin-top: 12px; display:flex; gap: 8px; flex-wrap: wrap; align-items: center; }
         .links label { display:inline; }
         a { color: var(--primary-color); }
+        a.button { display:inline-block; padding: 8px 14px; border-radius: 6px; text-decoration: none; }
+        a.button.primary { background: var(--primary-color); color: var(--text-primary-color, #fff); }
+        input:not([type]) { display:block; width:100%; box-sizing:border-box; margin-top:4px; padding:6px; font-size:14px; background: var(--card-background-color); color: var(--primary-text-color); border:1px solid var(--divider-color); border-radius:6px; }
         .file input { display:none; }
         .file { color: var(--primary-color); text-decoration: underline; cursor: pointer; }
         .message { min-height: 1em; color: var(--primary-color); font-size: 13px; }
@@ -429,6 +504,16 @@ class LightMatchPanel extends HTMLElement {
       this._preview(true);
     });
     link("#export", () => this._export());
+    link("#share", () => {
+      this._shareOpen = true;
+      this._shareResult = null;
+      this._render();
+    });
+    on("#sharego", "click", () => this._share());
+    on("#shareclose", "click", () => {
+      this._shareOpen = false;
+      this._render();
+    });
     on("#import", "change", (e) => {
       const file = e.target.files[0];
       if (file) this._import(file, $("#merge").checked);

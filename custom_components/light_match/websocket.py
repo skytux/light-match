@@ -8,11 +8,14 @@ from homeassistant.components import websocket_api
 from homeassistant.const import ATTR_ENTITY_ID
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.loader import async_get_integration
 import voluptuous as vol
 
-from . import LightMatchData, data_for_entity, data_for_entry, loaded_entries
+from . import LightMatchData, data_for_entity, data_for_entry, database, device_info_for, loaded_entries
 from .const import CONF_BEHAVIOUR, CONF_PROFILE, CONF_REFERENCE, DOMAIN
 from .profile import MODE_ATTR, cell_target, grid_cells, nominal_command
+from .reference import reference_command, target_of
+from .share import repo_url, submission_url, suggested_path
 
 COMMAND_KEYS = {"brightness", *(a for a in MODE_ATTR.values() if a)}
 
@@ -29,6 +32,8 @@ def async_register_websocket(hass: HomeAssistant) -> None:
         ws_show_target,
         ws_export,
         ws_import,
+        ws_share,
+        ws_reference,
     ):
         websocket_api.async_register_command(hass, handler)
 
@@ -91,6 +96,7 @@ def ws_profile(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> Non
                 **cell,
                 "calibrated": key in data.cells,
                 "source": profile.cell_source(key),
+                "target": target_of(key),
                 "model_command": profile.model_cells.get(key),
                 "command": profile.cell_command(key),
                 "default": profile.default_command(cell["kind"], anchor, cell["brightness"]),
@@ -205,7 +211,11 @@ async def ws_show_target(hass: HomeAssistant, connection: Any, msg: dict[str, An
             else:
                 await _turn_on(hass, twin.source, command, connection, msg)
         else:
-            command = nominal_command(target)
+            model = database(hass).match(device_info_for(hass, msg["entity_id"]))
+            if model is not None and model.data.get("reference"):
+                command = reference_command(target)
+            else:
+                command = nominal_command(target)
             await _turn_on(hass, msg["entity_id"], command, connection, msg)
     except (HomeAssistantError, vol.Invalid) as err:
         connection.send_error(msg["id"], "show_failed", str(err))
@@ -248,3 +258,57 @@ async def ws_import(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -
         connection.send_error(msg["id"], "invalid_format", str(err))
         return
     connection.send_result(msg["id"], {"imported": imported, "skipped": skipped})
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): f"{DOMAIN}/profile/share",
+        vol.Required("entry_id"): str,
+        vol.Optional("nickname"): vol.Any(None, str),
+        vol.Optional("github"): vol.Any(None, str),
+        vol.Optional("notes"): vol.Any(None, str),
+        vol.Optional("reference"): vol.Any(None, str),
+    }
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_share(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """The portable profile and a prefilled link to submit it to the database."""
+    if (data := _get(hass, connection, msg)) is None:
+        return
+    try:
+        profile = data.share(
+            msg.get("reference") or None,
+            nickname=msg.get("nickname") or None,
+            github=msg.get("github") or None,
+            notes=msg.get("notes") or None,
+        )
+    except vol.Invalid as err:
+        connection.send_error(msg["id"], "invalid_format", f"Nickname or GitHub name not accepted: {err}")
+        return
+    integration = await async_get_integration(hass, DOMAIN)
+    repo = repo_url(integration.manifest)
+    path = suggested_path(data.device_info())
+    url, json_in_url = submission_url(repo, profile, path)
+    connection.send_result(
+        msg["id"],
+        {
+            "profile": profile,
+            "path": path,
+            "filename": path.replace("/", "-"),
+            "url": url,
+            "json_in_url": json_in_url,
+            "target": profile["target"],
+            "cells": len(profile["cells"]),
+        },
+    )
+
+
+@websocket_api.websocket_command({vol.Required("type"): f"{DOMAIN}/reference", vol.Required("key"): str})
+@callback
+def ws_reference(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """The absolute lm-ref-1 target of a cell."""
+    try:
+        connection.send_result(msg["id"], target_of(msg["key"]))
+    except ValueError as err:
+        connection.send_error(msg["id"], "invalid_format", str(err))

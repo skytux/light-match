@@ -26,6 +26,7 @@ from .const import (
     CONF_FLOOR,
     CONF_HIDE_SOURCE,
     CONF_PROFILE,
+    CONF_REFERENCE,
     CONF_SOURCE,
     DEFAULT_OPTIONS,
     DOMAIN,
@@ -35,6 +36,8 @@ from .const import (
 )
 from .database import (
     SUBFLOOR_NONE,
+    TARGET_HOUSE,
+    TARGET_REFERENCE,
     DeviceInfo,
     ModelProfile,
     ProfileDatabase,
@@ -42,6 +45,7 @@ from .database import (
     load_bundled,
 )
 from .profile import Profile, SourceCaps
+from .share import portable_profile
 
 if TYPE_CHECKING:
     from .light import CalibratedLight
@@ -197,6 +201,37 @@ class LightMatchData:
     def export(self, model: str | None = None) -> dict[str, Any]:
         """The profile as shareable JSON."""
         return self.profile().to_json(model)
+
+    def share_target(self, reference: str | None = None) -> str:
+        """lm-ref-1 if the cells were matched to a reference-space lamp, else house."""
+        ref = reference or self.option(CONF_REFERENCE)
+        if not ref:
+            return TARGET_HOUSE
+        twin = data_for_entity(self.hass, ref)
+        source = twin.source if twin is not None else ref
+        model = database(self.hass).match(device_info_for(self.hass, source))
+        return TARGET_REFERENCE if model is not None and model.data.get("reference") else TARGET_HOUSE
+
+    def share_capabilities(self) -> dict[str, Any]:
+        """What Home Assistant knows of the lamp, for a shared profile."""
+        caps = self.caps()
+        modes = self._caps_attrs.get("supported_color_modes") or []
+        out: dict[str, Any] = {"color_modes": sorted(str(m) for m in modes)}
+        if caps.white_mode == "color_temp":
+            out["min_kelvin"], out["max_kelvin"] = caps.min_kelvin, caps.max_kelvin
+        if caps.floor:
+            out["brightness_floor"] = caps.floor
+        return out
+
+    def share(self, reference: str | None = None, **contributor: Any) -> dict[str, Any]:
+        """The portable profile of the user's own cells."""
+        return portable_profile(
+            self.profile().to_json(),
+            self.device_info(),
+            self.share_capabilities(),
+            self.share_target(reference),
+            **contributor,
+        )
 
     async def async_import(self, data: Any, merge: bool = False) -> tuple[int, int]:
         """Import an exported profile; returns (imported, skipped)."""
