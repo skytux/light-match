@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 - 2026-11-22
+
+- README: install, set-up, calibration walkthrough, how it works, profile
+  format, services, limits, and related projects / how this differs.
+
 ## 0.1.0 - 2026-11-22
 
 - First version: calibrated twin lights with a colour x brightness calibration
