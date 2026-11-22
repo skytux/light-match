@@ -60,6 +60,7 @@ Each twin has options (**Configure** on the entry):
 | Reference lamp | The lamp the panel offers as the look to match when you calibrate this one. |
 | Detect the brightness floor | Uses the known floor for the source's integration (currently WiZ: 26 of 255, i.e. 10 %). |
 | Brightness floor | Set the floor yourself (0–255) when detection is off. 0 means the lamp has no floor. |
+| Whites with the colour LEDs | For lamps with both colour temperature and RGB/RGBW/RGBWW channels. **Below the brightness floor** (default): white cells the colour temperature mode cannot reach (below the floor) are shown with the colour channels instead, at the floor brightness with the channels scaled down, so whites go as dim as colours. Above the floor the lamp's own white is used, and the switch happens where the level crosses the floor. **Always**: every white with the colour channels. **Never**: the colour temperature mode (except whites outside the lamp's range, see Limits). Each white cell can still be switched in the panel. |
 | Hide the source light | Hides the real lamp from dashboards and voice assistants, so only the twin is used. Removing the twin shows it again. A lamp you hid yourself is left alone. |
 
 ## Calibrate
@@ -78,6 +79,12 @@ Each twin has options (**Configure** on the entry):
    - red/green/blue(/white) channels for RGB, RGBW and RGBWW lamps;
    - hue and saturation for lamps that take colours as hue/saturation or xy;
    - colour temperature for white cells of lamps that have it.
+
+   A white cell of a lamp with colour LEDs has a **Calibrate in colour
+   mode** switch. It changes that cell's sliders to channel sliders and saves
+   the cell in the colour mode, so a dim white can go below the brightness
+   floor. It starts as the lamp option sets it; whites shown with the colour
+   LEDs have a colour bar in the grid.
 5. **Save** stores the cell and moves on; **Skip** leaves it at its default.
    **Previous** goes back; **Reset this cell** returns a cell to its default.
    Click any square in the grid to jump to that cell. The bar at the top shows

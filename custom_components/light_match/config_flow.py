@@ -19,10 +19,12 @@ from .const import (
     CONF_PROFILE,
     CONF_REFERENCE,
     CONF_SOURCE,
+    CONF_WHITE_COLOR,
     DEFAULT_OPTIONS,
     DOMAIN,
     PROFILE_AUTO,
     PROFILE_NONE,
+    WHITE_COLORS,
 )
 
 
@@ -165,6 +167,13 @@ class LightMatchOptionsFlow(OptionsFlow):
                     selector.EntitySelectorConfig(
                         domain="light",
                         exclude_entities=[self.config_entry.data[CONF_SOURCE]],
+                    )
+                ),
+                vol.Optional(CONF_WHITE_COLOR): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=WHITE_COLORS,
+                        mode=selector.SelectSelectorMode.LIST,
+                        translation_key=CONF_WHITE_COLOR,
                     )
                 ),
                 vol.Required(CONF_AUTO_FLOOR): selector.BooleanSelector(),

@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.7.3 - 2026-11-22
+
+- Whites with the colour LEDs, so they can go dimmer: a new per-lamp option
+  (auto, default; always; never) for lamps with colour temperature and
+  RGB/RGBW/RGBWW channels. Auto shows white cells below the brightness
+  floor with the colour channels (floor brightness, channels scaled down:
+  the W channel with red and green for warmth, the mix that matches the
+  colour temperature), the lamp's own white above; levels blend and switch
+  where they cross the floor. Always uses the colour LEDs for every white;
+  never keeps colour temperature (whites outside the lamp's range still
+  use the colour LEDs, as in 0.7.0).
+- Calibration panel: a "Calibrate in colour mode" switch on white cells
+  turns the sliders into channel sliders and saves the cell in that mode;
+  it starts as the lamp option sets it, and whites shown with the colour
+  LEDs carry a colour bar in the grid. A saved white keeps its mode.
+- Inverse mapping recognises colour-LED whites at any brightness; export,
+  import, model profiles and the profile schema record the mode of each
+  such cell (`modes.cells`), and a lamp without colour LEDs converts them
+  to its colour temperature.
+- scripts/test.sh builds the test image only when it is missing or with
+  REBUILD=1.
+
 ## 0.7.2 - 2026-11-22
 
 - Calibration panel: a big circle shows the target colour and brightness

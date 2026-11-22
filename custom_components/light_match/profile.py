@@ -29,6 +29,8 @@ from .const import (
     COLOR_ANCHORS,
     PROFILE_FORMAT,
     PROFILE_VERSION,
+    WHITE_COLOR_ALWAYS,
+    WHITE_COLOR_AUTO,
     WHITE_KELVINS,
 )
 
@@ -345,6 +347,15 @@ def _normalise(values: tuple[float, ...], mode: str) -> tuple[float, ...]:
     return tuple(v / top for v in values)
 
 
+def _command_mode(cmd: dict[str, Any], modes: list[str]) -> str | None:
+    """The first of these modes a command is given in (by its colour attribute)."""
+    for mode in modes:
+        attr = MODE_ATTR.get(mode, "")
+        if attr is None or attr in cmd:
+            return mode
+    return None
+
+
 def command_to_point(cmd: dict[str, Any], mode: str) -> Point:
     """Turn a source command into a point."""
     brightness = float(cmd.get("brightness", 255))
@@ -602,12 +613,14 @@ class Profile:
         identity: bool = False,
         model_cells: dict[str, dict[str, Any]] | None = None,
         infer: bool = True,
+        white_color: str = WHITE_COLOR_AUTO,
     ) -> None:
         """Create a profile for a lamp with these capabilities."""
         self.caps = caps
         self.fallback = fallback
         self.identity = identity
         self.infer = infer
+        self.white_color = white_color
         self._correction: dict[str, list[tuple[float, float]]] | None = None
         self.cells = dict(cells or {})
         self.model_cells = dict(model_cells or {})
@@ -641,8 +654,9 @@ class Profile:
             mode = self.cell_mode(key)
         except ValueError:
             return None
-        attr = MODE_ATTR.get(mode or "")
-        return cmd if mode is not None and (attr is None or attr in cmd) else None
+        if mode is None or not isinstance(cmd, dict):
+            return None
+        return cmd if _command_mode(cmd, [mode]) == mode else None
 
     def stored(self, key: str) -> dict[str, Any] | None:
         """The command stored for a cell: the user's, else the model profile's."""
@@ -671,7 +685,7 @@ class Profile:
         if mode is not None and (model := self._layer(self.model_cells, key)) is not None:
             return command_to_point(model, mode)
         value = COLOR_ANCHORS[anchor] if kind == KIND_COLOR else float(anchor)
-        return self._default_point(kind, value, level)
+        return self._default_point(kind, value, level, mode)
 
     def _corrections(self) -> dict[str, list[tuple[float, float]]]:
         """Per kind: (level %, lightness ratio user / base) from the user's cells."""
@@ -719,11 +733,12 @@ class Profile:
         Brightness: the base level scaled by the user's lightness ratio at this
         level, learned from all calibrated cells of the same kind.
         """
-        mode = self.mode_for(kind, anchor_name)
         color = base.color
         nearest: tuple[float, Point] | None = None
         for lvl in BRIGHTNESS_LEVELS:
-            cmd = self._layer(self.cells, cell_key(kind, anchor_name, lvl))
+            key = cell_key(kind, anchor_name, lvl)
+            cmd = self._layer(self.cells, key)
+            mode = self.cell_mode(key)
             if cmd is None or mode is None:
                 continue
             dist = abs(lightness(lvl / 100) - lightness(level / 100))
@@ -743,24 +758,37 @@ class Profile:
         Returns (converted cells, number skipped).
         """
         valid = self.valid_keys()
+        cell_modes = modes.get("cells") if isinstance(modes.get("cells"), dict) else {}
         converted: dict[str, dict[str, Any]] = {}
         skipped = 0
         for key, cmd in cells.items():
             try:
-                kind = parse_cell_key(key)[0]
+                kind, anchor, level = parse_cell_key(key)
             except ValueError:
                 skipped += 1
                 continue
-            dst = self.cell_mode(key)
-            src = modes.get(kind)
-            # a white shown with the colour LEDs (narrow ct range) was stored in the colour mode
+            src = cell_modes.get(key) or modes.get(kind)
+            # a white shown with the colour LEDs was stored in the colour mode
             if isinstance(cmd, dict) and src in MODE_ATTR and MODE_ATTR[src] not in cmd and MODE_ATTR[src] is not None:
                 src = modes.get(KIND_COLOR, src)
+            if kind == KIND_WHITE and not self.identity and key in valid:
+                # a white keeps the mode it was calibrated in when this lamp has it
+                allowed = self.white_modes(float(anchor))
+                dst = src if src in allowed else self.default_white_mode(float(anchor), level)
+            else:
+                dst = self.cell_mode(key)
             if key not in valid or dst is None or src not in MODE_ATTR:
                 skipped += 1
                 continue
             try:
-                result = convert_command(validate_command(cmd, src), src, dst, self.caps)
+                clean = validate_command(cmd, src)
+                if kind == KIND_WHITE and dst == "color_temp" and src != dst:
+                    # a white made with the colour LEDs: the cell's colour temperature at its level
+                    k = max(self.caps.min_kelvin, min(self.caps.max_kelvin, float(anchor)))
+                    level = command_to_point(clean, src).level
+                    result = point_to_command(Point(dst, level, (1e6 / k,)), self.caps.floor)
+                else:
+                    result = convert_command(clean, src, dst, self.caps)
                 if result is None:
                     raise ValueError("cannot convert")
                 converted[key] = validate_command(result, dst)
@@ -778,21 +806,99 @@ class Profile:
             return self.caps.white_mode_at(float(anchor))
         return self.caps.white_mode
 
+    @property
+    def _colour_dims_lower(self) -> bool:
+        """Whether whites with the colour LEDs can go below the floor (sub-floor trick)."""
+        return self.caps.color_mode in CHANNEL_MODES and self._subfloor and self.caps.floor > 0
+
+    def white_modes(self, kelvin: float) -> list[str]:
+        """The modes a white cell can be calibrated in: the lamp's white first, then its colour LEDs."""
+        caps = self.caps
+        if self.identity:
+            return [caps.white_mode] if caps.white_mode else []
+        base = caps.white_mode_at(kelvin)
+        if base is None:
+            return []
+        if base == "color_temp" and caps.color_mode is not None:
+            return [base, caps.color_mode]
+        return [base]
+
+    def default_white_mode(self, kelvin: float, level: float) -> str | None:
+        """The mode of an uncalibrated white cell, by the white colour option.
+
+        auto: the colour LEDs only where the default brightness is below the
+        lamp's floor, which the colour channels can dim under; always: the
+        colour LEDs for every white; never: the colour temperature (whites
+        outside the lamp's range always use the colour LEDs).
+        """
+        caps = self.caps
+        if self.identity:
+            return caps.white_mode
+        base = caps.white_mode_at(kelvin)
+        if base != "color_temp" or caps.color_mode is None:
+            return base
+        if self.white_color == WHITE_COLOR_ALWAYS:
+            return caps.color_mode
+        if (
+            self.white_color == WHITE_COLOR_AUTO
+            and self._colour_dims_lower
+            and self._default_level(level) < caps.floor
+        ):
+            return caps.color_mode
+        return base
+
     def cell_mode(self, key: str) -> str | None:
-        """The command mode of one cell."""
-        kind, anchor, _level = parse_cell_key(key)
-        return self.mode_for(kind, anchor if kind == KIND_WHITE else None)
+        """The command mode of one cell.
+
+        A white cell is in the mode its calibration (user, else model profile)
+        was saved in, when the lamp has that mode; else the default mode.
+        """
+        kind, anchor, level = parse_cell_key(key)
+        if kind == KIND_COLOR or self.identity:
+            return self.mode_for(kind)
+        kelvin = float(anchor)
+        allowed = self.white_modes(kelvin)
+        if len(allowed) > 1:
+            for layer in (self.cells, self.model_cells):
+                cmd = layer.get(key)
+                if isinstance(cmd, dict) and (mode := _command_mode(cmd, allowed)) is not None:
+                    return mode
+        return self.default_white_mode(kelvin, level)
+
+    def colour_whites(self) -> bool:
+        """Whether any white cell is shown with the colour LEDs of a ct lamp."""
+        caps = self.caps
+        if self.identity or caps.white_mode != "color_temp" or caps.color_mode is None:
+            return False
+        return any(
+            self.cell_mode(cell_key(KIND_WHITE, k, lvl)) != caps.white_mode
+            for k in caps.white_kelvins
+            for lvl in BRIGHTNESS_LEVELS
+        )
 
     def valid_keys(self) -> set[str]:
         """Keys of the cells this lamp's grid has."""
         return {cell["key"] for cell in grid_cells(self.caps)}
 
-    def set_cell(self, key: str, cmd: dict[str, Any]) -> dict[str, Any]:
-        """Store a calibrated cell; validates the key and the command."""
+    def set_cell(self, key: str, cmd: dict[str, Any], mode: str | None = None) -> dict[str, Any]:
+        """Store a calibrated cell; validates the key, the mode and the command.
+
+        A white cell can be saved in any of its modes (``mode``, else the mode
+        the command is in, else the cell's current mode).
+        """
         if key not in self.valid_keys():
             raise ValueError(f"this lamp has no cell {key!r}")
-        mode = self.cell_mode(key)
-        assert mode is not None
+        kind, anchor, _level = parse_cell_key(key)
+        current = self.cell_mode(key)
+        assert current is not None
+        allowed = [current]
+        if kind == KIND_WHITE:
+            allowed += [m for m in self.white_modes(float(anchor)) if m != current]
+        if mode is None:
+            mode = _command_mode(cmd, allowed) if isinstance(cmd, dict) else None
+            mode = mode or current
+        elif mode not in allowed:
+            raise ValueError(f"cell {key!r} cannot be calibrated in {mode!r}")
         clean = validate_command(cmd, mode)
         self.cells = {**self.cells, key: clean}
         return clean
@@ -803,11 +909,42 @@ class Profile:
         self.cells = {k: v for k, v in self.cells.items() if k != key}
         return had
 
-    def default_command(self, kind: str, anchor: float, level: float) -> dict[str, Any]:
-        """The fallback command for a target colour hue / white kelvin at a level."""
+    def default_command(
+        self, kind: str, anchor: float, level: float, mode: str | None = None
+    ) -> dict[str, Any]:
+        """The fallback command for a target colour hue / white kelvin at a level (in a mode)."""
         return point_to_command(
-            self._default_point(kind, anchor, level), self.caps.floor, self._subfloor
+            self._default_point(kind, anchor, level, mode), self.caps.floor, self._subfloor
         )
+
+    def cell_command_in(self, key: str, mode: str) -> dict[str, Any]:
+        """A white cell's command in one of its modes, for switching modes in the panel.
+
+        In the cell's own mode this is its command. In the other mode it is the
+        model profile's cell when that is in this mode, else the cell's command
+        converted at the same light level: the colour LEDs mix the white of the
+        cell's colour temperature, below the floor with the channels scaled
+        down at the floor brightness.
+        """
+        current = self.cell_mode(key)
+        if mode == current:
+            return self.cell_command(key)
+        kind, anchor, _level = parse_cell_key(key)
+        if kind != KIND_WHITE or mode not in self.white_modes(float(anchor)):
+            raise ValueError(f"cell {key!r} has no mode {mode!r}")
+        model = self.model_cells.get(key)
+        if isinstance(model, dict) and _command_mode(model, [mode]) == mode:
+            return dict(model)
+        assert current is not None
+        point = command_to_point(self.cell_command(key), current)
+        caps = self.caps
+        if mode == "color_temp":
+            kelvin = max(caps.min_kelvin, min(caps.max_kelvin, float(anchor)))
+            other = Point(mode, point.level, (1e6 / kelvin,))
+        else:
+            kelvin = 1e6 / point.color[0] if point.mode == "color_temp" else float(anchor)
+            other = Point(mode, point.level, caps.white_color(kelvin, mode))
+        return point_to_command(other, caps.floor, caps.subfloor and not self.identity)
 
     def cell_command(self, key: str) -> dict[str, Any]:
         """The command of a cell: calibrated if stored, else inferred or the default."""
@@ -845,9 +982,10 @@ class Profile:
                 return from_curve
         return level * 255 / 100
 
-    def _default_point(self, kind: str, anchor: float, level: float) -> Point:
+    def _default_point(self, kind: str, anchor: float, level: float, mode: str | None = None) -> Point:
         caps = self.caps
-        mode = self.mode_for(kind, anchor if kind == KIND_WHITE else None)
+        if mode is None:
+            mode = self.mode_for(kind) if kind == KIND_COLOR else self.default_white_mode(anchor, level)
         target_level = self._default_level(level)
         if mode is None:
             return Point("brightness", target_level)
@@ -871,7 +1009,7 @@ class Profile:
         mode = self.cell_mode(key)
         if mode is not None and (stored := self.stored(key)) is not None:
             return command_to_point(stored, mode)
-        base = self._default_point(kind, anchor, level)
+        base = self._default_point(kind, anchor, level, mode)
         if self._inferring:
             return self._inferred_point(kind, anchor_name, level, base)
         return base
@@ -889,11 +1027,11 @@ class Profile:
         for low, high in zip(levels, levels[1:], strict=False):
             if low <= brightness <= high:
                 t = _perceptual_t(brightness, low, high)
-                return mix_points(
-                    self._cell_point(kind, anchor_name, anchor, low),
-                    self._cell_point(kind, anchor_name, anchor, high),
-                    t,
-                )
+                p0 = self._cell_point(kind, anchor_name, anchor, low)
+                p1 = self._cell_point(kind, anchor_name, anchor, high)
+                if p0.mode != p1.mode:
+                    return self._mix_white(p0, p1, t, anchor)
+                return mix_points(p0, p1, t)
         raise AssertionError("unreachable")
 
     def _color_neighbours(self, hue: float) -> tuple[str, float, str, float, float]:
@@ -940,20 +1078,27 @@ class Profile:
             return p0
         p1 = self._level_point(kind, k1, float(k1), target.brightness)
         if p0.mode != p1.mode:
-            return self._mix_white_modes(p0, p1, t, kelvin)
+            k = max(self.caps.min_kelvin, min(self.caps.max_kelvin, kelvin))
+            return self._mix_white(p0, p1, t, kelvin, 1e6 / k)
         return mix_points(p0, p1, t)
 
-    def _mix_white_modes(self, p0: Point, p1: Point, t: float, kelvin: float) -> Point:
+    def _mix_white(self, p0: Point, p1: Point, t: float, kelvin: float, mired: float | None = None) -> Point:
         """Blend a colour-temperature white with a white shown by the colour LEDs.
 
-        Inside the lamp's ct range the lamp's own white is used at the blended
-        level; outside it the ct white is converted to the colour mode first.
+        Where the lamp's own white can show the result (inside its ct range and
+        at or above its floor) it is used at the blended level, with ``mired``
+        (default: the ct point's). Otherwise the ct white is converted to the
+        colour mode and blended there, so levels below the floor stay reachable.
         """
         caps = self.caps
+        if p0.mode != "color_temp" and p1.mode != "color_temp":
+            # two colour modes cannot happen on one lamp; keep the nearer point
+            return p0 if t < 0.5 else p1
         ct, other = (p0, p1) if p0.mode == "color_temp" else (p1, p0)
-        if caps.white_mode_at(kelvin) == "color_temp":
-            k = max(caps.min_kelvin, min(caps.max_kelvin, kelvin))
-            return Point("color_temp", _mix_level(p0.level, p1.level, t), (1e6 / k,))
+        level = _mix_level(p0.level, p1.level, t)
+        below = level < caps.floor and self._colour_dims_lower
+        if caps.white_mode_at(kelvin) == "color_temp" and not below:
+            return Point("color_temp", level, (mired if mired is not None else ct.color[0],))
         converted = Point(other.mode, ct.level, caps.white_color(1e6 / ct.color[0], other.mode))
         return mix_points(converted, p1, t) if p0 is ct else mix_points(p0, converted, t)
 
@@ -996,11 +1141,19 @@ class Profile:
             kelvin = state.get("color_temp_kelvin")
             return self._inverse_white(level, float(kelvin) if kelvin else None)
         hue, sat = float(hs[0]), float(hs[1])
-        narrow = self.caps.narrow_white and not self.identity
-        if self.caps.white_mode != "color_temp" and sat < 20 or narrow and sat < 95:
-            # a colour-LED white of a narrow ct range is warm, so allow more saturation but a closer match
-            white = self._inverse_white_by_hs(level, hue, sat, 15.0 if sat < 20 else 6.0)
-            if white is not None and (not narrow or self.caps.white_mode_at(white.kelvin) != "color_temp"):
+        if self.caps.white_mode != "color_temp" and sat < 20:
+            white = self._inverse_white_by_hs(level, hue, sat)
+            if white is not None:
+                return white
+        elif sat < 95 and self.colour_whites():
+            # a colour-LED white of a ct lamp (below the floor, a narrow ct range or by
+            # choice) can be warm, so allow more saturation but a closer match; compare
+            # at about the right brightness, where the cell modes are what they are
+            kelvins = self.caps.white_kelvins
+            mid = float(kelvins[len(kelvins) // 2])
+            near = self._solve_brightness(lambda x: Target(KIND_WHITE, x, kelvin=mid), level)
+            white = self._inverse_white_by_hs(level, hue, sat, 15.0 if sat < 20 else 6.0, near)
+            if white is not None and self.forward_point(white).mode != "color_temp":
                 return white
         if self.caps.color_mode is None:
             return self._inverse_white(level, None)
@@ -1027,8 +1180,8 @@ class Profile:
 
             def dist(k: float) -> float:
                 point = self.forward_point(Target(KIND_WHITE, 50.0, kelvin=k))
-                if point.mode != "color_temp":  # shown with the colour LEDs
-                    return 1e9
+                if point.mode != "color_temp":  # shown with the colour LEDs: the nearest such
+                    return 1e3 + abs(1e6 / k - actual)
                 # the small second term breaks ties where the lamp's range clamps
                 return abs(point.color[0] - actual) + 1e-4 * abs(1e6 / k - actual)
 
@@ -1038,13 +1191,16 @@ class Profile:
         b = self._solve_brightness(lambda x: Target(KIND_WHITE, x, kelvin=target_k), level)
         return Target(KIND_WHITE, b, kelvin=round(target_k))
 
-    def _inverse_white_by_hs(self, level: float, hue: float, sat: float, max_dist: float = 15.0) -> Target | None:
+    def _inverse_white_by_hs(
+        self, level: float, hue: float, sat: float, max_dist: float = 15.0, at: float = 50.0
+    ) -> Target | None:
         kelvins = self.caps.white_kelvins
         if len(kelvins) < 2:
             return None
+        at = max(0.5, at)
 
         def dist(k: float) -> float:
-            fh, fs = point_hs(self.forward_point(Target(KIND_WHITE, 50.0, kelvin=k)))
+            fh, fs = point_hs(self.forward_point(Target(KIND_WHITE, at, kelvin=k)))
             return _hs_distance(fh, fs, hue, sat)
 
         target_k = _scan(dist, kelvins[0], kelvins[-1])
@@ -1109,10 +1265,24 @@ class Profile:
         ``meta`` adds the portable metadata (device, capabilities, provenance).
         """
         cells = {**self.model_cells, **self.cells} if effective else self.cells
+        modes: dict[str, Any] = {"color": self.caps.color_mode, "white": self.caps.white_mode}
+        # whites saved with the colour LEDs record their mode per cell
+        cell_modes: dict[str, str] = {}
+        for key, cmd in cells.items():
+            try:
+                kind, anchor, _level = parse_cell_key(key)
+            except ValueError:
+                continue
+            if kind == KIND_WHITE and isinstance(cmd, dict):
+                mode = _command_mode(cmd, self.white_modes(float(anchor)))
+                if mode is not None and mode != self.caps.white_mode:
+                    cell_modes[key] = mode
+        if cell_modes:
+            modes["cells"] = dict(sorted(cell_modes.items()))
         data: dict[str, Any] = {
             "format": PROFILE_FORMAT,
             "version": PROFILE_VERSION,
-            "modes": {"color": self.caps.color_mode, "white": self.caps.white_mode},
+            "modes": modes,
             "floor": self.caps.floor,
             "cells": {key: dict(cmd) for key, cmd in sorted(cells.items())},
         }

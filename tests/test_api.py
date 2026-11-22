@@ -62,7 +62,36 @@ async def test_websocket_commands(hass: HomeAssistant, sources, hass_ws_client) 
     cells = {c["key"]: c for c in res["result"]["cells"]}
     assert cells["color:red:1"]["command"] == {"brightness": 26, "rgbw_color": [25, 0, 0, 0]}
     assert cells["color:red:1"]["calibrated"] is False
-    assert cells["white:2700:1"]["mode"] == "color_temp"
+    # auto: a white below the floor (26) is shown with the colour LEDs, above it in ct
+    assert cells["white:2700:1"]["mode"] == "rgbw"
+    assert cells["white:2700:1"]["default_mode"] == "rgbw"
+    assert cells["white:2700:1"]["modes"] == ["color_temp", "rgbw"]
+    assert cells["white:2700:1"]["command"]["brightness"] == 26
+    assert set(cells["white:2700:1"]["commands"]) == {"color_temp", "rgbw"}
+    assert "color_temp_kelvin" in cells["white:2700:1"]["commands"]["color_temp"]
+    assert cells["white:2700:20"]["mode"] == "color_temp"
+    assert "modes" not in cells["color:red:1"]
+
+    # a white saved in its other mode switches that cell
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/cell/set", "entry_id": entry.entry_id, "key": "white:4000:20",
+         "mode": "rgbw", "command": {"brightness": 51, "rgbw_color": [40, 30, 0, 255]}}
+    )
+    res = await client.receive_json()
+    assert res["success"], res
+    await client.send_json_auto_id({"type": f"{DOMAIN}/profile", "entry_id": entry.entry_id})
+    cells = {c["key"]: c for c in (await client.receive_json())["result"]["cells"]}
+    assert cells["white:4000:20"]["mode"] == "rgbw"
+    assert cells["white:4000:20"]["default_mode"] == "color_temp"
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/cell/set", "entry_id": entry.entry_id, "key": "white:4000:20",
+         "mode": "hs", "command": {"brightness": 51, "hs_color": [30, 50]}}
+    )
+    assert not (await client.receive_json())["success"]
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/cell/reset", "entry_id": entry.entry_id, "key": "white:4000:20"}
+    )
+    assert (await client.receive_json())["success"]
 
     await client.send_json_auto_id(
         {"type": f"{DOMAIN}/cell/set", "entry_id": entry.entry_id, "key": "color:red:1",

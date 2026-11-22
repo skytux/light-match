@@ -67,10 +67,12 @@ async def test_options_flow(hass: HomeAssistant, sources) -> None:
             "auto_floor": False,
             "brightness_floor": 26,
             "hide_source": False,
+            "white_color": "always",
         },
     )
     await hass.async_block_till_done()
     assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert entry.options["white_color"] == "always"
     assert entry.options["behaviour"] == "plain"
     assert entry.options["brightness_floor"] == 26
     assert entry.options["reference_entity"] == "light.bulb_hs"

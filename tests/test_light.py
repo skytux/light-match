@@ -195,3 +195,22 @@ async def test_narrow_white_uses_colour_leds(hass: HomeAssistant, sources) -> No
     assert hass.states.get(twin).attributes["color_temp_kelvin"] == 2200
     await _on(hass, twin, color_temp_kelvin=3000, brightness=128)
     assert _sent(src)["color_temp_kelvin"] == 3000
+
+
+async def test_dim_white_below_the_floor_uses_colour_leds(hass: HomeAssistant, sources) -> None:
+    entry = await add_twin(hass, "light.bulb_rgbw", auto_floor=False, brightness_floor=26)
+    twin = twin_id(hass, entry)
+    src = sources["light.bulb_rgbw"]
+    await _on(hass, twin, color_temp_kelvin=4000, brightness=3)
+    sent = _sent(src)
+    assert sent["brightness"] == 26 and max(sent["rgbw_color"]) < 64  # channels scaled down
+    state = hass.states.get(twin)
+    assert state.attributes["color_mode"] == "color_temp"
+    assert abs(state.attributes["color_temp_kelvin"] - 4000) < 300
+    await _on(hass, twin, color_temp_kelvin=4000, brightness=128)
+    assert _sent(src)["color_temp_kelvin"] == 4000
+    # never: ct even below the floor
+    hass.config_entries.async_update_entry(entry, options={**entry.options, "white_color": "never"})
+    await hass.async_block_till_done()
+    await _on(hass, twin, color_temp_kelvin=4000, brightness=3)
+    assert "color_temp_kelvin" in _sent(src)

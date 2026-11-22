@@ -344,6 +344,23 @@
             "color_temp",
             "brightness"
           ]
+        },
+        "cells": {
+          "type": "object",
+          "description": "The command mode of single cells that are not in their kind's mode, such as a white cell calibrated with the colour LEDs of a lamp that has colour temperature (to dim below the brightness floor, or outside the lamp's colour temperature range).",
+          "propertyNames": {
+            "pattern": "^(color:(red|orange|yellow|green|cyan|blue|purple|pink)|white:[0-9]+):(1|5|20|50|100)$"
+          },
+          "additionalProperties": {
+            "enum": [
+              "rgb",
+              "rgbw",
+              "rgbww",
+              "hs",
+              "color_temp",
+              "brightness"
+            ]
+          }
         }
       }
     },

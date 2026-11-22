@@ -28,11 +28,13 @@ from .const import (
     CONF_PROFILE,
     CONF_REFERENCE,
     CONF_SOURCE,
+    CONF_WHITE_COLOR,
     DEFAULT_OPTIONS,
     DOMAIN,
     PROFILE_AUTO,
     PROFILE_NONE,
     STORAGE_VERSION,
+    WHITE_COLOR_AUTO,
 )
 from .database import (
     SUBFLOOR_NONE,
@@ -209,16 +211,19 @@ class LightMatchData:
             self.cells,
             fallback=behaviour,
             identity=behaviour == BEHAVIOUR_REFERENCE,
+            white_color=self.option(CONF_WHITE_COLOR) or WHITE_COLOR_AUTO,
         )
         model = next((p for p in self.model_profiles() if p.cells), None)
         if model is not None:
             profile.model_cells, _ = profile.convert_cells(model.cells, model.modes)
         return profile
 
-    async def async_set_cell(self, key: str, command: dict[str, Any]) -> dict[str, Any]:
-        """Store a calibrated cell."""
+    async def async_set_cell(
+        self, key: str, command: dict[str, Any], mode: str | None = None
+    ) -> dict[str, Any]:
+        """Store a calibrated cell (a white in one of its modes)."""
         profile = self.profile()
-        clean = profile.set_cell(key, command)
+        clean = profile.set_cell(key, command, mode)
         self.cells = profile.cells
         await self.async_save()
         return clean

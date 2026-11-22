@@ -165,6 +165,8 @@ MODES_SCHEMA = vol.Schema(
     {
         vol.Optional("color"): vol.Any(None, vol.In(COMMAND_MODES)),
         vol.Optional("white"): vol.Any(None, vol.In(COMMAND_MODES)),
+        # the mode of single cells not in their kind's mode (a white shown with the colour LEDs)
+        vol.Optional("cells"): {str: vol.In(COMMAND_MODES)},
     }
 )
 
@@ -189,10 +191,11 @@ def _provenance_rules(data: dict[str, Any]) -> dict[str, Any]:
         if data.get("target") != TARGET_REFERENCE:
             raise vol.Invalid(f"database cells must be in the reference space ({TARGET_REFERENCE})")
         modes = data.get("modes") or {}
+        cell_modes = modes.get("cells") or {}
         for key, cmd in data["cells"].items():
             try:
                 kind = parse_cell_key(key)[0]
-                validate_command(cmd, modes.get(kind) or "")
+                validate_command(cmd, cell_modes.get(key) or modes.get(kind) or "")
             except ValueError as err:
                 raise vol.Invalid(f"cell {key}: {err}") from err
     return data

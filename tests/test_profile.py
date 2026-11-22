@@ -401,3 +401,168 @@ def test_narrow_kelvin_range() -> None:
     hs = color_util.color_RGB_to_hs(*color_util.color_rgbw_to_rgb(*orange["rgbw_color"]))
     state = {"brightness": orange["brightness"], "color_mode": "rgbw", "rgbw_color": orange["rgbw_color"], "hs_color": list(hs)}
     assert profile.inverse(state).kind == KIND_COLOR
+
+
+WIDE = SourceCaps.from_modes(["rgbw", "color_temp"], 2200, 6500, floor=26)
+
+
+def test_white_color_option_picks_the_cell_mode() -> None:
+    auto = Profile(WIDE)
+    # auto: the colour LEDs only where the default brightness is below the floor (26 of 255)
+    assert auto.cell_mode("white:2700:1") == "rgbw" and auto.cell_mode("white:6500:5") == "rgbw"
+    assert auto.cell_mode("white:2700:20") == "color_temp" and auto.cell_mode("white:2200:100") == "color_temp"
+    assert auto.default_white_mode(2700, 10.0) == "rgbw"  # 25.5 < 26
+    assert auto.default_white_mode(2700, 10.3) == "color_temp"  # 26.3
+    assert auto.cell_mode("color:red:1") == "rgbw"
+    # without a floor, with plain defaults or without channel LEDs auto keeps ct
+    no_floor = SourceCaps.from_modes(["rgbw", "color_temp"], 2200, 6500)
+    assert Profile(no_floor).cell_mode("white:2700:1") == "color_temp"
+    assert Profile(WIDE, fallback=BEHAVIOUR_PLAIN).cell_mode("white:2700:1") == "color_temp"
+    assert Profile(HS).cell_mode("white:2700:1") == "color_temp"
+    # always: every white row; never: only whites outside the ct range (0.7.0)
+    always = Profile(WIDE, white_color="always")
+    assert all(always.cell_mode(f"white:{k}:{lvl}") == "rgbw" for k in (2200, 6500) for lvl in (1, 100))
+    assert Profile(HS, white_color="always").cell_mode("white:4000:50") == "hs"
+    never = Profile(RGBW, white_color="never")
+    assert never.cell_mode("white:2700:1") == "color_temp" and never.cell_mode("white:2200:1") == "rgbw"
+    assert not Profile(WIDE, white_color="never").colour_whites() and auto.colour_whites()
+    # the reference lamp passes through
+    assert Profile(WIDE, identity=True).cell_mode("white:2700:1") == "color_temp"
+    assert Profile(WIDE).white_modes(4000) == ["color_temp", "rgbw"] and Profile(RGBW).white_modes(2200) == ["rgbw"]
+
+
+@pytest.mark.parametrize("kelvin", [2200, 2700, 4000, 6500])
+def test_subfloor_white_defaults(kelvin: int) -> None:
+    cmd = Profile(WIDE).cell_command(f"white:{kelvin}:1")
+    r, g, b, w = cmd["rgbw_color"]
+    # the floor brightness with the channels scaled down to about 1 % (2.55 of 26)
+    assert cmd["brightness"] == 26
+    assert max(r, g, b, w) == round(255 * 2.55 / 26)
+    # the W channel with red and some green for warmth, no blue
+    assert w > 0 and b == 0 and r >= g
+    if kelvin >= 4000:
+        assert w == max(r, g, b, w)
+    # the colour of the mix matches the colour temperature
+    full = Profile(WIDE).cell_command_in(f"white:{kelvin}:20", "rgbw")
+    hue, sat = color_util.color_RGB_to_hs(*color_util.color_rgbw_to_rgb(*full["rgbw_color"]))
+    want = color_util.color_RGB_to_hs(*color_util.color_temperature_to_rgb(kelvin))
+    assert abs(hue - want[0]) < 4 and abs(sat - want[1]) < 4
+    # 5 % is below the floor too, 20 % is above it and uses ct
+    assert "rgbw_color" in Profile(WIDE).cell_command(f"white:{kelvin}:5")
+    assert Profile(WIDE).cell_command(f"white:{kelvin}:20")["color_temp_kelvin"] == kelvin
+
+
+def test_subfloor_white_warmth_grows_with_lower_kelvin() -> None:
+    profile = Profile(WIDE, white_color="always")
+    red_share = []
+    for kelvin in (6500, 4000, 2700, 2200):
+        r, g, _b, w = profile.cell_command(f"white:{kelvin}:100")["rgbw_color"]
+        red_share.append(r / (r + g + w))
+    assert red_share == sorted(red_share)
+
+
+def test_white_modes_blend_at_the_floor() -> None:
+    profile = Profile(WIDE)
+    previous = 0.0
+    modes = []
+    for tenth in range(5, 300):
+        point = profile.forward_point(Target(KIND_WHITE, tenth / 10, kelvin=3000))
+        assert point.level >= previous - 1e-6
+        previous = point.level
+        modes.append(point.mode)
+        # the colour LEDs only below the floor, ct from the floor up
+        assert (point.mode == "rgbw") == (point.level < 26)
+    switch = modes.index("color_temp")
+    assert modes[switch:] == ["color_temp"] * (len(modes) - switch)
+    below = profile.forward_point(Target(KIND_WHITE, (switch + 4) / 10, kelvin=3000))
+    above = profile.forward_point(Target(KIND_WHITE, (switch + 5) / 10, kelvin=3000))
+    assert abs(above.level - below.level) < 1.0
+    # sub-floor channels are sent at the floor brightness
+    cmd = profile.forward(Target(KIND_WHITE, 2.0, kelvin=3000))
+    assert cmd["brightness"] == 26 and max(cmd["rgbw_color"]) == round(255 * 2.0 * 2.55 / 26)
+    assert "color_temp_kelvin" in profile.forward(Target(KIND_WHITE, 50.0, kelvin=3000))
+
+
+def test_white_cell_mode_override() -> None:
+    profile = Profile(WIDE)
+    # a white above the floor saved with the colour LEDs, one below the floor saved in ct
+    colour = profile.set_cell("white:4000:50", {"brightness": 128, "rgbw_color": [60, 40, 0, 255]})
+    assert profile.cell_mode("white:4000:50") == "rgbw"
+    assert profile.forward(Target(KIND_WHITE, 50.0, kelvin=4000)) == colour
+    ct = profile.set_cell("white:2700:1", {"brightness": 3, "color_temp_kelvin": 2700}, "color_temp")
+    assert profile.cell_mode("white:2700:1") == "color_temp" and profile.cell_command("white:2700:1") == ct
+    with pytest.raises(ValueError):
+        profile.set_cell("white:2700:1", {"brightness": 3, "hs_color": [30, 50]}, "hs")
+    with pytest.raises(ValueError):
+        profile.set_cell("white:2700:1", {"brightness": 3, "color_temp_kelvin": 2700}, "rgbw")
+    # the panel's switch converts at the same light level
+    switched = profile.cell_command_in("white:2700:20", "rgbw")
+    current = profile.cell_command("white:2700:20")
+    assert switched["brightness"] == current["brightness"] and max(switched["rgbw_color"]) == 255
+    back = profile.cell_command_in("white:4000:50", "color_temp")
+    assert back == {"brightness": round(128 * 255 / 255), "color_temp_kelvin": 4000}
+    sub = profile.cell_command_in("white:2700:1", "rgbw")
+    assert sub["brightness"] == 26 and max(sub["rgbw_color"]) < 255
+    assert profile.reset_cell("white:4000:50") and profile.cell_mode("white:4000:50") == "color_temp"
+
+
+def test_colour_white_inverse() -> None:
+    profile = Profile(WIDE)
+
+    def state(cmd: dict[str, Any]) -> dict[str, Any]:
+        rgb = color_util.color_rgbw_to_rgb(*cmd["rgbw_color"])
+        return {"brightness": cmd["brightness"], "color_mode": "rgbw", "rgbw_color": cmd["rgbw_color"],
+                "hs_color": list(color_util.color_RGB_to_hs(*rgb))}
+
+    for kelvin in (2700, 4000, 6500):
+        for level in (1.0, 5.0):
+            back = profile.inverse(state(profile.forward(Target(KIND_WHITE, level, kelvin=kelvin))))
+            assert back.kind == KIND_WHITE, (kelvin, level, back)
+            assert abs(1e6 / back.kelvin - 1e6 / kelvin) < 25
+            assert abs(back.brightness - level) < 0.6
+    # a calibrated colour-LED white maps back to its cell
+    profile.set_cell("white:2700:5", {"brightness": 26, "rgbw_color": [90, 30, 0, 70]})
+    back = profile.inverse(state(profile.cell_command("white:2700:5")))
+    assert back.kind == KIND_WHITE and abs(back.kelvin - 2700) < 250 and abs(back.brightness - 5) < 0.6
+    # a dim red stays a colour; a ct state still maps to a white with every row in colour mode
+    red = profile.forward(Target(KIND_COLOR, 1.0, hue=0.0))
+    assert profile.inverse(state(red)).kind == KIND_COLOR
+    always = Profile(WIDE, white_color="always")
+    back = always.inverse({"brightness": 128, "color_mode": "color_temp", "color_temp_kelvin": 4000})
+    assert back.kind == KIND_WHITE and abs(back.kelvin - 4000) < 50
+
+
+def test_colour_whites_export_and_import() -> None:
+    profile = Profile(WIDE)
+    profile.set_cell("white:4000:50", {"brightness": 128, "rgbw_color": [60, 40, 0, 255]})
+    profile.set_cell("white:2700:1", {"brightness": 3, "color_temp_kelvin": 2700})
+    profile.set_cell("white:2700:5", {"brightness": 26, "rgbw_color": [90, 30, 0, 70]})
+    data = profile.to_json()
+    assert data["modes"] == {
+        "color": "rgbw", "white": "color_temp", "cells": {"white:2700:5": "rgbw", "white:4000:50": "rgbw"},
+    }
+    # each white keeps the mode it was saved in, whatever the option of the lamp it goes to
+    copy = Profile(WIDE, white_color="never")
+    assert copy.import_json(data) == (3, 0)
+    assert copy.cell_mode("white:4000:50") == "rgbw" and copy.cell_mode("white:2700:1") == "color_temp"
+    assert copy.cells["white:2700:5"] == {"brightness": 26, "rgbw_color": [90, 30, 0, 70]}
+    # a lamp without colour LEDs converts them to colour temperature
+    ct_only = Profile(SourceCaps.from_modes(["color_temp"], 2200, 6500))
+    assert ct_only.import_json(data) == (3, 0)
+    assert "color_temp_kelvin" in ct_only.cells["white:4000:50"]
+    # an rgb lamp gets channels
+    rgb = Profile(SourceCaps.from_modes(["rgb", "color_temp"], 2200, 6500, floor=26))
+    rgb.import_json(data)
+    assert "rgb_color" in rgb.cells["white:2700:5"]
+    # a database profile with per-cell modes validates
+    from custom_components.light_match.database import validate_db_profile  # noqa: PLC0415
+
+    db = {
+        "format": "light_match_profile", "version": 2, "revision": 1, "name": "Acme X1",
+        "license": "CC-BY-4.0", "device": {"manufacturer": "Acme", "models": ["X1"]},
+        "provenance": {"method": "by_eye", "verified": False}, "modes": data["modes"], "cells": data["cells"],
+    }
+    validate_db_profile(db)
+    db["modes"] = {"color": "rgbw", "white": "color_temp"}
+    with pytest.raises(Exception, match="color_temp_kelvin"):
+        validate_db_profile(db)

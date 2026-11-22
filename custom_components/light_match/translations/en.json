@@ -40,6 +40,7 @@
           "profile": "Model profile",
           "behaviour": "Behaviour",
           "reference_entity": "Reference lamp for calibration",
+          "white_color": "Whites with the colour LEDs",
           "auto_floor": "Brightness floor from the model profile",
           "brightness_floor": "Brightness floor (0-255)",
           "hide_source": "Hide the source light"
@@ -47,6 +48,7 @@
         "data_description": {
           "behaviour": "How commands are translated for cells you have not calibrated yet.",
           "reference_entity": "The lamp the panel offers as the look to match. Usually the twin of your best lamp, set to \"This lamp is the reference\".",
+          "white_color": "For lamps with colour temperature and colour LEDs: show whites with the colour channels so they can dim below the brightness floor. Each white cell can still be switched in the panel.",
           "auto_floor": "Use the brightness floor from the model profile (WiZ: 26). Turn off to set the floor yourself.",
           "brightness_floor": "The lowest brightness the lamp really dims to; 0 for none. Used only when detection is off.",
           "hide_source": "Hide the real lamp from dashboards and voice assistants. It is shown again when you remove this light.",
@@ -62,6 +64,13 @@
         "smart": "Calibrated, smart defaults (scale colours below the brightness floor)",
         "plain": "Calibrated, plain defaults",
         "reference": "This lamp is the reference (pass commands through)"
+      }
+    },
+    "white_color": {
+      "options": {
+        "auto": "Below the brightness floor (dimmer whites)",
+        "always": "Always",
+        "never": "Never (only whites outside the lamp's colour temperature range)"
       }
     }
   },

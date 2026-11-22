@@ -163,7 +163,7 @@ class LightMatchPanel extends HTMLElement {
     const order = this._order();
     const firstOpen = order.find((i) => !this._profile.cells[i].calibrated);
     this._index = firstOpen ?? order[0] ?? 0;
-    this._command = this._cell ? structuredClone(this._cell.command) : null;
+    this._loadCell();
   }
 
   async _loadProfile() {
@@ -176,13 +176,51 @@ class LightMatchPanel extends HTMLElement {
     if (!this._profile) return;
     const count = this._profile.cells.length;
     this._index = ((index % count) + count) % count;
-    this._command = structuredClone(this._cell.command);
+    this._loadCell();
     this._message = "";
     this._render();
     if (show) {
       await this._showTarget();
       await this._preview(true);
     }
+  }
+
+  // The cell's command and the mode it is edited in (a white can use the colour LEDs).
+  _loadCell() {
+    const cell = this._cell;
+    this._mode = cell ? cell.mode : null;
+    this._command = cell ? structuredClone(cell.command) : null;
+  }
+
+  // The colour mode a white cell can switch to, if it has one.
+  _colourMode(cell) {
+    return cell && cell.kind === "white" && cell.modes && cell.modes.length > 1
+      ? cell.modes.find((m) => m !== "color_temp") || null
+      : null;
+  }
+
+  _setColourMode(on) {
+    const cell = this._cell;
+    const colour = this._colourMode(cell);
+    if (!colour) return;
+    this._mode = on ? colour : "color_temp";
+    this._command = structuredClone(cell.commands[this._mode]);
+    this._render();
+    this._preview(true);
+  }
+
+  _colourToggle(cell) {
+    const colour = this._colourMode(cell);
+    if (!colour) return "";
+    const choice = this._entry && this._entry.white_color;
+    const preset =
+      cell.default_mode === colour
+        ? choice === "always"
+          ? "preset: colour LEDs for every white (lamp option)"
+          : "preset: colour LEDs below the brightness floor (lamp option)"
+        : "preset: colour temperature (lamp option)";
+    return `<label class="toggle"><input type="checkbox" id="colourmode" ${this._mode === colour ? "checked" : ""}>
+      Calibrate in colour mode <span class="hint">(${esc(colour)} channels, can go dimmer than the floor; ${esc(preset)})</span></label>`;
   }
 
   async _showTarget() {
@@ -212,7 +250,8 @@ class LightMatchPanel extends HTMLElement {
   async _save() {
     const cell = this._cell;
     try {
-      await this._ws("cell/set", { entry_id: this._entryId, key: cell.key, command: this._command });
+      const mode = this._colourMode(cell) ? { mode: this._mode } : {};
+      await this._ws("cell/set", { entry_id: this._entryId, key: cell.key, command: this._command, ...mode });
       await this._loadProfile();
       this._flash(`Saved ${this._label(cell)}.`);
       await this._step(1);
@@ -359,7 +398,7 @@ class LightMatchPanel extends HTMLElement {
         <input type="range" data-id="${id}" min="${min}" max="${max}" step="${step}" value="${value}">
         <input type="number" data-id="${id}" min="${min}" max="${max}" step="${step}" value="${value}"></label>`;
     rows.push(row("brightness", "Brightness", 1, 255, cmd.brightness));
-    const mode = cell.mode;
+    const mode = this._mode || cell.mode;
     if (CHANNEL_NAMES[mode]) {
       CHANNEL_NAMES[mode].forEach((n, i) => rows.push(row(`ch${i}`, n, 0, 255, cmd[MODE_ATTR[mode]][i])));
     } else if (mode === "hs") {
@@ -374,7 +413,7 @@ class LightMatchPanel extends HTMLElement {
 
   _applyInput(id, value) {
     const cmd = this._command;
-    const mode = this._cell.mode;
+    const mode = this._mode || this._cell.mode;
     const v = Number(value);
     if (Number.isNaN(v)) return;
     if (id === "brightness") cmd.brightness = Math.max(1, Math.min(255, Math.round(v)));
@@ -402,13 +441,18 @@ class LightMatchPanel extends HTMLElement {
       html += `<tr><th><span class="dot" style="background:${this._swatch(cell)}"></span>${esc(name)}</th>`;
       for (const { cell: c, i } of items) {
         const quick = this._quick && (p.quick || []).includes(c.key);
-        const cls = [c.calibrated ? "done" : "", c.source === "model" ? "model" : "", quick ? "quick" : "", i === this._index ? "current" : ""].join(" ");
+        const leds = c.kind === "white" && c.mode && c.mode !== p.modes.white;
+        const cls = [c.calibrated ? "done" : "", c.source === "model" ? "model" : "", quick ? "quick" : "", leds ? "leds" : "", i === this._index ? "current" : ""].join(" ");
         const mark = c.calibrated ? "&#10003;" : c.source === "model" ? "M" : c.source === "inferred" ? "~" : "";
-        html += `<td><button class="cell ${cls}" data-index="${i}" title="${esc(this._label(c))} (${esc(SOURCE_LABEL[c.source] || c.source)})">${mark}</button></td>`;
+        html += `<td><button class="cell ${cls}" data-index="${i}" title="${esc(this._label(c))} (${esc(SOURCE_LABEL[c.source] || c.source)}${leds ? ", colour LEDs" : ""})">${mark}</button></td>`;
       }
       html += "</tr>";
     }
-    return html + "</table>";
+    html += "</table>";
+    if (p.cells.some((c) => c.kind === "white" && c.mode && c.mode !== p.modes.white)) {
+      html += `<p class="hint"><span class="legend leds"></span> whites shown with the colour LEDs</p>`;
+    }
+    return html;
   }
 
   _referenceOptions() {
@@ -531,6 +575,7 @@ class LightMatchPanel extends HTMLElement {
           <p class="hint">Target colour and brightness as your screen can show it (screen white = full output). A rough guide only: screens are not calibrated, so trust the reference lamp first. Tap the circle for full screen; at low levels turn the screen brightness down.</p>
         </div>
         <p class="hint">Make the lamp under test look like the reference, then Save. Changes are sent to the lamp live.</p>
+        ${this._colourToggle(cell)}
         ${this._sliders()}
         <p class="cmd">${esc(JSON.stringify(this._command))}</p>
         <div class="buttons">
@@ -604,6 +649,9 @@ class LightMatchPanel extends HTMLElement {
       .cell.done { background: var(--success-color, #43a047); color: #fff; border-color: transparent; }
         .cell.quick { border: 2px dashed var(--primary-color); }
         .cell.current { outline: 2px solid var(--primary-color); outline-offset: 1px; }
+        .cell.leds, .legend.leds { background-image: linear-gradient(90deg, #e53935, #43a047, #1e88e5); background-size: 100% 4px; background-repeat: no-repeat; background-position: bottom; }
+        .legend { display:inline-block; width: 28px; height: 14px; border: 1px solid var(--divider-color); border-radius: 3px; vertical-align: middle; }
+        .toggle { margin: 8px 0; }
         @media (max-width: 600px) { .row { grid-template-columns: 90px 1fr 64px; } .content { padding: 8px 16px; } }
       </style>
       <div class="toolbar"><ha-menu-button></ha-menu-button><span>Light Match</span></div>
@@ -660,8 +708,10 @@ class LightMatchPanel extends HTMLElement {
     link("#resetall", () => this._reset(true));
     on("#online", "change", (e) => this._setOnline(e.target.checked));
     link("#checknow", () => this._checkNow());
+    on("#colourmode", "change", (e) => this._setColourMode(e.target.checked));
     link("#default", () => {
-      this._command = structuredClone(this._cell.default);
+      const cell = this._cell;
+      this._command = structuredClone((cell.defaults && cell.defaults[this._mode]) || cell.default);
       this._render();
       this._preview(true);
     });

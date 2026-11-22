@@ -20,7 +20,7 @@ from . import (
     loaded_entries,
     online_updater,
 )
-from .const import CONF_BEHAVIOUR, CONF_PROFILE, CONF_REFERENCE, DOMAIN
+from .const import CONF_BEHAVIOUR, CONF_PROFILE, CONF_REFERENCE, CONF_WHITE_COLOR, DOMAIN
 from .profile import MODE_ATTR, cell_target, grid_cells, nominal_command, quick_keys
 from .reference import reference_command, target_of
 from .share import repo_url, submission_url, suggested_path
@@ -65,6 +65,7 @@ def _summary(data: LightMatchData) -> dict[str, Any]:
         "source": data.source,
         "reference_entity": data.option(CONF_REFERENCE),
         "behaviour": data.option(CONF_BEHAVIOUR),
+        "white_color": data.option(CONF_WHITE_COLOR),
         "modes": {"color": caps.color_mode, "white": caps.white_mode},
         "min_kelvin": caps.min_kelvin,
         "max_kelvin": caps.max_kelvin,
@@ -103,18 +104,27 @@ def ws_profile(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> Non
     for cell in grid_cells(profile.caps):
         key = cell["key"]
         anchor = cell["hue"] if cell["kind"] == "color" else float(cell["kelvin"])
-        cells.append(
-            {
-                **cell,
-                "calibrated": key in data.cells,
-                "source": profile.cell_source(key),
-                "target": target_of(key),
-                "model_command": profile.model_cells.get(key),
-                "command": profile.cell_command(key),
-                "default": profile.default_command(cell["kind"], anchor, cell["brightness"]),
-                "mode": profile.cell_mode(key),
+        mode = profile.cell_mode(key)
+        item = {
+            **cell,
+            "calibrated": key in data.cells,
+            "source": profile.cell_source(key),
+            "target": target_of(key),
+            "model_command": profile.model_cells.get(key),
+            "command": profile.cell_command(key),
+            "default": profile.default_command(cell["kind"], anchor, cell["brightness"], mode),
+            "mode": mode,
+        }
+        if cell["kind"] == "white":
+            # a white of a ct lamp with colour LEDs can be calibrated in either mode
+            modes = profile.white_modes(anchor)
+            item["modes"] = modes
+            item["default_mode"] = profile.default_white_mode(anchor, cell["brightness"])
+            item["commands"] = {m: profile.cell_command_in(key, m) for m in modes}
+            item["defaults"] = {
+                m: profile.default_command("white", anchor, cell["brightness"], m) for m in modes
             }
-        )
+        cells.append(item)
     connection.send_result(
         msg["id"], {**_summary(data), "cells": cells, "quick": quick_keys(profile.caps)}
     )
@@ -126,6 +136,7 @@ def ws_profile(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> Non
         vol.Required("entry_id"): str,
         vol.Required("key"): str,
         vol.Required("command"): dict,
+        vol.Optional("mode"): str,
     }
 )
 @websocket_api.require_admin
@@ -135,7 +146,7 @@ async def ws_set_cell(hass: HomeAssistant, connection: Any, msg: dict[str, Any])
     if (data := _get(hass, connection, msg)) is None:
         return
     try:
-        command = await data.async_set_cell(msg["key"], msg["command"])
+        command = await data.async_set_cell(msg["key"], msg["command"], msg.get("mode"))
     except ValueError as err:
         connection.send_error(msg["id"], "invalid_format", str(err))
         return

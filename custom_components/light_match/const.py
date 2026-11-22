@@ -14,6 +14,16 @@ CONF_BEHAVIOUR = "behaviour"
 CONF_AUTO_FLOOR = "auto_floor"
 CONF_FLOOR = "brightness_floor"
 CONF_HIDE_SOURCE = "hide_source"
+CONF_WHITE_COLOR = "white_color"
+
+# Whether white cells of a lamp with colour temperature and colour LEDs are
+# commanded with the colour LEDs: only below the lamp's brightness floor
+# (where the colour LEDs can dim further), always, or never (only whites
+# outside the lamp's colour temperature range).
+WHITE_COLOR_AUTO = "auto"
+WHITE_COLOR_ALWAYS = "always"
+WHITE_COLOR_NEVER = "never"
+WHITE_COLORS = [WHITE_COLOR_AUTO, WHITE_COLOR_ALWAYS, WHITE_COLOR_NEVER]
 
 # How a twin translates: calibrated cells with smart defaults (sub-floor
 # trick), calibrated cells with plain defaults, or "this lamp is the
@@ -29,6 +39,7 @@ DEFAULT_OPTIONS = {
     "brightness_floor": 0,
     "hide_source": False,
     "profile": "auto",
+    "white_color": WHITE_COLOR_AUTO,
 }
 
 # The calibration grid. Hues are the anchor points on the colour circle that
