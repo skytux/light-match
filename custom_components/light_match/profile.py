@@ -33,7 +33,7 @@ from .const import (
     WHITE_COLOR_AUTO,
     WHITE_KELVINS,
 )
-from .formats import APP_VERSION, FORMAT_VERSION, migrate
+from .formats import APP_VERSION, migrate, written_format
 
 CHANNEL_MODES: dict[str, int] = {"rgb": 3, "rgbw": 4, "rgbww": 5}
 MODE_ATTR: dict[str, str | None] = {
@@ -1283,7 +1283,6 @@ class Profile:
         data: dict[str, Any] = {
             "format": PROFILE_FORMAT,
             "version": PROFILE_VERSION,
-            "format_version": FORMAT_VERSION,
             "app_version": APP_VERSION,
             "modes": modes,
             "floor": self.caps.floor,
@@ -1293,6 +1292,7 @@ class Profile:
             data["model"] = model
         if meta:
             data.update(meta)
+        data["format_version"] = written_format(data)
         return data
 
     def import_json(self, data: Any, replace: bool = True) -> tuple[int, int]:

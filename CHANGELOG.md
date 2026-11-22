@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.2 - 2026-11-22
+
+- Rough camera calibration: the phone's rear camera measures the lamps and adjusts the lamp under test in damped steps (Auto-match this cell, Auto-run all cells with Stop); nothing is saved until you press Save.
+- The camera's white balance (about 5000 K), exposure and focus are locked where the browser allows it; the panel lists what got locked and, where it could not, recommends Chrome on an Android phone with the reason and offers "Continue anyway (very rough)". The HA app's camera refusal points to Chrome on Android too.
+- Two modes: against the reference lamp in the same picture, or without one against lm-ref-1 values with a 100 % anchor, exposure rescaling and an optional camera correction from red/green/blue/white screen patches.
+- New method "camera (rough)", ranked below by eye and above spec (without a reference lamp a little lower); calibration.camera_locked, camera_reference and camera_corrected in exports and the schemas.
+- Format 3 for files with camera details; other files are still written as format 2, so 0.8.1 keeps applying them.
+
 ## 0.8.1 - 2026-11-22
 
 - Full-screen swatch: Android/browser Back, Esc and leaving full screen close it instead of leaving the panel (one history entry is added while it is open).

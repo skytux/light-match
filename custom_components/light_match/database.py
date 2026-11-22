@@ -46,7 +46,8 @@ METHOD_BY_EYE = "by_eye"
 METHOD_LUX = "lux_meter"
 METHOD_COLORIMETER = "colorimeter"
 METHOD_IMPORTED = "imported"  # generated from a public database: partly calibrated, unverified
-METHODS = [METHOD_SPEC, METHOD_IMPORTED, METHOD_BY_EYE, METHOD_LUX, METHOD_COLORIMETER]
+METHOD_CAMERA = "camera"  # rough: a phone camera with white balance and exposure locked where possible
+METHODS = [METHOD_SPEC, METHOD_IMPORTED, METHOD_BY_EYE, METHOD_LUX, METHOD_COLORIMETER, METHOD_CAMERA]
 MEASURED_METHODS = {METHOD_BY_EYE, METHOD_LUX, METHOD_COLORIMETER}
 # Licences of the sources imported data may come from (SPDX ids).
 IMPORT_LICENCES = ["MIT", "BSD-2-Clause", "BSD-3-Clause", "Apache-2.0"]
@@ -62,7 +63,23 @@ CONTRIBUTOR_ROLES = ["calibrated", "measured", "verified", "edited"]
 # A contributor is credited by a nickname they choose; never a real name or email.
 _NICK_RE = r"^[^@<>\s][^@<>]{0,38}[^@<>\s]$|^[^@<>\s]$"
 _GITHUB_RE = r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$"
-METHOD_RANK = {METHOD_COLORIMETER: 4, METHOD_LUX: 4, METHOD_BY_EYE: 3, METHOD_IMPORTED: 2, METHOD_SPEC: 1}
+METHOD_RANK = {
+    METHOD_COLORIMETER: 40,
+    METHOD_LUX: 40,
+    METHOD_BY_EYE: 30,
+    METHOD_CAMERA: 25,  # against a reference lamp in the same frame; without one: 22
+    METHOD_IMPORTED: 20,
+    METHOD_SPEC: 10,
+}
+CAMERA_ABSOLUTE_RANK = 22
+
+
+def method_rank(data: dict[str, Any]) -> int:
+    """How much a profile's method is trusted (camera without a reference lamp below one with)."""
+    method = data["provenance"]["method"]
+    if method == METHOD_CAMERA and (data.get("calibration") or {}).get("camera_reference") == "absolute":
+        return CAMERA_ABSOLUTE_RANK
+    return METHOD_RANK[method]
 
 DISCUSSIONS_URL = "https://github.com/skytux/ha-light-match/discussions/categories/lamp-profiles"
 
@@ -512,7 +529,7 @@ class ProfileDatabase:
         prov = prof.data["provenance"]
         # calibrated under the recommended screen conditions: worth one thumbs up
         rating = self.rating(prof.id) + int(good_practice(prof.data))
-        return (int(prov["verified"]), METHOD_RANK[prov["method"]], rating, prof.revision)
+        return (int(prov["verified"]), method_rank(prof.data), rating, prof.revision)
 
     def candidates(self, device: DeviceInfo) -> list[ModelProfile]:
         """Every profile that fits a device, best first.

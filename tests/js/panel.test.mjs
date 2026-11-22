@@ -80,7 +80,7 @@ test("device guess and format version", () => {
   assert.equal(formatOf({ format_version: "3" }), 1);
 });
 
-function loadPanel() {
+function loadPanel(extra = {}) {
   let Panel;
   const shadow = { innerHTML: "", querySelector: () => null, querySelectorAll: () => [] };
   const ctx2 = vm.createContext({
@@ -94,6 +94,7 @@ function loadPanel() {
     localStorage: { getItem: () => null, setItem: () => {} },
     crypto: globalThis.crypto,
     structuredClone: globalThis.structuredClone,
+    ...extra,
   });
   vm.runInContext(source, ctx2);
   return { Panel, shadow };
@@ -177,4 +178,57 @@ test("calibration details, badges, read-only profiles and GitHub rating render (
   assert.ok(!html.includes('data-db-apply="on/new"'));
   assert.ok(!/turn the screen down/i.test(html));
   assert.equal(panel._matchCell().key, "white:6500:100");
+});
+
+test("camera card: start, the Chrome-on-Android box when nothing locks, and the HA-app camera refusal", async () => {
+  const refused = Object.assign(new Error("denied"), { name: "NotAllowedError" });
+  const { Panel, shadow } = loadPanel({
+    navigator: { mediaDevices: { getUserMedia: async () => Promise.reject(refused) } },
+    setTimeout,
+  });
+  const entry = {
+    entry_id: "a", title: "Desk", entity_id: "light.a", make: "Acme", model: "Glow 9", modes: { color: "hs", white: "color_temp" },
+    floor: 0, calibrated: 0, total: 1, behaviour: "smart", device: {}, model_profile: null, format_version: 2, calibration: {},
+  };
+  const replies = {
+    "light_match/entries": { entries: [entry] },
+    "light_match/settings": { online_update: false, online_profiles: [] },
+    "light_match/profiles/browse": { mine: [], builtin: [], community: [] },
+    "light_match/groups": { auto: [], manual: [] },
+    "light_match/profile": {
+      calibrated: 0, total: 1, quick: [], min_kelvin: 2200, max_kelvin: 6500, modes: { color: "hs", white: "color_temp" },
+      cells: [{ key: "white:6500:100", kind: "white", kelvin: 6500, brightness: 100, source: "default", calibrated: false, mode: "color_temp",
+        command: { brightness: 255, color_temp_kelvin: 6500 }, target: { xy: [0.3127, 0.329], relative_output: 1 } }],
+    },
+  };
+  const panel = new Panel();
+  panel._hass = { callWS: async (msg) => structuredClone(replies[msg.type]), states: {} };
+  await panel._init();
+  let html = shadow.innerHTML;
+  for (const text of ["Camera calibration (rough)", "Start camera", "Without a reference lamp", "not a colour meter"]) {
+    assert.ok(html.includes(text), text);
+  }
+  assert.ok(html.includes("camera (rough)"));
+
+  // a device that locked nothing: the recommendation comes first
+  panel._cam = { plan: { wb: false, exposure: false, focus: true }, accepted: false, regions: {}, log: [], wrap: null };
+  panel._render();
+  html = shadow.innerHTML;
+  for (const text of ["Use Chrome on an Android phone for camera calibration.", "automatic white balance and automatic exposure",
+    "Safari's engine", "Firefox", "white balance <b>not locked</b>", "exposure <b>not locked</b>", "focus locked",
+    "Continue anyway (very rough)", "Stop camera"]) {
+    assert.ok(html.includes(text), text);
+  }
+  assert.ok(!html.includes("Auto-match this cell"));
+  panel._cam.accepted = true;
+  panel._render();
+  html = shadow.innerHTML;
+  assert.ok(html.includes("Auto-match this cell") && html.includes("very rough") && html.includes("Measure 100 % anchor"));
+  panel._cam = null;
+
+  // the Home Assistant app refuses the camera
+  await panel._camStart();
+  html = shadow.innerHTML;
+  assert.ok(html.includes("open this page in Chrome on an Android phone"));
+  assert.ok(html.includes("Safari's engine") && html.includes("Try again"));
 });

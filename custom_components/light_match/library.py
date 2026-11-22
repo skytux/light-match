@@ -29,6 +29,7 @@ from .formats import (
     good_practice,
     is_newer,
     migrate,
+    written_format,
 )
 
 if TYPE_CHECKING:
@@ -149,7 +150,7 @@ class Library:
             "modes": {k: v for k, v in (prof.get("modes") or {}).items() if k != "cells"},
             "format_version": version,
             "read_only": version > FORMAT_VERSION,
-            "convertible": version < FORMAT_VERSION,
+            "convertible": version <= FORMAT_VERSION and version < written_format(prof),
             "good_practice": good_practice(prof),
             "notes": prof.get("notes") if isinstance(prof.get("notes"), str) else None,
             "calibration": prof.get("calibration") if isinstance(prof.get("calibration"), dict) else {},

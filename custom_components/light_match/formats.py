@@ -9,6 +9,11 @@ shown but never applied (:class:`NewerFormatError`).
 
 Format 2 adds ``app_version`` (the Light Match release that wrote the file),
 ``calibration`` (how it was calibrated) and ``notes`` (free text).
+
+Format 3 adds the rough camera calibration: method ``camera`` and the
+``camera_locked``, ``camera_reference`` and ``camera_corrected`` details. A
+file is written with the lowest format that holds it (:func:`written_format`),
+so a profile calibrated by eye stays format 2 and older releases still use it.
 """
 
 from __future__ import annotations
@@ -21,7 +26,8 @@ from typing import Any
 
 import voluptuous as vol
 
-FORMAT_VERSION = 2
+FORMAT_VERSION = 3
+BASE_FORMAT = 2  # the format of files without camera details
 NOTES_MAX = 500
 DEVICE_MAX = 80
 
@@ -30,7 +36,13 @@ CAL_MATCHED = "screen_matched"  # the screen brightness was matched to the lamp 
 CAL_DEVICE = "reference_device"
 CAL_INSTRUMENT = "instrument"
 CAL_METHOD = "method"
-CAL_METHODS = ["by_eye", "lux_meter", "colorimeter"]
+CAL_CAMERA_LOCKED = "camera_locked"  # {"wb": bool, "exposure": bool}: what the browser could lock
+CAL_CAMERA_REFERENCE = "camera_reference"  # "lamp" (a reference lamp in the frame) or "absolute"
+CAL_CAMERA_CORRECTED = "camera_corrected"  # a camera -> sRGB matrix from screen patches was used
+CAMERA_REFERENCES = ["lamp", "absolute"]
+METHOD_CAMERA = "camera"  # rough: a phone camera, white balance and exposure locked where possible
+CAL_METHODS = ["by_eye", "lux_meter", "colorimeter", METHOD_CAMERA]
+CAMERA_KEYS = (CAL_CAMERA_LOCKED, CAL_CAMERA_REFERENCE, CAL_CAMERA_CORRECTED)
 
 try:
     APP_VERSION: str = json.loads(Path(__file__).with_name("manifest.json").read_text(encoding="utf-8"))["version"]
@@ -59,11 +71,14 @@ CALIBRATION_SCHEMA = vol.Schema(
         vol.Optional(CAL_MATCHED): bool,
         vol.Optional(CAL_DEVICE): vol.All(str, _short(DEVICE_MAX)),
         vol.Optional(CAL_INSTRUMENT): vol.All(str, _short(DEVICE_MAX)),
+        vol.Optional(CAL_CAMERA_LOCKED): {vol.Required("wb"): bool, vol.Required("exposure"): bool},
+        vol.Optional(CAL_CAMERA_REFERENCE): vol.In(CAMERA_REFERENCES),
+        vol.Optional(CAL_CAMERA_CORRECTED): bool,
     }
 )
 
 
-CALIBRATION_KEYS = (CAL_METHOD, CAL_SCREEN, CAL_MATCHED, CAL_DEVICE, CAL_INSTRUMENT)
+CALIBRATION_KEYS = (CAL_METHOD, CAL_SCREEN, CAL_MATCHED, CAL_DEVICE, CAL_INSTRUMENT, *CAMERA_KEYS)
 
 
 class NewerFormatError(ValueError):
@@ -105,8 +120,28 @@ def _v1_to_v2(data: dict[str, Any]) -> dict[str, Any]:
     return data
 
 
+def _v2_to_v3(data: dict[str, Any]) -> dict[str, Any]:
+    """Format 3 only adds optional camera details."""
+    return data
+
+
 # MIGRATIONS[n] turns format n into format n + 1.
-MIGRATIONS: dict[int, Callable[[dict[str, Any]], dict[str, Any]]] = {1: _v1_to_v2}
+MIGRATIONS: dict[int, Callable[[dict[str, Any]], dict[str, Any]]] = {1: _v1_to_v2, 2: _v2_to_v3}
+
+
+def uses_camera(data: dict[str, Any]) -> bool:
+    """Whether a profile holds format 3 camera details."""
+    cal = data.get("calibration")
+    prov = data.get("provenance")
+    return bool(
+        (isinstance(cal, dict) and (cal.get(CAL_METHOD) == METHOD_CAMERA or any(k in cal for k in CAMERA_KEYS)))
+        or (isinstance(prov, dict) and prov.get("method") == METHOD_CAMERA)
+    )
+
+
+def written_format(data: dict[str, Any]) -> int:
+    """The lowest format that holds a (current) profile."""
+    return FORMAT_VERSION if uses_camera(data) else BASE_FORMAT
 
 
 def migrate(data: Any) -> dict[str, Any]:
@@ -121,7 +156,7 @@ def migrate(data: Any) -> dict[str, Any]:
     while version < FORMAT_VERSION:
         out = MIGRATIONS[version](out)
         version += 1
-    out["format_version"] = FORMAT_VERSION
+    out["format_version"] = written_format(out)
     return out
 
 

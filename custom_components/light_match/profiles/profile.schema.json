@@ -29,7 +29,7 @@
     "format_version": {
       "type": "integer",
       "minimum": 1,
-      "description": "Layout of this file; missing means 1. Light Match migrates older formats and shows newer ones read-only."
+      "description": "Layout of this file; missing means 1. Light Match migrates older formats and shows newer ones read-only. Written as the lowest format that holds the file: 3 only with camera details."
     },
     "app_version": {
       "type": "string",
@@ -42,7 +42,7 @@
       "description": "How the profile was calibrated.",
       "properties": {
         "method": {
-          "enum": ["spec", "imported", "by_eye", "lux_meter", "colorimeter"]
+          "enum": ["spec", "imported", "by_eye", "lux_meter", "colorimeter", "camera"]
         },
         "screen_conditions_confirmed": {
           "type": "boolean",
@@ -61,6 +61,21 @@
           "type": "string",
           "maxLength": 80,
           "description": "Lux meter or colorimeter, if any."
+        },
+        "camera_locked": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["wb", "exposure"],
+          "description": "Method camera (format 3): whether the browser could lock the camera's white balance and exposure.",
+          "properties": {"wb": {"type": "boolean"}, "exposure": {"type": "boolean"}}
+        },
+        "camera_reference": {
+          "enum": ["lamp", "absolute"],
+          "description": "Method camera: measured against a reference lamp in the same frame, or against the lm-ref-1 values directly (rougher)."
+        },
+        "camera_corrected": {
+          "type": "boolean",
+          "description": "Method camera: a camera to sRGB correction from screen patches was used."
         }
       }
     },
@@ -288,7 +303,8 @@
             "imported",
             "by_eye",
             "lux_meter",
-            "colorimeter"
+            "colorimeter",
+            "camera"
           ]
         },
         "sources": {

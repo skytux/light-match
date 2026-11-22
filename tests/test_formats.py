@@ -18,6 +18,7 @@ from custom_components.light_match.database import (
 )
 from custom_components.light_match.formats import (
     APP_VERSION,
+    BASE_FORMAT,
     FORMAT_VERSION,
     NOTES_MAX,
     NewerFormatError,
@@ -26,6 +27,8 @@ from custom_components.light_match.formats import (
     format_version,
     good_practice,
     migrate,
+    uses_camera,
+    written_format,
 )
 from custom_components.light_match.github import DEVICE_CODE_URL, GRAPHQL_URL, TOKEN_URL, GitHubRating
 from custom_components.light_match.library import Library, browse
@@ -58,7 +61,7 @@ def _db_data(**extra) -> dict:
 def test_migrate_v1_to_current() -> None:
     assert format_version(V1) == 1
     out = migrate(V1)
-    assert out["format_version"] == FORMAT_VERSION == 2
+    assert out["format_version"] == BASE_FORMAT == 2  # written as the lowest format that holds it
     assert out["calibration"] == {"method": "by_eye", "screen_conditions_confirmed": False}
     assert "format_version" not in V1  # a copy
     # the method of a database profile comes from its provenance
@@ -93,7 +96,7 @@ def test_calibration_and_notes_validation() -> None:
 
 def test_db_schema_and_read_only() -> None:
     data = validate_db_profile(_db_data(notes="Diffuser on", calibration={"screen_conditions_confirmed": True}))
-    assert data["format_version"] == FORMAT_VERSION and data["notes"] == "Diffuser on"
+    assert data["format_version"] == BASE_FORMAT and data["notes"] == "Diffuser on"
     with pytest.raises(vol.Invalid):
         validate_db_profile(_db_data(notes="x" * 501))
     with pytest.raises(vol.Invalid):
@@ -126,7 +129,7 @@ async def test_library_keeps_newer_read_only_and_converts_old(hass: HomeAssistan
     assert items[old["id"]]["convertible"] and not items[old["id"]]["read_only"]
     assert items[new["id"]]["read_only"] and items[new["id"]]["format_version"] == FORMAT_VERSION + 1
     converted = await lib.async_convert(old["id"])
-    assert converted["profile"]["format_version"] == FORMAT_VERSION
+    assert converted["profile"]["format_version"] == BASE_FORMAT
     assert not Library.summary(converted)["convertible"]
     with pytest.raises(NewerFormatError):
         await lib.async_convert(new["id"])
@@ -169,11 +172,11 @@ async def test_import_export_and_calibration_websocket(hass: HomeAssistant, sour
 
     exported = (await ws(type=f"{DOMAIN}/profile/export", entry_id=rgbw.entry_id))["result"]
     profile = exported.get("profile", exported)
-    assert profile["format_version"] == FORMAT_VERSION and profile["app_version"] == APP_VERSION
+    assert profile["format_version"] == BASE_FORMAT and profile["app_version"] == APP_VERSION
     assert profile["calibration"]["screen_conditions_confirmed"] is True
     assert profile["calibration"]["reference_device"] == "Pixel 8" and profile["notes"] == "Frosted globe"
     entries = (await ws(type=f"{DOMAIN}/entries"))["result"]["entries"]
-    assert entries[0]["calibration"]["screen_matched"] and entries[0]["format_version"] == FORMAT_VERSION
+    assert entries[0]["calibration"]["screen_matched"] and entries[0]["format_version"] == FORMAT_VERSION  # what this code reads
 
     # the details are kept across a reload
     await hass.config_entries.async_reload(rgbw.entry_id)
@@ -235,3 +238,68 @@ async def test_github_device_flow_and_reaction(hass: HomeAssistant, aioclient_mo
     assert not gh.status()["signed_in"]
     await gh.async_logout()
     assert gh.status()["login"] is None
+
+
+CAMERA_CAL = {"method": "camera", "camera_locked": {"wb": True, "exposure": False}, "camera_reference": "lamp",
+              "camera_corrected": False}
+
+
+def test_camera_method_and_format_3() -> None:
+    assert FORMAT_VERSION == 3
+    assert clean_calibration(CAMERA_CAL) == CAMERA_CAL
+    for bad in ({"camera_reference": "screen"}, {"camera_locked": {"wb": True}}, {"camera_corrected": "no"},
+                {"camera_locked": {"wb": 1, "exposure": "x"}}):
+        with pytest.raises(ValueError):
+            clean_calibration(bad)
+    # by eye stays format 2 (0.8.1 can still apply it); camera details need format 3
+    assert written_format({"calibration": {"method": "by_eye"}}) == 2
+    assert written_format({"calibration": CAMERA_CAL}) == 3
+    assert written_format({"provenance": {"method": "camera"}}) == 3
+    assert uses_camera({"calibration": {"camera_corrected": True}})
+    # migrating a format 2 file with camera details lands in 3; without, it stays 2
+    v2 = migrate(V1)
+    assert migrate(v2)["format_version"] == 2
+    assert migrate({**v2, "calibration": CAMERA_CAL})["format_version"] == 3
+
+
+def test_camera_ranks_below_by_eye_above_spec() -> None:
+    db = ProfileDatabase()
+
+    def prof(pid: str, kind: str, **cal) -> ModelProfile:
+        data = _db_data(provenance={"method": kind, "verified": False, "sources": ["https://example.com/x1"]})
+        if cal:
+            data["calibration"] = cal
+        return ModelProfile(pid, validate_db_profile(data))
+
+    eye = prof("acme/eye", "by_eye")
+    lamp = prof("acme/lamp", "camera", method="camera", camera_reference="lamp")
+    absolute = prof("acme/abs", "camera", method="camera", camera_reference="absolute")
+    spec = prof("acme/spec", "spec")
+    assert db.rank(eye) > db.rank(lamp) > db.rank(absolute) > db.rank(spec)
+    assert lamp.data["format_version"] == 3
+    with pytest.raises(vol.Invalid):
+        validate_db_profile(_db_data(calibration={"camera_reference": "nowhere"}))
+
+
+async def test_camera_calibration_exports_format_3(hass: HomeAssistant, sources, hass_ws_client) -> None:
+    rgbw = await add_twin(hass, "light.bulb_rgbw", title="Desk")
+    client = await hass_ws_client(hass)
+
+    async def ws(**msg):
+        await client.send_json_auto_id(msg)
+        return await client.receive_json()
+
+    await ws(type=f"{DOMAIN}/profile/import", entry_id=rgbw.entry_id, profile=V1)
+    res = await ws(type=f"{DOMAIN}/calibration/set", entry_id=rgbw.entry_id, calibration=CAMERA_CAL)
+    assert res["result"]["calibration"] == CAMERA_CAL
+    exported = (await ws(type=f"{DOMAIN}/profile/export", entry_id=rgbw.entry_id))["result"]
+    profile = exported.get("profile", exported)
+    assert profile["format_version"] == 3 and profile["calibration"]["camera_locked"] == {"wb": True, "exposure": False}
+
+    # the library offers no conversion for a current camera profile, but does for a format 2 copy of it
+    lib = Library(hass)
+    item = await lib.async_add(profile, name="Cam")
+    assert not Library.summary(item)["convertible"]
+    old = await lib.async_add({**profile, "format_version": 2}, name="Cam old")
+    assert Library.summary(old)["convertible"]
+    assert (await lib.async_convert(old["id"]))["profile"]["format_version"] == 3

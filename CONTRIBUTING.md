@@ -54,7 +54,10 @@ You may also open a pull request that adds the file.
 - [ ] `device.manufacturer` and `device.models` match what Home Assistant
       shows on the device page; add every model id and product code you know
       the profile fits.
-- [ ] `provenance.method` is honest: `by_eye`, `lux_meter` or `colorimeter`.
+- [ ] `provenance.method` is honest: `by_eye`, `lux_meter`, `colorimeter`
+      or `camera` (the panel's rough camera calibration; it ranks below
+      `by_eye` and above `spec`, and without a reference lamp,
+      `calibration.camera_reference: absolute`, a little lower still).
       Never mark a profile `verified` yourself: a maintainer does that after a
       second person confirms it.
 - [ ] `provenance.notes` names the firmware and anything unusual (diffuser,

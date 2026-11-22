@@ -115,6 +115,54 @@ never sent anywhere by itself), the instrument, the method (by eye, lux meter,
 colorimeter) and a note of up to 500 characters. *Match screen to lamp* also
 records `screen_matched`.
 
+### Camera calibration (rough)
+
+*Camera calibration (rough)* in the calibrate card lets the phone's rear
+camera do the matching: it measures the lamps and adjusts the lamp under test
+step by step (8 to 12 small damped steps, stopping when the colour and
+brightness are close). It is rough: a phone camera is not a colour meter, so
+check every result by eye. Nothing is saved automatically: **Auto-match this
+cell** puts the result in the sliders and you press **Save**; **Auto-run all
+cells** goes through the cells with a short pause and a **Stop** button, then
+offers **Save the N matched cells**. A lamp calibrated this way records the
+method *camera (rough)*.
+
+**Use Chrome on an Android phone for camera calibration.** Only Chrome on
+Android lets a web page switch off the camera's automatic white balance and
+automatic exposure. With those on, the camera keeps "correcting" the picture:
+a warm lamp gets shifted toward white and a dim lamp gets brightened. That
+hides exactly the differences being measured, and the lamp gets adjusted to
+the wrong colour. On iPhone every browser uses Safari's engine, which has no
+such controls; Firefox does not offer them either. The panel locks white
+balance (about 5000 K), exposure and focus where it can and lists what it
+managed; where it could not, it shows this recommendation first and offers
+*Continue anyway (very rough)*. The Home Assistant companion app often does
+not give the camera to the page at all: open Home Assistant in Chrome
+instead. The page must be served over HTTPS for the browser to offer the
+camera.
+
+Two modes:
+
+- **Against the reference lamp** (better): both lamps, or the white paper or
+  wall each one lights, in the same picture. Tap the reference, then the lamp
+  under test. The reference shows each cell's target and the camera compares
+  the two in the same frame, so the camera's own colour errors mostly cancel.
+- **Without a reference lamp**: the lamp is matched to the cell's lm-ref-1
+  colour and relative output directly. First **Measure 100 % anchor**: the
+  lamp shows its 100 % neutral white with the exposure locked, which defines
+  output 1.0; when the panel changes the exposure (to keep a patch from
+  clipping or going too dark) it rescales by the exposure ratio. This mode
+  depends on the camera's colours, so the optional **camera correction**
+  helps: open the panel on a second screen (a computer or tablet, set up like
+  the phone screen above), press **Show patches** there and measure the red,
+  green, blue and white patches with the phone (its rear camera cannot see
+  its own screen). The fitted correction is kept in that browser. Profiles
+  made without a reference rank below those made with one.
+
+The details go into the profile's `calibration`: `camera_locked: {wb,
+exposure}`, `camera_reference` (`lamp` or `absolute`) and
+`camera_corrected`.
+
 You do not need to calibrate everything. Start with the cells that look most
 wrong, typically the lowest brightness levels and the reds. Uncalibrated
 cells use the defaults, and every target between cells is interpolated.
@@ -220,8 +268,11 @@ out of GitHub** forgets the token (you can also revoke it in your GitHub
 settings). Without the OAuth app the feature is hidden; the Discussions link
 always works.
 
-**Format versions.** Profile files carry `format_version` (2 now; a file
-without it is format 1) and `app_version`, the Light Match release that wrote
+**Format versions.** Profile files carry `format_version` (a file without
+it is format 1). Files are written in the lowest format that holds them:
+format 2, or format 3 when they carry camera calibration details, so Light
+Match 0.8.1 still applies profiles calibrated by eye and shows camera ones
+read-only. They also carry `app_version`, the Light Match release that wrote
 it. Older formats are converted on import and when loaded from the database;
 saved ones show **Convert to the current format** in *My calibrations*. A
 file of a newer format than your Light Match knows is shown, read-only, with
@@ -312,7 +363,9 @@ renamed or deleted, and are stored with the library.
 
 ## Limits
 
-- Calibration is by eye and only as good as the match you make. Viewing
+- Calibration is by eye (or a rough phone camera) and only as good as the
+  match you make. Camera locking works only in Chrome on Android, and is
+  tested against simulated lamps, not a range of phones. Viewing
   angle, diffusers and the room change how a lamp looks.
 - Whether the sub-floor trick works depends on the lamp: it needs a lamp that
   really dims its channels at the floor brightness. It has been seen on WiZ

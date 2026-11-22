@@ -75,8 +75,291 @@ function autoName(make, model, day = new Date()) {
   return [...parts, date, token].join("_").slice(0, 120);
 }
 
+// ---- Rough camera calibration (pure functions; tested in tests/js) --------
+// The camera is treated as an sRGB-ish sensor: pixels are decoded to linear
+// RGB, optionally corrected by a 3x3 matrix, and turned into CIE xy and a
+// relative luminance. Good enough to steer a lamp toward a target, not a
+// colorimeter.
+
+const CAM_CLIP = 250; // a pixel with any channel at or above this is clipped
+const CAM_XY_TOL = 0.006; // stop when the chromaticity is this close...
+const CAM_Y_TOL = 0.06; // ...and the brightness within 6 %
+const CAM_MAX_STEPS = 10;
+const SRGB_TO_XYZ = [
+  [0.4124, 0.3576, 0.1805],
+  [0.2126, 0.7152, 0.0722],
+  [0.0193, 0.1192, 0.9505],
+];
+const XYZ_TO_SRGB = [
+  [3.2406, -1.5372, -0.4986],
+  [-0.9689, 1.8758, 0.0415],
+  [0.0557, -0.204, 1.057],
+];
+
+function srgbToLinear(v8) {
+  return decodeSrgb(Math.max(0, Math.min(255, v8)) / 255);
+}
+
+function linearToSrgb8(c) {
+  c = Math.max(0, Math.min(1, c));
+  return Math.round(255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055));
+}
+
+function mat3mul(m, v) {
+  return [0, 1, 2].map((i) => m[i][0] * v[0] + m[i][1] * v[1] + m[i][2] * v[2]);
+}
+
+// Average linear RGB of a rectangle of RGBA pixels (canvas ImageData),
+// leaving out clipped pixels. rect = {x, y, w, h} in pixels.
+function regionStats(data, width, rect, clip = CAM_CLIP) {
+  const sum = [0, 0, 0];
+  let n = 0, clipped = 0, total = 0;
+  const x0 = Math.max(0, Math.floor(rect.x)), y0 = Math.max(0, Math.floor(rect.y));
+  const x1 = Math.min(width, Math.floor(rect.x + rect.w));
+  const y1 = Math.min(Math.floor(data.length / 4 / width), Math.floor(rect.y + rect.h));
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) {
+      const i = (y * width + x) * 4;
+      total++;
+      if (data[i] >= clip || data[i + 1] >= clip || data[i + 2] >= clip) {
+        clipped++;
+        continue;
+      }
+      sum[0] += srgbToLinear(data[i]);
+      sum[1] += srgbToLinear(data[i + 1]);
+      sum[2] += srgbToLinear(data[i + 2]);
+      n++;
+    }
+  }
+  return { rgb: n ? sum.map((s) => s / n) : [0, 0, 0], n, clipped, total, clipFraction: total ? clipped / total : 0 };
+}
+
+// Linear camera RGB -> {x, y, Y}; `matrix` corrects camera RGB to linear sRGB.
+function camToXyY(rgb, matrix = null) {
+  const lin = matrix ? mat3mul(matrix, rgb) : rgb;
+  const [X, Y, Z] = mat3mul(SRGB_TO_XYZ, lin);
+  const s = X + Y + Z;
+  return s > 0 ? { x: X / s, y: Y / s, Y } : { x: 0.3127, y: 0.329, Y: 0 };
+}
+
+// xy (+ luminance) -> linear sRGB, negative parts clipped.
+function xyToLinear(xy, Y = 1) {
+  const [x, y] = xy;
+  if (!(y > 0)) return [0, 0, 0];
+  const X = (x / y) * Y, Z = ((1 - x - y) / y) * Y;
+  return mat3mul(XYZ_TO_SRGB, [X, Y, Z]).map((c) => Math.max(0, c));
+}
+
+// McCamy's correlated colour temperature of an xy point.
+function cctOf(xy) {
+  const n = (xy[0] - 0.332) / (0.1858 - xy[1]);
+  return 449 * n ** 3 + 3525 * n ** 2 + 6823.3 * n + 5520.33;
+}
+
+function rgbToHs(rgb) {
+  const [r, g, b] = rgb;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  if (max <= 0) return [0, 0];
+  let h = 0;
+  if (d > 0) {
+    if (max === r) h = ((g - b) / d) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+  }
+  return [(h * 60 + 360) % 360, (d / max) * 100];
+}
+
+// hs -> xy as an sRGB display would show it (a rough model of an hs lamp).
+function hsToXy(hs) {
+  const [h, s] = [((hs[0] % 360) + 360) % 360, Math.max(0, Math.min(100, hs[1])) / 100];
+  const f = (n) => {
+    const k = (n + h / 60) % 6;
+    return 1 - s * Math.max(0, Math.min(k, 4 - k, 1));
+  };
+  const { x, y } = camToXyY([f(5), f(3), f(1)].map((c) => decodeSrgb(c)));
+  return [x, y];
+}
+
+// How far a measurement is from its target: chromaticity distance and the
+// brightness ratio (both measured in the same units).
+function cameraError(meas, target) {
+  const dxy = Math.hypot(meas.x - target.x, meas.y - target.y);
+  const ratio = meas.Y > 0 && target.Y > 0 ? meas.Y / target.Y : meas.Y > 0 ? Infinity : 0;
+  return { dxy, ratio, ok: dxy <= CAM_XY_TOL && Math.abs(Math.log(ratio || 1e-9)) <= Math.log(1 + CAM_Y_TOL) };
+}
+
+const _clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+// One damped step of a lamp command toward the target, in the command's own
+// form (channels, hue/saturation, xy or colour temperature, plus brightness).
+function cameraStep(command, meas, target, opts = {}) {
+  const gain = opts.gain ?? 0.6;
+  const out = structuredCloneSafe(command);
+  const err = cameraError(meas, target);
+  if (err.dxy > CAM_XY_TOL / 2) {
+    if (Array.isArray(out.xy_color)) {
+      out.xy_color = [
+        _clamp(out.xy_color[0] + gain * (target.x - meas.x), 0, 0.8),
+        _clamp(out.xy_color[1] + gain * (target.y - meas.y), 0, 0.85),
+      ].map((v) => Math.round(v * 10000) / 10000);
+    } else if (Array.isArray(out.hs_color)) {
+      const [th, ts] = rgbToHs(xyToLinear([target.x, target.y]).map((c) => c));
+      const [mh, ms] = rgbToHs(xyToLinear([meas.x, meas.y]).map((c) => c));
+      let dh = th - mh;
+      if (dh > 180) dh -= 360;
+      if (dh < -180) dh += 360;
+      out.hs_color = [
+        Math.round((((out.hs_color[0] + gain * dh) % 360) + 360) % 360 * 10) / 10,
+        Math.round(_clamp(out.hs_color[1] + gain * (ts - ms), 0, 100) * 10) / 10,
+      ];
+    } else if (typeof out.color_temp_kelvin === "number") {
+      const lo = opts.minKelvin || 1000, hi = opts.maxKelvin || 10000;
+      out.color_temp_kelvin = Math.round(_clamp(out.color_temp_kelvin + gain * (cctOf([target.x, target.y]) - cctOf([meas.x, meas.y])), lo, hi));
+    } else {
+      const key = ["rgbww_color", "rgbw_color", "rgb_color"].find((k) => Array.isArray(out[k]));
+      if (key) {
+        const t = xyToLinear([target.x, target.y]);
+        const m = xyToLinear([meas.x, meas.y]);
+        const ch = out[key];
+        const top = Math.max(ch[0], ch[1], ch[2]) || 255;
+        const lin = [0, 1, 2].map((i) => {
+          const c = Math.max(srgbToLinear(ch[i]), srgbToLinear(1)); // an off channel can still come on
+          const r = m[i] > 1e-6 ? t[i] / m[i] : t[i] > 0 ? 4 : 0.25;
+          return c * Math.pow(_clamp(r, 0.25, 4), gain);
+        });
+        const peak = Math.max(...lin) || 1;
+        const enc = lin.map((c) => _clamp(Math.round((linearToSrgb8(c / peak) * top) / 255), 0, 255));
+        out[key] = [...enc, ...ch.slice(3)];
+      }
+    }
+  }
+  if (typeof out.brightness === "number" && Number.isFinite(err.ratio) && err.ratio > 0) {
+    const g = opts.brightnessGain ?? 0.5;
+    out.brightness = Math.round(_clamp(out.brightness * Math.pow(1 / err.ratio, g), 1, 255));
+  } else if (typeof out.brightness === "number" && err.ratio === 0) {
+    out.brightness = Math.min(255, out.brightness * 2);
+  } else if (typeof out.brightness === "number" && err.ratio === Infinity) {
+    out.brightness = Math.max(1, Math.round(out.brightness / 2));
+  }
+  return out;
+}
+
+function structuredCloneSafe(v) {
+  return JSON.parse(JSON.stringify(v));
+}
+
+// The closed loop: send, measure, step, until close enough or out of steps.
+// send(command) and measure() -> {meas, target} are async callbacks.
+async function runCameraLoop({ command, send, measure, maxSteps = CAM_MAX_STEPS, stop = () => false, onStep = () => {}, opts = {} }) {
+  let cmd = structuredCloneSafe(command);
+  let last = null;
+  for (let step = 1; step <= maxSteps; step++) {
+    if (stop()) return { command: cmd, steps: step - 1, converged: false, stopped: true, error: last };
+    await send(cmd);
+    const { meas, target } = await measure();
+    last = cameraError(meas, target);
+    onStep({ step, command: cmd, meas, target, error: last });
+    if (last.ok) return { command: cmd, steps: step, converged: true, error: last };
+    const next = cameraStep(cmd, meas, target, opts);
+    if (JSON.stringify(next) === JSON.stringify(cmd)) return { command: cmd, steps: step, converged: false, stuck: true, error: last };
+    cmd = next;
+  }
+  return { command: cmd, steps: maxSteps, converged: false, error: last };
+}
+
+// Light reaching the sensor scales with exposure time x ISO.
+function exposureFactor(from, to) {
+  const a = (from.exposureTime || 1) * (from.iso || 1);
+  const b = (to.exposureTime || 1) * (to.iso || 1);
+  return a / b;
+}
+
+// Absolute mode: a luminance measured at `exposure` relative to the 100 % anchor.
+function relativeToAnchor(Y, anchor, exposure = null) {
+  if (!anchor || !(anchor.Y > 0)) return 0;
+  const k = exposure && anchor.exposure ? exposureFactor(anchor.exposure, exposure) : 1;
+  return (Y * k) / anchor.Y;
+}
+
+// Should exposure change before measuring? Halve on clipping, double when
+// both regions are too dark to measure; null when fine or at the limit.
+function nextExposure(regions, settings, range = {}) {
+  const t = settings.exposureTime;
+  if (!(t > 0)) return null;
+  const lo = range.min ?? 0, hi = range.max ?? Infinity;
+  if (regions.some((r) => r.clipFraction > 0.05)) return t / 2 >= lo ? t / 2 : null;
+  if (regions.every((r) => Math.max(...r.rgb) < 0.02)) return t * 2 <= hi ? t * 2 : null;
+  return null;
+}
+
+function _closest(range, want) {
+  if (!range || typeof range.min !== "number") return want;
+  const step = range.step || 1;
+  const v = _clamp(want, range.min, range.max);
+  return Math.round((v - range.min) / step) * step + range.min;
+}
+
+// What to lock from track.getCapabilities() and the current settings (taken
+// while automatic: a sensible starting exposure). Returns the constraints and
+// what can be locked.
+function lockPlan(caps = {}, settings = {}) {
+  const advanced = [];
+  const has = (k, v) => Array.isArray(caps[k]) && caps[k].includes(v);
+  const wb = has("whiteBalanceMode", "manual");
+  const exposure = has("exposureMode", "manual") && !!caps.exposureTime;
+  if (wb) advanced.push({ whiteBalanceMode: "manual", ...(caps.colorTemperature ? { colorTemperature: _closest(caps.colorTemperature, 5000) } : {}) });
+  if (exposure) {
+    advanced.push({
+      exposureMode: "manual",
+      exposureTime: _closest(caps.exposureTime, settings.exposureTime || 100),
+      ...(caps.iso ? { iso: _closest(caps.iso, settings.iso || 100) } : {}),
+    });
+  }
+  const focus = has("focusMode", "manual");
+  if (focus) advanced.push({ focusMode: "manual" });
+  if (caps.torch) advanced.push({ torch: false });
+  return { advanced, wb, exposure, focus };
+}
+
+// Least-squares 3x3 matrix M with M * camera ~ expected (linear RGB pairs),
+// from screen patches (red, green, blue, white).
+function fitMatrix(pairs) {
+  const C = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  const E = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  for (const [cam, exp] of pairs) {
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        C[i][j] += cam[i] * cam[j];
+        E[i][j] += exp[i] * cam[j];
+      }
+    }
+  }
+  const inv = invert3(C);
+  if (!inv) return null;
+  return [0, 1, 2].map((i) => [0, 1, 2].map((j) => E[i][0] * inv[0][j] + E[i][1] * inv[1][j] + E[i][2] * inv[2][j]));
+}
+
+function invert3(m) {
+  const [[a, b, c], [d, e, f], [g, h, i]] = m;
+  const A = e * i - f * h, B = -(d * i - f * g), C = d * h - e * g;
+  const det = a * A + b * B + c * C;
+  if (Math.abs(det) < 1e-12) return null;
+  return [
+    [A / det, -(b * i - c * h) / det, (b * f - c * e) / det],
+    [B / det, (a * i - c * g) / det, -(a * f - c * d) / det],
+    [C / det, -(a * h - b * g) / det, (a * e - b * d) / det],
+  ];
+}
+
+const CAM_PATCHES = [
+  { name: "red", css: "rgb(255, 0, 0)", rgb: [1, 0, 0] },
+  { name: "green", css: "rgb(0, 255, 0)", rgb: [0, 1, 0] },
+  { name: "blue", css: "rgb(0, 0, 255)", rgb: [0, 0, 1] },
+  { name: "white", css: "rgb(255, 255, 255)", rgb: [1, 1, 1] },
+];
+
 const NOTES_MAX = 500;
-const CAL_METHODS = { by_eye: "by eye", lux_meter: "lux meter", colorimeter: "colorimeter" };
+const CAL_METHODS = { by_eye: "by eye", lux_meter: "lux meter", colorimeter: "colorimeter", camera: "camera (rough)" };
 
 // A guess at the phone or computer in use, to prefill "screen used" (editable,
 // stored only when the user saves the calibration details).
@@ -110,7 +393,7 @@ function download(filename, data) {
 }
 
 const SOURCE_LABEL = { user: "calibrated", model: "from the model profile", default: "default", inferred: "inferred" };
-const METHOD_LABEL = { spec: "spec-based", by_eye: "calibrated by eye", lux_meter: "lux meter", colorimeter: "colorimeter", imported: "imported (partly calibrated, unverified)" };
+const METHOD_LABEL = { spec: "spec-based", by_eye: "calibrated by eye", lux_meter: "lux meter", colorimeter: "colorimeter", camera: "camera (rough)", imported: "imported (partly calibrated, unverified)" };
 const CHANNEL_NAMES = {
   rgb: ["Red", "Green", "Blue"],
   rgbw: ["Red", "Green", "Blue", "White"],
@@ -346,6 +629,10 @@ class LightMatchPanel extends HTMLElement {
     try {
       const mode = this._colourMode(cell) ? { mode: this._mode } : {};
       await this._ws("cell/set", { entry_id: this._entryId, key: cell.key, command: this._command, ...mode });
+      if (this._camUsed === cell.key) {
+        this._camUsed = null;
+        await this._recordCamera();
+      }
       await this._loadProfile();
       this._flash(`Saved ${this._label(cell)}.`);
       await this._step(1);
@@ -972,6 +1259,499 @@ class LightMatchPanel extends HTMLElement {
       </details>`;
   }
 
+  // ---- Rough camera calibration -------------------------------------------
+
+  _camMatrix() {
+    try {
+      const m = JSON.parse(storageGet("light_match_camera_matrix") || "null");
+      return Array.isArray(m) && m.length === 3 && m.every((r) => Array.isArray(r) && r.length === 3 && r.every(Number.isFinite)) ? m : null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  _camWhy() {
+    return `<ul class="why">
+        <li>Only Chrome on Android lets a web page switch off the camera's automatic white balance and automatic exposure.</li>
+        <li>With those on, the camera keeps "correcting" the picture: a warm lamp gets shifted toward white and a dim lamp gets brightened. That hides exactly the differences being measured, and the lamp gets adjusted to the wrong colour.</li>
+        <li>On iPhone every browser uses Safari's engine, which has no such controls. Firefox does not offer them either.</li>
+      </ul>`;
+  }
+
+  _cameraCard() {
+    const entry = this._entry;
+    if (!entry || !this._profile) return "";
+    const cam = this._cam;
+    const mode = this._camMode || (this._reference ? "lamp" : "absolute");
+    const head = `<details class="camera" ${this._camOpen ? "open" : ""}>
+      <summary>Camera calibration (rough)</summary>
+      <p class="hint">The phone camera measures the lamps and adjusts the lamp under test step by step. It is rough: a phone camera is not a colour meter, so check the result by eye and save only what looks right. It needs Chrome on an Android phone to lock the camera (see below).</p>`;
+    if (this._camError) {
+      return `${head}<div class="recommend"><p><b>${esc(this._camError.title)}</b></p>${this._camError.html || ""}</div>
+        <div class="buttons left"><button id="camstart">Try again</button></div></details>`;
+    }
+    if (!cam) {
+      return `${head}
+        <label class="check"><input type="radio" name="cammode" value="lamp" ${mode === "lamp" ? "checked" : ""} ${this._reference ? "" : "disabled"}> Against the reference lamp: both lamps in the same picture${this._reference ? "" : " (choose a reference lamp first)"}</label>
+        <label class="check"><input type="radio" name="cammode" value="absolute" ${mode === "absolute" ? "checked" : ""}> Without a reference lamp: the lamp is matched to the lm-ref-1 values directly (rougher; best with the camera correction below)</label>
+        <div class="buttons left"><button id="camstart">Start camera</button></div></details>`;
+    }
+    const lockLine = [
+      `white balance ${cam.plan.wb ? "locked" : "<b>not locked</b>"}`,
+      `exposure ${cam.plan.exposure ? "locked" : "<b>not locked</b>"}`,
+      `focus ${cam.plan.focus ? "locked" : "not locked"}`,
+    ].join(" · ");
+    if (!(cam.plan.wb && cam.plan.exposure) && !cam.accepted) {
+      return `${head}<div class="recommend">
+          <p class="big">Use Chrome on an Android phone for camera calibration.</p>
+          ${this._camWhy()}
+          <p>This device: ${lockLine}.</p>
+          <div class="buttons left"><button id="camaccept">Continue anyway (very rough)</button><a href="#" id="camstop">Stop camera</a></div>
+        </div></details>`;
+    }
+    const matrix = this._camMatrix();
+    const regions = cam.regions || {};
+    const pick = mode === "lamp" ? (!regions.ref ? "ref" : !regions.test ? "test" : null) : !regions.test ? "test" : null;
+    const tip = pick === "ref"
+      ? "Tap the reference lamp (or the white paper it lights) in the picture."
+      : pick === "test"
+        ? "Tap the lamp under test (or the white paper it lights) in the picture."
+        : `Regions set. <a href="#" id="camrepick">Pick again</a>`;
+    const anchor = mode === "absolute"
+      ? `<p class="meta">${cam.anchor ? "100 % anchor measured." : "First measure the 100 % anchor: it sets the lamp's full white as output 1.0."} <a href="#" id="camanchor">${cam.anchor ? "Measure again" : "Measure 100 % anchor"}</a></p>`
+      : "";
+    const patch = cam.patches ? CAM_PATCHES[cam.patches.length] : null;
+    const correction = `<details class="camfix"><summary>Camera correction (optional, recommended without a reference lamp)${matrix ? " · in use" : ""}</summary>
+        <p class="hint">Open this panel on a second screen (computer or tablet), match that screen to the lamp at 100 % and set it up as described above, then press <b>Show patches</b> there. Fill the middle of this camera picture with each patch in turn and measure it here. The correction is kept in this browser.</p>
+        <div class="buttons left"><button id="campatch">${patch ? `Measure ${patch.name}` : "Measure red"}</button>${cam.patches ? `<span class="meta">${cam.patches.length}/4</span>` : ""}${matrix ? `<a href="#" id="camforget">Forget the correction</a>` : ""}</div>
+      </details>`;
+    const busy = !!cam.running;
+    const log = (cam.log || []).slice(-4).map((l) => `<li>${esc(l)}</li>`).join("");
+    const results = this._camResults && Object.keys(this._camResults).length
+      ? `<div class="camresults"><p>Auto-run results (not saved yet):</p><ul>${Object.values(this._camResults)
+          .map((r) => `<li>${esc(r.label)}: ${r.converged ? "matched" : "not matched"} in ${r.steps} steps (Δxy ${r.error ? r.error.dxy.toFixed(3) : "?"})</li>`)
+          .join("")}</ul><div class="buttons left"><button id="camsaveall" ${busy ? "disabled" : ""}>Save the ${Object.values(this._camResults).filter((r) => r.converged).length} matched cells</button><a href="#" id="camdiscard">Discard</a></div></div>`
+      : "";
+    return `${head}
+      <p class="meta">${lockLine}${cam.accepted && !(cam.plan.wb && cam.plan.exposure) ? " · camera not locked: very rough" : ""}${matrix ? " · corrected" : ""} · ${mode === "lamp" ? "against the reference lamp" : "without a reference lamp"}</p>
+      <div id="camslot"></div>
+      <p class="hint">${tip}</p>
+      ${anchor}
+      <div class="buttons left">
+        <button id="camcell" ${busy || pick ? "disabled" : ""}>Auto-match this cell</button>
+        <button id="camall" ${busy || pick ? "disabled" : ""}>Auto-run all cells</button>
+        ${busy ? `<button id="camhalt">Stop</button>` : ""}
+        <a href="#" id="camstop">Stop camera</a>
+      </div>
+      ${log ? `<ul class="camlog">${log}</ul>` : ""}
+      ${results}
+      ${correction}
+      <p class="hint">Show patches (on the second screen): <a href="#" id="camshow">Show patches</a></p>
+    </details>`;
+  }
+
+  async _camStart() {
+    this._camError = null;
+    const mode = this._camMode || (this._reference ? "lamp" : "absolute");
+    this._camMode = mode;
+    if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
+      this._camError = { title: "This browser gives no camera to the page.", html: "<p>Open Home Assistant over HTTPS in Chrome on an Android phone.</p>" };
+      this._render();
+      return;
+    }
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false,
+      });
+    } catch (err) {
+      const name = err && err.name;
+      this._camError = name === "NotAllowedError" || name === "SecurityError"
+        ? {
+            title: "The camera was not allowed. The Home Assistant app often does not pass the camera to pages: open this page in Chrome on an Android phone instead.",
+            html: `<p>Why Chrome on Android:</p>${this._camWhy()}`,
+          }
+        : name === "NotFoundError" || name === "OverconstrainedError"
+          ? { title: "No camera found on this device." }
+          : { title: `The camera did not start: ${err.message || name || err}` };
+      this._render();
+      return;
+    }
+    const track = stream.getVideoTracks()[0];
+    let caps = {}, settings = {};
+    try {
+      caps = track.getCapabilities ? track.getCapabilities() : {};
+      settings = track.getSettings ? track.getSettings() : {};
+    } catch (err) {
+      caps = {};
+    }
+    // let automatic exposure settle on the scene before freezing it
+    await new Promise((r) => setTimeout(r, 800));
+    try {
+      settings = track.getSettings ? track.getSettings() : settings;
+    } catch (err) {
+      // keep the first settings
+    }
+    const plan = lockPlan(caps, settings);
+    if (plan.advanced.length) {
+      try {
+        await track.applyConstraints({ advanced: plan.advanced });
+      } catch (err) {
+        plan.wb = plan.exposure = plan.focus = false;
+      }
+    }
+    // read back what really took
+    try {
+      const now = track.getSettings();
+      if (plan.wb && now.whiteBalanceMode && now.whiteBalanceMode !== "manual") plan.wb = false;
+      if (plan.exposure && now.exposureMode && now.exposureMode !== "manual") plan.exposure = false;
+      settings = now;
+    } catch (err) {
+      // trust the plan
+    }
+    const video = document.createElement("video");
+    video.setAttribute("playsinline", "");
+    video.muted = true;
+    video.srcObject = stream;
+    const wrap = document.createElement("div");
+    wrap.className = "camwrap";
+    wrap.appendChild(video);
+    for (const name of ["ref", "test"]) {
+      const m = document.createElement("div");
+      m.className = `cammark ${name}`;
+      m.textContent = name === "ref" ? "reference" : "under test";
+      m.hidden = true;
+      wrap.appendChild(m);
+    }
+    wrap.addEventListener("click", (e) => this._camTap(e));
+    try {
+      await video.play();
+    } catch (err) {
+      // autoplay of a muted inline video is allowed; ignore
+    }
+    this._cam = {
+      stream, track, video, wrap, caps, plan, accepted: false, regions: {}, log: [],
+      exposure: { exposureTime: settings.exposureTime, iso: settings.iso },
+      canvas: document.createElement("canvas"),
+    };
+    this._camOpen = true;
+    this._render();
+  }
+
+  _camStop() {
+    const cam = this._cam;
+    if (cam) {
+      cam.halt = true;
+      try {
+        cam.stream.getTracks().forEach((t) => t.stop());
+      } catch (err) {
+        // already stopped
+      }
+    }
+    this._cam = null;
+    this._render();
+  }
+
+  disconnectedCallback() {
+    if (this._cam) {
+      try {
+        this._cam.stream.getTracks().forEach((t) => t.stop());
+      } catch (err) {
+        // already stopped
+      }
+      this._cam = null;
+    }
+  }
+
+  _camTap(e) {
+    const cam = this._cam;
+    if (!cam || cam.running) return;
+    const rect = cam.video.getBoundingClientRect();
+    const pos = { x: (e.clientX - rect.left) / rect.width, y: (e.clientY - rect.top) / rect.height };
+    if (pos.x < 0 || pos.x > 1 || pos.y < 0 || pos.y > 1) return;
+    const lamp = this._camMode === "lamp";
+    if (lamp && !cam.regions.ref) cam.regions.ref = pos;
+    else if (!cam.regions.test) cam.regions.test = pos;
+    else return;
+    this._render();
+  }
+
+  _camAttach() {
+    const cam = this._cam;
+    const slot = this.shadowRoot.querySelector("#camslot");
+    if (!cam || !slot) return;
+    slot.appendChild(cam.wrap);
+    for (const name of ["ref", "test"]) {
+      const m = cam.wrap.querySelector(`.cammark.${name}`);
+      const p = cam.regions[name];
+      m.hidden = !p;
+      if (p) {
+        m.style.left = `${p.x * 100}%`;
+        m.style.top = `${p.y * 100}%`;
+      }
+    }
+  }
+
+  _camRect(pos, size = 0.08) {
+    const v = this._cam.video;
+    const w = v.videoWidth, h = v.videoHeight, side = Math.max(4, Math.min(w, h, Math.round(w * size)));
+    const clamp = (c, max) => Math.max(0, Math.min(max - side, c));
+    return { x: clamp(Math.round(pos.x * w - side / 2), w), y: clamp(Math.round(pos.y * h - side / 2), h), w: side, h: side };
+  }
+
+  // Linear RGB stats of the given regions, averaged over a few frames.
+  async _camGrab(positions, size) {
+    const cam = this._cam;
+    const v = cam.video;
+    if (!v.videoWidth) throw new Error("the camera shows no picture yet");
+    const c = cam.canvas;
+    c.width = v.videoWidth;
+    c.height = v.videoHeight;
+    const g = c.getContext("2d", { willReadFrequently: true });
+    const sums = positions.map(() => ({ rgb: [0, 0, 0], n: 0, clipped: 0, total: 0 }));
+    for (let f = 0; f < 3; f++) {
+      if (f) await new Promise((r) => setTimeout(r, 90));
+      g.drawImage(v, 0, 0, c.width, c.height);
+      positions.forEach((p, i) => {
+        const r = this._camRect(p, size);
+        const img = g.getImageData(r.x, r.y, r.w, r.h);
+        const s = regionStats(img.data, img.width, { x: 0, y: 0, w: img.width, h: img.height });
+        for (let k = 0; k < 3; k++) sums[i].rgb[k] += s.rgb[k] * s.n;
+        sums[i].n += s.n;
+        sums[i].clipped += s.clipped;
+        sums[i].total += s.total;
+      });
+    }
+    return sums.map((s) => ({ rgb: s.n ? s.rgb.map((v) => v / s.n) : [0, 0, 0], n: s.n, clipped: s.clipped, total: s.total, clipFraction: s.total ? s.clipped / s.total : 0 }));
+  }
+
+  // Measure, changing the locked exposure (up to four times) if a region clips or is too dark.
+  async _camMeasure(positions, size) {
+    const cam = this._cam;
+    let stats = await this._camGrab(positions, size);
+    for (let i = 0; i < 4 && cam.plan.exposure; i++) {
+      const next = nextExposure(stats, cam.exposure, cam.caps.exposureTime || {});
+      if (next == null) break;
+      try {
+        await cam.track.applyConstraints({ advanced: [{ exposureMode: "manual", exposureTime: next }] });
+        cam.exposure = { ...cam.exposure, exposureTime: next };
+      } catch (err) {
+        break;
+      }
+      await new Promise((r) => setTimeout(r, 400));
+      stats = await this._camGrab(positions, size);
+    }
+    return stats;
+  }
+
+  _camLog(line) {
+    if (!this._cam) return;
+    this._cam.log.push(line);
+    this._render();
+  }
+
+  async _camAnchor() {
+    const cam = this._cam;
+    const cell = this._matchCell();
+    if (!cam || !cam.regions.test || !cell) return;
+    try {
+      await this._ws("preview", { entry_id: this._entryId, command: cell.command });
+      await new Promise((r) => setTimeout(r, 1200));
+      const [s] = await this._camMeasure([cam.regions.test]);
+      const m = camToXyY(s.rgb, this._camMatrix());
+      if (!(m.Y > 0)) throw new Error("the lamp is too dark or clipped in the picture");
+      cam.anchor = { Y: m.Y, exposure: { ...cam.exposure } };
+      this._camLog(`100 % anchor: ${this._label(cell)} measured.`);
+    } catch (err) {
+      this._flash(`Anchor not measured: ${err.message || err}`);
+    }
+  }
+
+  // Run the closed loop on one cell; returns the loop's result (nothing saved).
+  async _camCell(cell) {
+    const cam = this._cam;
+    const lamp = this._camMode === "lamp";
+    const matrix = this._camMatrix();
+    if (lamp) await this._ws("show_target", { entity_id: this._reference, key: cell.key });
+    const positions = lamp ? [cam.regions.ref, cam.regions.test] : [cam.regions.test];
+    const opts = { minKelvin: this._profile.min_kelvin, maxKelvin: this._profile.max_kelvin };
+    return runCameraLoop({
+      command: this._command,
+      opts,
+      stop: () => !this._cam || cam.halt,
+      send: async (command) => {
+        await this._ws("preview", { entry_id: this._entryId, command, transition: 0 });
+        await new Promise((r) => setTimeout(r, 900));
+      },
+      measure: async () => {
+        const stats = await this._camMeasure(positions);
+        if (lamp) return { meas: camToXyY(stats[1].rgb, matrix), target: camToXyY(stats[0].rgb, matrix) };
+        const m = camToXyY(stats[0].rgb, matrix);
+        const t = cell.target || {};
+        return {
+          meas: { ...m, Y: relativeToAnchor(m.Y, cam.anchor, cam.exposure) },
+          target: { x: t.xy[0], y: t.xy[1], Y: t.relative_output },
+        };
+      },
+      onStep: ({ step, error }) =>
+        this._camLog(`${this._label(cell)} step ${step}: Δxy ${error.dxy.toFixed(3)}, brightness ${Number.isFinite(error.ratio) ? Math.round(error.ratio * 100) : "?"} %`),
+    });
+  }
+
+  _camReady() {
+    const cam = this._cam;
+    if (!cam) return false;
+    if (this._camMode === "absolute" && !cam.anchor) {
+      this._flash("Measure the 100 % anchor first.");
+      return false;
+    }
+    if (this._camMode === "absolute" && !(this._cell && this._cell.target && this._cell.target.xy)) {
+      this._flash("This cell has no lm-ref-1 target.");
+      return false;
+    }
+    return true;
+  }
+
+  async _camRunCell() {
+    if (!this._camReady()) return;
+    const cam = this._cam;
+    const cell = this._cell;
+    cam.running = true;
+    cam.halt = false;
+    this._render();
+    try {
+      const res = await this._camCell(cell);
+      this._command = res.command;
+      this._camUsed = cell.key;
+      this._flash(
+        res.converged
+          ? `Matched in ${res.steps} steps. Check it by eye, then press Save to keep it.`
+          : `${res.stopped ? "Stopped" : "Not matched"} after ${res.steps} steps (Δxy ${res.error ? res.error.dxy.toFixed(3) : "?"}). Adjust by hand or try again; nothing is saved until you press Save.`
+      );
+    } catch (err) {
+      this._flash(`Camera calibration stopped: ${err.message || err}`);
+    } finally {
+      if (this._cam) this._cam.running = false;
+      this._render();
+    }
+  }
+
+  async _camRunAll() {
+    if (!this._camReady()) return;
+    const cam = this._cam;
+    cam.running = true;
+    cam.halt = false;
+    this._camResults = {};
+    const order = this._order();
+    try {
+      for (const i of order) {
+        if (!this._cam || cam.halt) break;
+        this._index = i;
+        this._loadCell();
+        const cell = this._cell;
+        if (this._camMode === "absolute" && !(cell.target && cell.target.xy)) continue;
+        this._render();
+        const res = await this._camCell(cell);
+        if (res.stopped) break;
+        this._camResults[cell.key] = { key: cell.key, label: this._label(cell), command: res.command, mode: this._mode, colour: !!this._colourMode(cell), ...res };
+        this._render();
+        await new Promise((r) => setTimeout(r, 1500));
+      }
+    } catch (err) {
+      this._flash(`Camera calibration stopped: ${err.message || err}`);
+    } finally {
+      if (this._cam) this._cam.running = false;
+      this._render();
+    }
+  }
+
+  async _camSaveAll() {
+    const done = Object.values(this._camResults || {}).filter((r) => r.converged);
+    try {
+      for (const r of done) {
+        await this._ws("cell/set", { entry_id: this._entryId, key: r.key, command: r.command, ...(r.colour ? { mode: r.mode } : {}) });
+      }
+      if (done.length) await this._recordCamera();
+      this._camResults = null;
+      await this._loadProfile();
+      this._loadCell();
+      this._render();
+      this._flash(`Saved ${done.length} cells matched by the camera.`);
+    } catch (err) {
+      this._flash(`Not saved: ${err.message || err}`);
+    }
+  }
+
+  // Record the camera method with the lamp's calibration details (the roughest of the session wins).
+  async _recordCamera() {
+    const cam = this._cam;
+    const cal = { ...(this._cal || {}) };
+    const before = cal.method === "camera";
+    const locked = { wb: !!(cam && cam.plan.wb), exposure: !!(cam && cam.plan.exposure) };
+    cal.method = "camera";
+    cal.camera_locked = before && cal.camera_locked ? { wb: cal.camera_locked.wb && locked.wb, exposure: cal.camera_locked.exposure && locked.exposure } : locked;
+    const ref = this._camMode === "absolute" ? "absolute" : "lamp";
+    cal.camera_reference = before && cal.camera_reference === "absolute" ? "absolute" : ref;
+    const corrected = !!this._camMatrix();
+    cal.camera_corrected = before && cal.camera_corrected === false ? false : corrected;
+    try {
+      const res = await this._ws("calibration/set", { entry_id: this._entryId, calibration: cal, notes: this._notes || null });
+      this._cal = res.calibration;
+      const entry = this._entry;
+      if (entry) entry.calibration = res.calibration;
+    } catch (err) {
+      this._flash(`Calibration method not recorded: ${err.message || err}`);
+    }
+  }
+
+  async _camPatch() {
+    const cam = this._cam;
+    if (!cam) return;
+    cam.patches = cam.patches || [];
+    const patch = CAM_PATCHES[cam.patches.length];
+    try {
+      const [s] = await this._camMeasure([{ x: 0.5, y: 0.5 }], 0.3);
+      if (!s.n) throw new Error("the patch is clipped or not in the picture");
+      const k = cam.patchExposure ? exposureFactor(cam.patchExposure, cam.exposure) : 1;
+      if (!cam.patchExposure) cam.patchExposure = { ...cam.exposure };
+      cam.patches.push([s.rgb.map((v) => v * k), patch.rgb]);
+      if (cam.patches.length === CAM_PATCHES.length) {
+        const m = fitMatrix(cam.patches);
+        cam.patches = null;
+        cam.patchExposure = null;
+        if (!m) throw new Error("the patches could not be told apart; try again");
+        storageSet("light_match_camera_matrix", JSON.stringify(m));
+        this._flash("Camera correction saved in this browser.");
+      } else {
+        this._flash(`${patch.name} measured. Next: ${CAM_PATCHES[cam.patches.length].name}.`);
+      }
+    } catch (err) {
+      this._flash(`Patch not measured: ${err.message || err}`);
+    }
+    this._render();
+  }
+
+  // Full-screen red, green, blue and white patches for the camera correction: one overlay, a tap shows the next.
+  _camShowPatches() {
+    const text = (i) => `Patch ${i + 1}/4: ${CAM_PATCHES[i].name}. Measure it with the camera, then tap for the next. Back closes.`;
+    this._overlay(CAM_PATCHES[0].css, text(0));
+    const div = this.shadowRoot.querySelector(".fullscreen:last-of-type");
+    if (!div) return;
+    let i = 0;
+    div.addEventListener(
+      "click",
+      (e) => {
+        if (i >= CAM_PATCHES.length - 1) return; // the last tap closes
+        e.stopImmediatePropagation();
+        i += 1;
+        div.style.background = CAM_PATCHES[i].css;
+        div.querySelector("span").textContent = text(i);
+      },
+      true
+    );
+  }
+
   async _saveCalibration(done) {
     const $ = (sel) => this.shadowRoot.querySelector(sel);
     const cal = { ...(this._cal || {}) };
@@ -1263,6 +2043,7 @@ class LightMatchPanel extends HTMLElement {
           <a href="#" id="reset">Reset this cell</a> · <a href="#" id="default">Load default</a>${cell.model_command && cell.source !== "model" ? ` · <a href="#" id="copymodel">Copy from model profile</a>` : ""}
         </div>
         ${this._conditionsCard()}
+        ${this._cameraCard()}
         <p class="message">${esc(this._message)}</p>
       </div>`
           : ""
@@ -1325,6 +2106,17 @@ class LightMatchPanel extends HTMLElement {
         details.conditions { margin: 12px 0; }
         details.conditions summary { cursor: pointer; font-weight: 500; }
         .buttons.left { justify-content: flex-start; align-items: center; gap: 8px; }
+        .recommend { border: 2px solid var(--warning-color, #ffa600); border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
+        .recommend .big { font-size: 1.15em; font-weight: 600; margin: 4px 0; }
+        .why { margin: 4px 0; padding-left: 20px; }
+        details.camera, details.camfix { margin: 12px 0; }
+        details.camera summary, details.camfix summary { cursor: pointer; font-weight: 500; }
+        .camwrap { position: relative; display: inline-block; max-width: 100%; touch-action: manipulation; }
+        .camwrap video { display: block; max-width: 100%; max-height: 50vh; }
+        .cammark { position: absolute; transform: translate(-50%, -50%); width: 8%; aspect-ratio: 1; border: 2px solid #fff; box-shadow: 0 0 0 1px #000; font-size: 10px; color: #fff; text-shadow: 0 0 2px #000; display: flex; align-items: flex-end; justify-content: center; pointer-events: none; }
+        .cammark.ref { border-color: #4fc3f7; }
+        .cammark.test { border-color: #ffb74d; }
+        .camlog { font-size: 12px; margin: 4px 0; padding-left: 18px; }
         .readonly { border: 1px dashed var(--divider-color); padding: 8px; margin: 8px 0; }
         .row.floor { grid-template-columns: 110px 1fr 50px; }
         .file { color: var(--primary-color); text-decoration: underline; cursor: pointer; }
@@ -1357,6 +2149,7 @@ class LightMatchPanel extends HTMLElement {
       menu.narrow = this._narrow;
     }
     this._bind();
+    this._camAttach();
   }
 
   _bind() {
@@ -1493,6 +2286,41 @@ class LightMatchPanel extends HTMLElement {
     }
     on("#grpadd", "click", () => this._groupAction("add"));
     on("#matchscreen", "click", () => this._matchScreen());
+    on("#camstart", "click", () => this._camStart());
+    on("#camaccept", "click", () => {
+      if (this._cam) this._cam.accepted = true;
+      this._render();
+    });
+    link("#camstop", () => this._camStop());
+    link("#camrepick", () => {
+      if (this._cam) this._cam.regions = {};
+      this._render();
+    });
+    link("#camanchor", () => this._camAnchor());
+    on("#camcell", "click", () => this._camRunCell());
+    on("#camall", "click", () => this._camRunAll());
+    on("#camhalt", "click", () => {
+      if (this._cam) this._cam.halt = true;
+    });
+    on("#camsaveall", "click", () => this._camSaveAll());
+    link("#camdiscard", () => {
+      this._camResults = null;
+      this._render();
+    });
+    on("#campatch", "click", () => this._camPatch());
+    link("#camforget", () => {
+      storageSet("light_match_camera_matrix", "");
+      this._render();
+    });
+    link("#camshow", () => this._camShowPatches());
+    this.shadowRoot.querySelectorAll('input[name="cammode"]').forEach((el) =>
+      el.addEventListener("change", () => {
+        this._camMode = el.value;
+        this._render();
+      })
+    );
+    const camDetails = $("details.camera");
+    if (camDetails) camDetails.addEventListener("toggle", () => (this._camOpen = camDetails.open));
     for (const sel of ["#calscreen", "#caldevice", "#calinstrument", "#calmethod", "#calnotes"]) on(sel, "change", () => this._saveCalibration());
     on("#calnotes", "input", (e) => {
       const n = $("#notecount");

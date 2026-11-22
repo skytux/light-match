@@ -25,7 +25,7 @@
           "name": {"type": "string"},
           "manufacturer": {"type": "string"},
           "models": {"type": "array", "items": {"type": "string"}},
-          "method": {"enum": ["spec", "imported", "by_eye", "lux_meter", "colorimeter"]},
+          "method": {"enum": ["spec", "imported", "by_eye", "lux_meter", "colorimeter", "camera"]},
           "verified": {"type": "boolean"},
           "contributors": {"type": "array", "items": {"type": "string"}, "description": "Nicknames only."},
           "format_version": {"type": "integer", "minimum": 1, "description": "Format of the profile file (1 when it does not say)."},
