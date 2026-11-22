@@ -1,0 +1,53 @@
+name: Profiles release
+
+# Nightly: publish every profile revision as an asset of the "profiles"
+# release (what the optional online update downloads) and refresh the
+# community stats (ratings, downloads, dates) in profiles/index.json.
+
+on:
+  schedule:
+    - cron: "41 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  discussions: write
+
+concurrency:
+  group: profiles-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build the test image
+        run: docker build -q -t light-match-test -f scripts/Dockerfile.test .
+      - name: Profile assets
+        run: docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/repo" -w /repo light-match-test python scripts/profile_stats.py assets dist
+      - name: Upload to the profiles release
+        run: |
+          gh release view profiles >/dev/null 2>&1 || \
+            gh release create profiles --title "Lamp profiles" --notes "Profile files for the optional online update. Updated nightly." --latest=false
+          gh release upload profiles dist/*.json --clobber
+      - name: Refresh community stats
+        run: |
+          docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/repo" -w /repo \
+            -e GITHUB_TOKEN -e GITHUB_REPOSITORY -e HOME=/tmp \
+            light-match-test sh -c 'git config --global --add safe.directory /repo && python scripts/profile_stats.py stats'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit the index
+        run: |
+          if ! git diff --quiet -- custom_components/light_match/profiles/index.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add custom_components/light_match/profiles/index.json
+            git commit -m "Profile stats $(date -u +%F)"
+            git push
+          fi

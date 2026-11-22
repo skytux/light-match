@@ -136,6 +136,48 @@ shows the look it was asked for. When the source changes another way, the
 twin inverse-maps the source state through the profile to find the closest
 calibrated look.
 
+## Profile database
+
+Light Match ships a database of lamp profiles in
+`custom_components/light_match/profiles/`. When you set up a twin, it matches
+the source lamp's manufacturer and model (from the device registry) against
+the database and uses the best profile as the model layer: its capabilities
+(kelvin range, floor, gamut) and any calibrated cells. Your own cells always
+sit on top and are never changed by the database. The options let you pick
+another profile or none.
+
+Ranking, best first:
+
+1. measured or verified community profiles (by eye against lm-ref-1, lux
+   meter, colorimeter), even a generic one for the brand;
+2. the closest model match;
+3. imported profiles (partly calibrated, unverified);
+4. spec profiles from public data sheets;
+5. among equals: verified, then rating, then revision.
+
+Capabilities missing from the best profile are filled from the next ones.
+What the lamp itself reports to Home Assistant wins over imported and spec
+data.
+
+**Online update (optional, off by default).** A checkbox in the panel (or
+`light_match.update_profiles`) fetches the profile index from GitHub once a
+day with an ETag and downloads only profiles newer than the bundled ones,
+each checked against the index's checksum and the schema. Turning it off
+removes the downloaded layer.
+
+**Privacy.** Nothing is sent anywhere unless you turn the online update on.
+Then Light Match only downloads public files from GitHub: no device data, no
+ids, no counting by Light Match. GitHub's own download counter on the
+release files is what the download stats show. Sharing a profile only
+happens when you click **Share profile**, and then only through a GitHub
+issue you submit yourself.
+
+**Ratings.** Each profile has a GitHub Discussion; its thumbs up and down
+are the rating shown in the panel, next to the downloads, the contributors'
+nicknames and the last update. **Rate / report** opens it.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) to calibrate and submit a profile.
+
 ## Sharing profiles
 
 The panel's **Export profile** downloads the lamp's calibration as a JSON
@@ -164,6 +206,11 @@ Profile format:
 
 Cell keys are `color:<name>:<level>` or `white:<kelvin>:<level>`, with levels
 1, 5, 20, 50 and 100.
+
+**Share profile** builds a database profile (format version 2: device model
+ids, capabilities, provenance, an optional nickname and the CC BY 4.0
+licence) and opens a prefilled "New lamp profile" issue on GitHub. Nothing is
+sent until you submit that issue yourself.
 
 ## Services
 
@@ -231,7 +278,8 @@ the panel's JavaScript with `node --check`.
 
 GPL-2.0-or-later. Copyright (C) 2026 Lou H. See [LICENSE](LICENSE).
 
-The lamp profile data is CC BY 4.0 (see
+The lamp profile data is CC BY 4.0; submitting a profile means you agree to
+license it under CC BY 4.0 (see
 [profiles/LICENSE](custom_components/light_match/profiles/LICENSE)).
 Imported profiles also keep the MIT, BSD-2-Clause, BSD-3-Clause and
 Apache-2.0 notices of the databases they come from, in

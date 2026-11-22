@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.1 - 2026-11-22
+
+- CONTRIBUTING.md: how to calibrate against lm-ref-1, share, the profile
+  checklist, nicknames, the CC BY 4.0 agreement, imported profiles, ratings.
+- GitHub files (not run yet): workflows for the tests, hassfest + HACS
+  validation, profile checks on pull requests, and a nightly profiles
+  release (assets per revision + community stats committed to the index);
+  the "New lamp profile" issue form with the fields the Share link fills,
+  checked by a test.
+- README: profile database and ranking, optional online update, privacy
+  (nothing is sent unless the online update is on), ratings, Share profile,
+  and the licences of the profile data.
+
 ## 0.7.0 - 2026-11-22
 
 - Effects pass through: the twin shows the source's effect list and running

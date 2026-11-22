@@ -1,0 +1,78 @@
+name: New lamp profile
+description: Share a calibrated lamp profile for the Light Match database.
+title: "Lamp profile: "
+labels: ["lamp-profile"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing! The panel's **Share profile** fills this form in for you.
+        Everything here is public. Use a nickname, never your real name or email,
+        and leave out entity ids, room names and addresses.
+        Read the checklist in [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md) first.
+  - type: input
+    id: manufacturer
+    attributes:
+      label: Manufacturer
+      description: As Home Assistant shows it on the device page.
+    validations:
+      required: true
+  - type: input
+    id: models
+    attributes:
+      label: Model ids
+      description: Comma-separated model ids (and product codes) this profile fits.
+    validations:
+      required: true
+  - type: input
+    id: integration
+    attributes:
+      label: Integration
+      description: The Home Assistant integration that runs the lamp (wiz, hue, zha, mqtt, ...).
+  - type: dropdown
+    id: method
+    attributes:
+      label: Method
+      options:
+        - by_eye
+        - lux_meter
+        - colorimeter
+        - spec
+    validations:
+      required: true
+  - type: dropdown
+    id: target
+    attributes:
+      label: Target space
+      description: lm-ref-1 if you matched against a reference-space lamp, house if against your own reference lamp.
+      options:
+        - lm-ref-1
+        - house
+    validations:
+      required: true
+  - type: input
+    id: path
+    attributes:
+      label: Suggested file
+      description: For example custom_components/light_match/profiles/wiz/esp01-shrgb-03.json
+  - type: input
+    id: nickname
+    attributes:
+      label: Nickname
+      description: Optional. Shown as the contributor in the profile file. Not your real name.
+  - type: textarea
+    id: profile
+    attributes:
+      label: Profile JSON
+      description: The exported profile. If it did not fit in the link, attach the file here.
+    validations:
+      required: true
+  - type: checkboxes
+    id: agree
+    attributes:
+      label: Licence and privacy
+      options:
+        - label: I agree to license this profile under CC BY 4.0.
+          required: true
+        - label: The profile contains no personal data (no names, emails, entity ids or addresses).
+          required: true

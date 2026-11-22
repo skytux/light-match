@@ -1,0 +1,25 @@
+name: Profiles
+
+on:
+  pull_request:
+    paths:
+      - "custom_components/light_match/profiles/**"
+      - "custom_components/light_match/database.py"
+      - "scripts/profiles.py"
+  push:
+    branches: [main]
+    paths:
+      - "custom_components/light_match/profiles/**"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the test image
+        run: docker build -q -t light-match-test -f scripts/Dockerfile.test .
+      - name: Schema, rules, duplicates and index
+        run: docker run --rm -v "$PWD:/repo" -w /repo light-match-test python scripts/profiles.py check
