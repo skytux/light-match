@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.5 - 2026-11-22
+
+- Copy calibration refuses a source lamp with no calibrated cells, so a
+  copy without merge can no longer empty the target lamp.
+
 ## 0.7.4 - 2026-11-22
 
 - Export and Share downloads now work in the companion app and phone browsers: the panel signs an authenticated download link (`/api/light_match/export/<entry>` and `/share/<entry>`, admins only) and follows it, as Home Assistant does for backups; the blob download stays as a fallback.

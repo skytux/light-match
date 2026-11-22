@@ -292,6 +292,8 @@ class LightMatchData:
 
     async def async_copy_from(self, source: LightMatchData, merge: bool = False) -> tuple[int, int]:
         """Reuse another twin's calibrated cells, converted like an import."""
+        if not source.cells:
+            raise ValueError("That lamp has no calibrated cells to copy")
         return await self.async_import(source.profile().to_json(), merge)
 
     async def async_import_curve(self, curve: dict[Any, Any]) -> int:

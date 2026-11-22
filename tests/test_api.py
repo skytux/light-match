@@ -355,6 +355,12 @@ async def test_copy_calibration_between_twins(hass: HomeAssistant, sources, hass
     )
     assert (await client.receive_json())["error"]["code"] == "not_found"
 
+    # an uncalibrated source never empties the target
+    source.runtime_data.cells.clear()
+    res = await copy()
+    assert res["error"]["code"] == "invalid_format"
+    assert set(target.runtime_data.cells) == {"color:red:5"}
+
 
 async def test_copy_calibration_needs_admin(hass: HomeAssistant, sources, hass_ws_client, hass_read_only_access_token) -> None:
     source = await add_twin(hass, "light.bulb_rgbw", title="Source")
