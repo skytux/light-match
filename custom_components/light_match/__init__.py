@@ -188,6 +188,15 @@ class LightMatchData:
         await self.async_save()
         return clean
 
+    async def async_copy_model(self, key: str = "*") -> int:
+        """Copy model profile cells into the user's cells."""
+        profile = self.profile()
+        copied = profile.copy_model(key)
+        if copied:
+            self.cells = profile.cells
+            await self.async_save()
+        return copied
+
     async def async_reset_cell(self, key: str) -> bool:
         """Forget a calibrated cell (or all with key '*')."""
         if key == "*":

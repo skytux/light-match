@@ -13,7 +13,7 @@ import voluptuous as vol
 
 from . import LightMatchData, data_for_entity, data_for_entry, database, device_info_for, loaded_entries
 from .const import CONF_BEHAVIOUR, CONF_PROFILE, CONF_REFERENCE, DOMAIN
-from .profile import MODE_ATTR, cell_target, grid_cells, nominal_command
+from .profile import MODE_ATTR, cell_target, grid_cells, nominal_command, quick_keys
 from .reference import reference_command, target_of
 from .share import repo_url, submission_url, suggested_path
 
@@ -33,6 +33,7 @@ def async_register_websocket(hass: HomeAssistant) -> None:
         ws_export,
         ws_import,
         ws_share,
+        ws_copy_model,
         ws_reference,
     ):
         websocket_api.async_register_command(hass, handler)
@@ -103,7 +104,9 @@ def ws_profile(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> Non
                 "mode": profile.mode_for(cell["kind"]),
             }
         )
-    connection.send_result(msg["id"], {**_summary(data), "cells": cells})
+    connection.send_result(
+        msg["id"], {**_summary(data), "cells": cells, "quick": quick_keys(profile.caps)}
+    )
 
 
 @websocket_api.websocket_command(
@@ -312,3 +315,19 @@ def ws_reference(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> N
         connection.send_result(msg["id"], target_of(msg["key"]))
     except ValueError as err:
         connection.send_error(msg["id"], "invalid_format", str(err))
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): f"{DOMAIN}/cell/copy_model",
+        vol.Required("entry_id"): str,
+        vol.Optional("key", default="*"): str,
+    }
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_copy_model(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> None:
+    """Copy one model profile cell, or all the user has not calibrated ('*')."""
+    if (data := _get(hass, connection, msg)) is None:
+        return
+    connection.send_result(msg["id"], {"copied": await data.async_copy_model(msg["key"])})

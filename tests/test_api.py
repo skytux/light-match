@@ -217,3 +217,28 @@ async def test_panel_registered_with_frontend(hass: HomeAssistant, sources) -> N
     assert kwargs["require_admin"] is True
     assert kwargs["module_url"].startswith("/light_match_static/light-match-panel.js?v=")
     assert panel.FRONTEND_DIR.joinpath("light-match-panel.js").is_file()
+
+
+async def test_copy_model_and_quick_keys(hass: HomeAssistant, sources, hass_ws_client) -> None:
+    from custom_components.light_match import async_get_database
+    from custom_components.light_match.database import ModelProfile, validate_db_profile
+
+    data = validate_db_profile({
+        "format": "light_match_profile", "version": 2, "revision": 1, "name": "Test lamp",
+        "license": "CC-BY-4.0", "device": {"manufacturer": "Nobody", "models": ["N1"]},
+        "provenance": {"method": "by_eye", "verified": False},
+        "modes": {"color": "hs", "white": "color_temp"},
+        "cells": {"color:red:5": {"brightness": 9, "hs_color": [3, 100]}},
+    })
+    (await async_get_database(hass)).bundled["nobody/n1"] = ModelProfile("nobody/n1", data)
+    entry = await add_twin(hass, "light.bulb_hs", profile="nobody/n1")
+    client = await hass_ws_client(hass)
+    await client.send_json_auto_id({"type": f"{DOMAIN}/profile", "entry_id": entry.entry_id})
+    res = (await client.receive_json())["result"]
+    assert res["quick"][:3] == ["white:2700:1", "white:2700:20", "white:2700:100"]
+    red5 = next(c for c in res["cells"] if c["key"] == "color:red:5")
+    assert red5["source"] == "model" and red5["model_command"]["hs_color"] == [3.0, 100.0]
+    assert res["model_profile"]["id"] == "nobody/n1"
+    await client.send_json_auto_id({"type": f"{DOMAIN}/cell/copy_model", "entry_id": entry.entry_id})
+    assert (await client.receive_json())["result"] == {"copied": 1}
+    assert entry.runtime_data.cells["color:red:5"]["brightness"] == 9

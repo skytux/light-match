@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.0 - 2026-11-22
+
+- Smart inference, so fewer cells need calibrating: an uncalibrated cell takes
+  its colour from the same anchor's nearest calibrated level, and its
+  brightness from the base (model profile or default) scaled by the
+  lightness ratio your calibrated cells show at that level, interpolated
+  between levels and held beyond the ends. Colour cells borrow the white
+  correction when none of them is calibrated. Such cells are marked
+  "inferred" (~ in the grid).
+- Quick calibration: a 5-cell walk (white 2700 K at 1, 20 and 100 %, plus red
+  and blue at 20 %; the cold and warm ends for colour-temperature lamps; the
+  5 levels for dimmers), remembered in the browser.
+- Copy from model profile: one cell or every model cell you have not
+  calibrated (`light_match/cell/copy_model`).
+
 ## 0.3.0 - 2026-11-22
 
 - Shared reference space `lm-ref-1` (`reference.py`, `docs/reference-space.md`):

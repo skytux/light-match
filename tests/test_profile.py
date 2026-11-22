@@ -134,7 +134,54 @@ def test_calibrated_cell_is_used_verbatim() -> None:
     profile = Profile(RGBW, {"color:red:50": cell})
     assert profile.forward(Target(KIND_COLOR, 50.0, hue=0.0)) == cell
     assert profile.cell_command("color:red:50") == cell
-    assert profile.cell_command("color:red:20") == profile.default_command(KIND_COLOR, 0.0, 20.0)
+    plain = Profile(RGBW, {"color:red:50": cell}, infer=False)
+    assert plain.cell_command("color:red:20") == plain.default_command(KIND_COLOR, 0.0, 20.0)
+    # with inference the neighbour takes the calibrated colour and brightness ratio
+    inferred = profile.cell_command("color:red:20")
+    assert inferred["rgbw_color"] == [255, 20, 0, 0]
+    assert inferred["brightness"] > profile.default_command(KIND_COLOR, 0.0, 20.0)["brightness"]
+    assert profile.cell_source("color:red:20") == "inferred"
+
+
+def test_inference_learns_brightness_curve_and_colour() -> None:
+    # the lamp is too bright: every calibrated white is at about half the L* of the default
+    ct = SourceCaps.from_modes(["color_temp"], 2200, 6500)
+    half = {
+        f"white:2700:{lvl}": {
+            "brightness": max(1, round(luminance(lightness(lvl / 100) * 0.5) * 255)),
+            "color_temp_kelvin": 2900,
+        }
+        for lvl in (1, 20, 100)
+    }
+    profile = Profile(ct, half)
+    for lvl in (5, 50):
+        cmd = profile.cell_command(f"white:2700:{lvl}")
+        expected = luminance(lightness(lvl / 100) * 0.5) * 255
+        assert cmd["brightness"] == pytest.approx(expected, abs=1.5)
+        assert cmd["color_temp_kelvin"] == 2900  # same anchor: the calibrated tint
+    # another white row gets the brightness correction but keeps its own colour
+    cold = profile.cell_command("white:6500:50")
+    assert cold["color_temp_kelvin"] == 6500
+    assert cold["brightness"] == pytest.approx(luminance(lightness(0.5) * 0.5) * 255, abs=1.5)
+    # forward() between cells follows the inferred cells
+    assert profile.forward(Target(KIND_WHITE, 50.0, kelvin=2700.0)) == profile.cell_command("white:2700:50")
+    # beyond the calibrated levels the ratio is held: 100 % gets the 100 % ratio
+    assert profile._correction_at(KIND_WHITE, 100.0) == pytest.approx(0.5, abs=0.02)
+    # colour cells borrow the white correction when no colour cell is calibrated
+    rgbw = Profile(RGBW, {"white:2700:50": {"brightness": 64, "color_temp_kelvin": 2700}})
+    assert rgbw.cell_command("color:red:50")["brightness"] < 128
+
+
+def test_quick_keys() -> None:
+    from custom_components.light_match.profile import quick_keys
+
+    assert quick_keys(RGBW) == ["white:2700:1", "white:2700:20", "white:2700:100", "color:red:20", "color:blue:20"]
+    ct = SourceCaps.from_modes(["color_temp"], 2200, 6500)
+    assert quick_keys(ct)[3:] == ["white:6500:20", "white:2200:20"]
+    assert quick_keys(DIM) == [f"white:2700:{lvl}" for lvl in (1, 5, 20, 50, 100)]
+    for caps in (RGBW, RGBW_NOCT, HS, DIM, ct):
+        keys = {c["key"] for c in grid_cells(caps)}
+        assert set(quick_keys(caps)) <= keys
 
 
 def test_brightness_interpolates_perceptually_and_monotonically() -> None:

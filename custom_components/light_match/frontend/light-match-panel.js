@@ -60,6 +60,27 @@ class LightMatchPanel extends HTMLElement {
     this._message = "";
     this._previewTimer = null;
     this._loaded = false;
+    this._quick = storageGet("light_match_quick") === "1";
+  }
+
+  _order() {
+    const cells = this._profile ? this._profile.cells : [];
+    if (this._quick && this._profile.quick && this._profile.quick.length) {
+      return this._profile.quick.map((k) => cells.findIndex((c) => c.key === k)).filter((i) => i >= 0);
+    }
+    return cells.map((_, i) => i);
+  }
+
+  _step(delta) {
+    const order = this._order();
+    const pos = order.indexOf(this._index);
+    if (pos < 0) return this._goto(order[delta > 0 ? 0 : order.length - 1] ?? 0);
+    const next = order[pos + delta];
+    if (next === undefined) {
+      if (delta > 0 && this._quick) this._flash("Quick calibration done: the other cells are inferred from these.");
+      return this._goto(this._index);
+    }
+    return this._goto(next);
   }
 
   set hass(hass) {
@@ -115,8 +136,9 @@ class LightMatchPanel extends HTMLElement {
     const entry = this._entry;
     this._reference = this._defaultReference(entry);
     await this._loadProfile();
-    const firstOpen = this._profile.cells.findIndex((c) => !c.calibrated);
-    this._index = firstOpen >= 0 ? firstOpen : 0;
+    const order = this._order();
+    const firstOpen = order.find((i) => !this._profile.cells[i].calibrated);
+    this._index = firstOpen ?? order[0] ?? 0;
     this._command = this._cell ? structuredClone(this._cell.command) : null;
   }
 
@@ -169,9 +191,20 @@ class LightMatchPanel extends HTMLElement {
       await this._ws("cell/set", { entry_id: this._entryId, key: cell.key, command: this._command });
       await this._loadProfile();
       this._flash(`Saved ${this._label(cell)}.`);
-      await this._goto(this._index + 1);
+      await this._step(1);
     } catch (err) {
       this._flash(`Not saved: ${err.message || err}`);
+    }
+  }
+
+  async _copyModel(key) {
+    try {
+      const res = await this._ws("cell/copy_model", { entry_id: this._entryId, key });
+      await this._loadProfile();
+      await this._goto(this._index, false);
+      this._flash(`Copied ${res.copied} cell${res.copied === 1 ? "" : "s"} from the model profile.`);
+    } catch (err) {
+      this._flash(`Not copied: ${err.message || err}`);
     }
   }
 
@@ -323,8 +356,9 @@ class LightMatchPanel extends HTMLElement {
     for (const [name, { cell, items }] of rows) {
       html += `<tr><th><span class="dot" style="background:${this._swatch(cell)}"></span>${esc(name)}</th>`;
       for (const { cell: c, i } of items) {
-        const cls = [c.calibrated ? "done" : "", c.source === "model" ? "model" : "", i === this._index ? "current" : ""].join(" ");
-        const mark = c.calibrated ? "&#10003;" : c.source === "model" ? "M" : "";
+        const quick = this._quick && (p.quick || []).includes(c.key);
+        const cls = [c.calibrated ? "done" : "", c.source === "model" ? "model" : "", quick ? "quick" : "", i === this._index ? "current" : ""].join(" ");
+        const mark = c.calibrated ? "&#10003;" : c.source === "model" ? "M" : c.source === "inferred" ? "~" : "";
         html += `<td><button class="cell ${cls}" data-index="${i}" title="${esc(this._label(c))} (${esc(SOURCE_LABEL[c.source] || c.source)})">${mark}</button></td>`;
       }
       html += "</tr>";
@@ -388,7 +422,7 @@ class LightMatchPanel extends HTMLElement {
         cell
           ? `<div class="card">
         <h2><span class="dot big" style="background:${this._swatch(cell)}"></span>${esc(this._label(cell))}
-          <small>${esc(SOURCE_LABEL[cell.source] || cell.source)} · ${this._index + 1}/${this._profile.cells.length}</small></h2>
+          <small>${esc(SOURCE_LABEL[cell.source] || cell.source)} · ${this._order().indexOf(this._index) + 1}/${this._order().length}${this._quick ? " quick" : ""}</small></h2>
         <p class="meta">Target in lm-ref-1: xy ${cell.target ? cell.target.xy.join(", ") : "-"} · ${cell.target ? (cell.target.relative_output * 100).toPrecision(2) : "-"} % of full output</p>
         <p class="hint">Make the lamp under test look like the reference, then Save. Changes are sent to the lamp live.</p>
         ${this._sliders()}
@@ -401,7 +435,8 @@ class LightMatchPanel extends HTMLElement {
         </div>
         <div class="links">
           <label><input type="checkbox" id="auto" ${this._autoShow ? "checked" : ""}> Show target and preview on every step</label>
-          <a href="#" id="reset">Reset this cell</a> · <a href="#" id="default">Load default</a>
+          <label><input type="checkbox" id="quick" ${this._quick ? "checked" : ""}> Quick calibration (5 cells, the rest inferred)</label>
+          <a href="#" id="reset">Reset this cell</a> · <a href="#" id="default">Load default</a>${cell.model_command && cell.source !== "model" ? ` · <a href="#" id="copymodel">Copy from model profile</a>` : ""}
         </div>
         <p class="message">${esc(this._message)}</p>
       </div>`
@@ -414,7 +449,7 @@ class LightMatchPanel extends HTMLElement {
         <a href="#" id="share">Share profile</a> ·
         <label class="file">Import profile <input type="file" id="import" accept=".json,application/json"></label>
         <label><input type="checkbox" id="merge"> merge with existing cells</label> ·
-        <a href="#" id="resetall">Reset all cells</a>
+        <a href="#" id="resetall">Reset all cells</a>${entry.model_profile && entry.model_profile.cells ? ` · <a href="#" id="copymodelall">Copy all model profile cells</a>` : ""}
       </div>`;
     }
     root.innerHTML = `
@@ -455,6 +490,7 @@ class LightMatchPanel extends HTMLElement {
         .cell { width: 100%; min-width: 28px; height: 26px; padding: 0; font-size: 13px; }
         .cell.model { background: var(--secondary-background-color); color: var(--secondary-text-color); font-size: 11px; }
       .cell.done { background: var(--success-color, #43a047); color: #fff; border-color: transparent; }
+        .cell.quick { border: 2px dashed var(--primary-color); }
         .cell.current { outline: 2px solid var(--primary-color); outline-offset: 1px; }
         @media (max-width: 600px) { .row { grid-template-columns: 90px 1fr 64px; } .content { padding: 8px 16px; } }
       </style>
@@ -491,8 +527,19 @@ class LightMatchPanel extends HTMLElement {
     this.shadowRoot.querySelectorAll("input[data-id]").forEach((el) =>
       el.addEventListener("input", (e) => this._applyInput(e.target.dataset.id, e.target.value))
     );
-    on("#prev", "click", () => this._goto(this._index - 1));
-    on("#skip", "click", () => this._goto(this._index + 1));
+    on("#prev", "click", () => this._step(-1));
+    on("#skip", "click", () => this._step(1));
+    on("#quick", "change", (e) => {
+      this._quick = e.target.checked;
+      storageSet("light_match_quick", this._quick ? "1" : "");
+      const order = this._order();
+      if (this._quick && !order.includes(this._index)) {
+        const open = order.find((i) => !this._profile.cells[i].calibrated);
+        this._goto(open ?? order[0] ?? 0);
+      } else this._render();
+    });
+    link("#copymodel", () => this._copyModel(this._cell.key));
+    link("#copymodelall", () => this._copyModel("*"));
     on("#save", "click", () => this._save());
     on("#show", "click", () => this._showTarget());
     on("#auto", "change", (e) => (this._autoShow = e.target.checked));

@@ -158,7 +158,8 @@ def test_layering_user_over_model_over_default() -> None:
     profile.model_cells = model
     assert profile.cell_source("color:red:5") == "user"
     assert profile.cell_source("color:blue:5") == "model"
-    assert profile.cell_source("color:green:5") == "default"
+    assert profile.cell_source("color:green:5") == "inferred"
+    assert Profile(caps, model_cells=model).cell_source("color:green:5") == "default"
     assert profile.cell_command("color:red:5")["rgbw_color"] == [200, 0, 0, 0]
     assert profile.cell_command("color:blue:5") == {"brightness": 40, "rgbw_color": [0, 0, 255, 0]}
     assert profile.forward(Target(KIND_COLOR, 5.0, hue=240.0)) == {"brightness": 40, "rgbw_color": [0, 0, 255, 0]}
@@ -242,3 +243,16 @@ def test_ranking_prefers_verified_then_measured() -> None:
     db = ProfileDatabase(bundled={p.id: p for p in profiles})
     order = [p.id for p in db.candidates(DeviceInfo("Example Co", "X1", integration="example"))]
     assert order == ["example/d-eye-verified", "example/c-lux", "example/b-eye", "example/a-spec"]
+
+
+def test_copy_from_model() -> None:
+    caps = SourceCaps.from_modes(["hs", "color_temp"], 2000, 6500)
+    model = {"color:red:5": {"brightness": 9, "hs_color": [2.0, 100.0]},
+             "color:blue:5": {"brightness": 9, "hs_color": [238.0, 100.0]}}
+    profile = Profile(caps, {"color:red:5": {"brightness": 12, "hs_color": [0.0, 100.0]}}, model_cells=model)
+    assert profile.copy_model("color:blue:5") == 1
+    assert profile.cells["color:blue:5"]["hs_color"] == [238.0, 100.0]
+    assert profile.copy_model("color:green:5") == 0
+    profile.reset_cell("color:blue:5")
+    assert profile.copy_model() == 1  # the user's red stays
+    assert profile.cells["color:red:5"]["brightness"] == 12

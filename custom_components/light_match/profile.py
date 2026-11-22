@@ -503,6 +503,26 @@ def convert_command(cmd: dict[str, Any], src_mode: str, dst_mode: str, caps: Sou
 SOURCE_USER = "user"
 SOURCE_MODEL = "model"
 SOURCE_DEFAULT = "default"
+SOURCE_INFERRED = "inferred"
+
+
+def quick_keys(caps: SourceCaps) -> list[str]:
+    """The five cells of the quick calibration, in order.
+
+    White at 1, 20 and 100 % fix the brightness curve; two more cells fix the
+    colour: red and blue for colour lamps, the warm and cold ends for
+    colour-temperature lamps. Inference spreads them over the grid.
+    """
+    if caps.white_mode is None:
+        return []
+    if caps.white_mode == "brightness":
+        return [cell_key(KIND_WHITE, DIM_KELVIN, lvl) for lvl in BRIGHTNESS_LEVELS]
+    keys = [cell_key(KIND_WHITE, 2700, lvl) for lvl in (1, 20, 100)]
+    if caps.color_mode is not None:
+        keys += [cell_key(KIND_COLOR, "red", 20), cell_key(KIND_COLOR, "blue", 20)]
+    else:
+        keys += [cell_key(KIND_WHITE, 6500, 20), cell_key(KIND_WHITE, 2200, 20)]
+    return keys
 
 
 class Profile:
@@ -520,13 +540,36 @@ class Profile:
         fallback: str = BEHAVIOUR_SMART,
         identity: bool = False,
         model_cells: dict[str, dict[str, Any]] | None = None,
+        infer: bool = True,
     ) -> None:
         """Create a profile for a lamp with these capabilities."""
         self.caps = caps
-        self.cells: dict[str, dict[str, Any]] = dict(cells or {})
-        self.model_cells: dict[str, dict[str, Any]] = dict(model_cells or {})
         self.fallback = fallback
         self.identity = identity
+        self.infer = infer
+        self._correction: dict[str, list[tuple[float, float]]] | None = None
+        self.cells = dict(cells or {})
+        self.model_cells = dict(model_cells or {})
+
+    @property
+    def cells(self) -> dict[str, dict[str, Any]]:
+        """The user's own calibrated cells."""
+        return self._cells
+
+    @cells.setter
+    def cells(self, value: dict[str, dict[str, Any]]) -> None:
+        self._cells = value
+        self._correction = None
+
+    @property
+    def model_cells(self) -> dict[str, dict[str, Any]]:
+        """Cells from the model profile, in this lamp's modes."""
+        return self._model_cells
+
+    @model_cells.setter
+    def model_cells(self, value: dict[str, dict[str, Any]]) -> None:
+        self._model_cells = value
+        self._correction = None
 
     def stored(self, key: str) -> dict[str, Any] | None:
         """The command stored for a cell: the user's, else the model profile's."""
@@ -535,12 +578,91 @@ class Profile:
         return self.cells.get(key) or self.model_cells.get(key)
 
     def cell_source(self, key: str) -> str:
-        """Where a cell's command comes from: user, model or default."""
+        """Where a cell's command comes from: user, model, inferred or default."""
         if not self.identity and key in self.cells:
             return SOURCE_USER
         if not self.identity and key in self.model_cells:
             return SOURCE_MODEL
+        if self._inferring:
+            return SOURCE_INFERRED
         return SOURCE_DEFAULT
+
+    # -- inference -------------------------------------------------------------
+
+    @property
+    def _inferring(self) -> bool:
+        return self.infer and not self.identity and bool(self.cells)
+
+    def _base_point(self, key: str) -> Point:
+        """A cell's point below the user's layer: model cell, else default."""
+        kind, anchor, level = parse_cell_key(key)
+        mode = self.mode_for(kind)
+        if mode is not None and (model := self.model_cells.get(key)) is not None:
+            return command_to_point(model, mode)
+        value = COLOR_ANCHORS[anchor] if kind == KIND_COLOR else float(anchor)
+        return self._default_point(kind, value, level)
+
+    def _corrections(self) -> dict[str, list[tuple[float, float]]]:
+        """Per kind: (level %, lightness ratio user / base) from the user's cells."""
+        if self._correction is not None:
+            return self._correction
+        ratios: dict[str, dict[float, list[float]]] = {KIND_COLOR: {}, KIND_WHITE: {}}
+        for key, cmd in self.cells.items():
+            try:
+                kind, _anchor, level = parse_cell_key(key)
+            except ValueError:
+                continue
+            mode = self.mode_for(kind)
+            if mode is None:
+                continue
+            base = lightness(self._base_point(key).level / 255)
+            if base <= _EPS:
+                continue
+            user = lightness(command_to_point(cmd, mode).level / 255)
+            ratios[kind].setdefault(level, []).append(user / base)
+        self._correction = {
+            kind: sorted((lvl, sum(vals) / len(vals)) for lvl, vals in by_level.items())
+            for kind, by_level in ratios.items()
+        }
+        return self._correction
+
+    def _correction_at(self, kind: str, level: float) -> float:
+        """The lightness ratio at a level: interpolated, constant beyond the ends."""
+        table = self._corrections()
+        curve = table.get(kind) or table.get(KIND_WHITE if kind == KIND_COLOR else KIND_COLOR) or []
+        if not curve:
+            return 1.0
+        if level <= curve[0][0]:
+            return curve[0][1]
+        if level >= curve[-1][0]:
+            return curve[-1][1]
+        for (l0, r0), (l1, r1) in zip(curve, curve[1:], strict=False):
+            if l0 <= level <= l1:
+                return r0 + (r1 - r0) * _perceptual_t(level, l0, l1)
+        return 1.0
+
+    def _inferred_point(self, kind: str, anchor_name: str | int, level: float, base: Point) -> Point:
+        """An uncalibrated cell estimated from the user's cells.
+
+        Colour: the same anchor's calibrated cell at the nearest level.
+        Brightness: the base level scaled by the user's lightness ratio at this
+        level, learned from all calibrated cells of the same kind.
+        """
+        mode = self.mode_for(kind)
+        color = base.color
+        nearest: tuple[float, Point] | None = None
+        for lvl in BRIGHTNESS_LEVELS:
+            cmd = self.cells.get(cell_key(kind, anchor_name, lvl))
+            if cmd is None or mode is None:
+                continue
+            dist = abs(lightness(lvl / 100) - lightness(level / 100))
+            if nearest is None or dist < nearest[0]:
+                nearest = (dist, command_to_point(cmd, mode))
+        if nearest is not None and nearest[1].mode == base.mode:
+            color = nearest[1].color
+        ratio = self._correction_at(kind, level)
+        new_level = luminance(lightness(base.level / 255) * ratio) * 255
+        return Point(base.mode, max(0.0, min(255.0, new_level)), color)
 
     def convert_cells(
         self, cells: dict[str, Any], modes: dict[str, Any]
@@ -590,12 +712,14 @@ class Profile:
         mode = self.mode_for(kind)
         assert mode is not None
         clean = validate_command(cmd, mode)
-        self.cells[key] = clean
+        self.cells = {**self.cells, key: clean}
         return clean
 
     def reset_cell(self, key: str) -> bool:
         """Forget a calibrated cell; True if there was one."""
-        return self.cells.pop(key, None) is not None
+        had = key in self.cells
+        self.cells = {k: v for k, v in self.cells.items() if k != key}
+        return had
 
     def default_command(self, kind: str, anchor: float, level: float) -> dict[str, Any]:
         """The fallback command for a target colour hue / white kelvin at a level."""
@@ -604,12 +728,28 @@ class Profile:
         )
 
     def cell_command(self, key: str) -> dict[str, Any]:
-        """The command of a cell: calibrated if stored, else the default."""
+        """The command of a cell: calibrated if stored, else inferred or the default."""
         if (stored := self.stored(key)) is not None:
             return dict(stored)
         kind, anchor, level = parse_cell_key(key)
         value = COLOR_ANCHORS[anchor] if kind == KIND_COLOR else float(anchor)
+        if self._inferring and self.mode_for(kind) is not None:
+            point = self._cell_point(kind, anchor if kind == KIND_COLOR else int(anchor), value, level)
+            return point_to_command(point, self.caps.floor, self._subfloor)
         return self.default_command(kind, value, level)
+
+    def copy_model(self, key: str = "*") -> int:
+        """Copy model profile cells into the user's cells; returns cells copied.
+
+        With ``*``, every model cell the user has not calibrated is copied.
+        """
+        keys = [k for k in self.model_cells if k not in self.cells] if key == "*" else [key]
+        copied = 0
+        for k in keys:
+            if (cmd := self.model_cells.get(k)) is not None:
+                self.cells = {**self.cells, k: dict(cmd)}
+                copied += 1
+        return copied
 
     @property
     def _subfloor(self) -> bool:
@@ -645,7 +785,10 @@ class Profile:
         mode = self.mode_for(kind)
         if mode is not None and (stored := self.stored(key)) is not None:
             return command_to_point(stored, mode)
-        return self._default_point(kind, anchor, level)
+        base = self._default_point(kind, anchor, level)
+        if self._inferring:
+            return self._inferred_point(kind, anchor_name, level, base)
+        return base
 
     # -- forward -------------------------------------------------------------
 
@@ -840,15 +983,15 @@ class Profile:
                     return y0 if x1 == x0 else y0 + (y1 - y0) * (x - x0) / (x1 - x0)
             return x
 
-        written = 0
+        written: dict[str, dict[str, Any]] = {}
         for cell in grid_cells(self.caps):
-            if self.cell_source(cell["key"]) != SOURCE_DEFAULT:
+            if self.cell_source(cell["key"]) not in (SOURCE_DEFAULT, SOURCE_INFERRED):
                 continue
             anchor = cell["hue"] if cell["kind"] == KIND_COLOR else float(cell["kelvin"])
             mapped = max(0.1, min(100.0, remap(cell["brightness"])))
-            self.cells[cell["key"]] = self.default_command(cell["kind"], anchor, mapped)
-            written += 1
-        return written
+            written[cell["key"]] = self.default_command(cell["kind"], anchor, mapped)
+        self.cells = {**self.cells, **written}
+        return len(written)
 
     def to_json(
         self, model: str | None = None, meta: dict[str, Any] | None = None, effective: bool = False
@@ -894,7 +1037,7 @@ class Profile:
         if replace:
             self.cells = imported
         else:
-            self.cells.update(imported)
+            self.cells = {**self.cells, **imported}
         return len(imported), skipped
 
 
