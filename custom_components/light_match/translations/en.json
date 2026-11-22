@@ -1,0 +1,109 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add a calibrated light",
+        "description": "Light Match creates a calibrated twin of a light. The twin translates every command so that the same brightness and colour look the same on every calibrated lamp. Calibrate it in the Light Match panel in the sidebar.",
+        "data": {
+          "source": "Source light",
+          "name": "Name of the calibrated light"
+        },
+        "data_description": {
+          "source": "The real lamp to calibrate.",
+          "name": "Leave empty to use the source name plus \"calibrated\"."
+        }
+      }
+    },
+    "error": {
+      "own_twin": "This is already a Light Match light. Pick the real lamp.",
+      "not_found": "This light does not exist."
+    },
+    "abort": {
+      "already_configured": "This light already has a calibrated twin."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Calibrated light options",
+        "data": {
+          "behaviour": "Behaviour",
+          "reference_entity": "Reference lamp for calibration",
+          "auto_floor": "Detect the brightness floor",
+          "brightness_floor": "Brightness floor (0-255)",
+          "hide_source": "Hide the source light"
+        },
+        "data_description": {
+          "behaviour": "How commands are translated for cells you have not calibrated yet.",
+          "reference_entity": "The lamp the panel offers as the look to match. Usually the twin of your best lamp, set to \"This lamp is the reference\".",
+          "auto_floor": "Use the known floor for the source's integration (WiZ: 26). Turn off to set the floor yourself.",
+          "brightness_floor": "The lowest brightness the lamp really dims to; 0 for none. Used only when detection is off.",
+          "hide_source": "Hide the real lamp from dashboards and voice assistants. It is shown again when you remove this light."
+        }
+      }
+    }
+  },
+  "selector": {
+    "behaviour": {
+      "options": {
+        "smart": "Calibrated, smart defaults (scale colours below the brightness floor)",
+        "plain": "Calibrated, plain defaults",
+        "reference": "This lamp is the reference (pass commands through)"
+      }
+    }
+  },
+  "exceptions": {
+    "not_a_twin": {
+      "message": "{entity_id} is not a Light Match light."
+    }
+  },
+  "services": {
+    "calibrate_cell": {
+      "name": "Calibrate cell",
+      "description": "Store the source command that makes this lamp show the target look of one grid cell.",
+      "fields": {
+        "entity_id": {"name": "Calibrated light", "description": "The Light Match light."},
+        "cell": {"name": "Cell", "description": "Cell key: color:<name>:<level> or white:<kelvin>:<level>, levels 1, 5, 20, 50, 100."},
+        "brightness": {"name": "Brightness", "description": "Source brightness 1-255."},
+        "hs_color": {"name": "Hue and saturation", "description": "For lamps commanded in hs."},
+        "rgb_color": {"name": "RGB", "description": "For RGB lamps."},
+        "rgbw_color": {"name": "RGBW", "description": "For RGBW lamps."},
+        "rgbww_color": {"name": "RGBWW", "description": "For RGBWW lamps."},
+        "color_temp_kelvin": {"name": "Colour temperature", "description": "For white cells of lamps with colour temperature."}
+      }
+    },
+    "reset_cell": {
+      "name": "Reset cell",
+      "description": "Forget a calibrated cell; * forgets all.",
+      "fields": {
+        "entity_id": {"name": "Calibrated light", "description": "The Light Match light."},
+        "cell": {"name": "Cell", "description": "Cell key, or * for all cells."}
+      }
+    },
+    "export_profile": {
+      "name": "Export profile",
+      "description": "Return the calibration profile as JSON, to share it for this lamp model.",
+      "fields": {
+        "entity_id": {"name": "Calibrated light", "description": "The Light Match light."},
+        "model": {"name": "Model", "description": "Optional lamp model to put in the profile."}
+      }
+    },
+    "import_profile": {
+      "name": "Import profile",
+      "description": "Load an exported profile into this lamp.",
+      "fields": {
+        "entity_id": {"name": "Calibrated light", "description": "The Light Match light."},
+        "profile": {"name": "Profile", "description": "The exported profile (object or JSON text)."},
+        "merge": {"name": "Merge", "description": "Keep cells the profile does not have."}
+      }
+    },
+    "import_brightness_curve": {
+      "name": "Import brightness curve",
+      "description": "Fill uncalibrated cells from a brightness curve (target % to lamp %), such as a Lightener brightness map.",
+      "fields": {
+        "entity_id": {"name": "Calibrated light", "description": "The Light Match light."},
+        "curve": {"name": "Curve", "description": "Object of target percentage to lamp percentage."}
+      }
+    }
+  }
+}

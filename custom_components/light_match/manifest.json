@@ -1,0 +1,14 @@
+{
+  "domain": "light_match",
+  "name": "Light Match",
+  "after_dependencies": ["frontend", "panel_custom"],
+  "codeowners": ["@skytux"],
+  "config_flow": true,
+  "dependencies": ["http", "websocket_api"],
+  "documentation": "https://github.com/skytux/ha-light-match",
+  "integration_type": "helper",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/skytux/ha-light-match/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

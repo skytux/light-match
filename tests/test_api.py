@@ -1,0 +1,219 @@
+"""Websocket commands, services and storage."""
+
+from __future__ import annotations
+
+import json
+
+from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ServiceValidationError
+import pytest
+
+from custom_components.light_match.const import DOMAIN
+
+from .conftest import add_twin, twin_id
+
+
+async def test_storage_roundtrip(hass: HomeAssistant, sources, hass_storage) -> None:
+    entry = await add_twin(hass, "light.bulb_rgbw")
+    cell = {"brightness": 26, "rgbw_color": [12, 0, 0, 0]}
+    await entry.runtime_data.async_set_cell("color:red:1", cell)
+    assert hass_storage[f"{DOMAIN}.{entry.entry_id}"]["data"] == {"cells": {"color:red:1": cell}}
+
+    assert await hass.config_entries.async_reload(entry.entry_id)
+    await hass.async_block_till_done()
+    assert entry.runtime_data.cells == {"color:red:1": cell}
+
+    assert await hass.config_entries.async_remove(entry.entry_id)
+    await hass.async_block_till_done()
+    assert f"{DOMAIN}.{entry.entry_id}" not in hass_storage
+
+
+async def test_storage_loads_existing(hass: HomeAssistant, sources, hass_storage) -> None:
+    from pytest_homeassistant_custom_component.common import MockConfigEntry
+
+    entry = MockConfigEntry(domain=DOMAIN, title="Twin", data={"source": "light.bulb_hs"}, unique_id="light.bulb_hs")
+    hass_storage[f"{DOMAIN}.{entry.entry_id}"] = {
+        "version": 1,
+        "key": f"{DOMAIN}.{entry.entry_id}",
+        "data": {"cells": {"white:2700:5": {"brightness": 9, "color_temp_kelvin": 2600}}},
+    }
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    assert entry.runtime_data.cells["white:2700:5"]["brightness"] == 9
+
+
+async def test_websocket_commands(hass: HomeAssistant, sources, hass_ws_client) -> None:
+    entry = await add_twin(hass, "light.bulb_rgbw", auto_floor=False, brightness_floor=26)
+    ref = await add_twin(hass, "light.bulb_hs", title="Reference", behaviour="reference")
+    client = await hass_ws_client(hass)
+
+    await client.send_json_auto_id({"type": f"{DOMAIN}/entries"})
+    res = await client.receive_json()
+    assert res["success"]
+    entries = {e["entry_id"]: e for e in res["result"]["entries"]}
+    assert entries[entry.entry_id]["modes"] == {"color": "rgbw", "white": "color_temp"}
+    assert entries[entry.entry_id]["total"] == 60
+    assert entries[entry.entry_id]["floor"] == 26
+    assert entries[ref.entry_id]["behaviour"] == "reference"
+
+    await client.send_json_auto_id({"type": f"{DOMAIN}/profile", "entry_id": entry.entry_id})
+    res = await client.receive_json()
+    cells = {c["key"]: c for c in res["result"]["cells"]}
+    assert cells["color:red:1"]["command"] == {"brightness": 26, "rgbw_color": [25, 0, 0, 0]}
+    assert cells["color:red:1"]["calibrated"] is False
+    assert cells["white:2700:1"]["mode"] == "color_temp"
+
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/cell/set", "entry_id": entry.entry_id, "key": "color:red:1",
+         "command": {"brightness": 26, "rgbw_color": [12, 0, 0, 0]}}
+    )
+    res = await client.receive_json()
+    assert res["success"], res
+    assert entry.runtime_data.cells["color:red:1"]["rgbw_color"] == [12, 0, 0, 0]
+
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/cell/set", "entry_id": entry.entry_id, "key": "color:red:1",
+         "command": {"brightness": 26, "hs_color": [0, 100]}}
+    )
+    res = await client.receive_json()
+    assert not res["success"] and res["error"]["code"] == "invalid_format"
+
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/preview", "entry_id": entry.entry_id,
+         "command": {"brightness": 40, "rgbw_color": [0, 0, 200, 0], "effect": "x"}}
+    )
+    res = await client.receive_json()
+    assert res["success"], res
+    assert sources["light.bulb_rgbw"].calls[-1][1] == {"brightness": 40, "rgbw_color": (0, 0, 200, 0)}
+
+    # a twin reference shows the target through its own profile (pass-through here)
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/show_target", "entity_id": twin_id(hass, ref), "key": "color:orange:20"}
+    )
+    res = await client.receive_json()
+    assert res["success"], res
+    assert res["result"]["sent"] == {"brightness": 51, "hs_color": [30.0, 100.0]}
+    assert sources["light.bulb_hs"].calls[-1][1]["hs_color"] == (30.0, 100.0)
+
+    # any other light gets the plain command
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/show_target", "entity_id": "light.bulb_dim", "key": "white:4000:50"}
+    )
+    res = await client.receive_json()
+    assert res["success"], res
+    assert sources["light.bulb_dim"].calls[-1][1]["brightness"] == 128
+
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/show_target", "entity_id": "light.bulb_dim", "key": "bad"}
+    )
+    assert not (await client.receive_json())["success"]
+
+    await client.send_json_auto_id({"type": f"{DOMAIN}/profile/export", "entry_id": entry.entry_id, "model": "X"})
+    res = await client.receive_json()
+    exported = res["result"]["profile"]
+    assert exported["model"] == "X" and "color:red:1" in exported["cells"]
+
+    await client.send_json_auto_id({"type": f"{DOMAIN}/cell/reset", "entry_id": entry.entry_id, "key": "color:red:1"})
+    res = await client.receive_json()
+    assert res["result"] == {"removed": True}
+    assert entry.runtime_data.cells == {}
+
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/profile/import", "entry_id": ref.entry_id, "profile": exported}
+    )
+    res = await client.receive_json()
+    assert res["result"] == {"imported": 1, "skipped": 0}
+    assert ref.runtime_data.cells["color:red:1"]["hs_color"][0] == pytest.approx(0.0)
+
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/profile/import", "entry_id": ref.entry_id, "profile": {"format": "nope"}}
+    )
+    assert not (await client.receive_json())["success"]
+
+    await client.send_json_auto_id({"type": f"{DOMAIN}/profile", "entry_id": "missing"})
+    res = await client.receive_json()
+    assert res["error"]["code"] == "not_found"
+
+
+async def test_websocket_writes_need_admin(hass: HomeAssistant, sources, hass_ws_client, hass_read_only_access_token) -> None:
+    entry = await add_twin(hass, "light.bulb_rgbw")
+    client = await hass_ws_client(hass, hass_read_only_access_token)
+    await client.send_json_auto_id(
+        {"type": f"{DOMAIN}/cell/set", "entry_id": entry.entry_id, "key": "color:red:1",
+         "command": {"brightness": 26, "rgbw_color": [12, 0, 0, 0]}}
+    )
+    res = await client.receive_json()
+    assert res["error"]["code"] == "unauthorized"
+
+
+async def test_services(hass: HomeAssistant, sources) -> None:
+    entry = await add_twin(hass, "light.bulb_rgbw")
+    twin = twin_id(hass, entry)
+
+    await hass.services.async_call(
+        DOMAIN, "calibrate_cell",
+        {"entity_id": twin, "cell": "color:blue:5", "brightness": 26, "rgbw_color": [0, 0, 60, 0]},
+        blocking=True,
+    )
+    assert entry.runtime_data.cells["color:blue:5"] == {"brightness": 26, "rgbw_color": [0, 0, 60, 0]}
+
+    with pytest.raises(ServiceValidationError):
+        await hass.services.async_call(
+            DOMAIN, "calibrate_cell",
+            {"entity_id": twin, "cell": "color:blue:7", "brightness": 26, "rgbw_color": [0, 0, 60, 0]},
+            blocking=True,
+        )
+    with pytest.raises(ServiceValidationError):
+        await hass.services.async_call(
+            DOMAIN, "export_profile", {"entity_id": "light.bulb_hs"}, blocking=True, return_response=True
+        )
+
+    res = await hass.services.async_call(
+        DOMAIN, "export_profile", {"entity_id": twin, "model": "M"}, blocking=True, return_response=True
+    )
+    profile = res["profile"]
+    assert profile["cells"] == {"color:blue:5": {"brightness": 26, "rgbw_color": [0, 0, 60, 0]}}
+
+    await hass.services.async_call(DOMAIN, "reset_cell", {"entity_id": twin, "cell": "*"}, blocking=True)
+    assert entry.runtime_data.cells == {}
+
+    res = await hass.services.async_call(
+        DOMAIN, "import_profile", {"entity_id": twin, "profile": json.dumps(profile)},
+        blocking=True, return_response=True,
+    )
+    assert res == {"imported": 1, "skipped": 0}
+    with pytest.raises(ServiceValidationError):
+        await hass.services.async_call(
+            DOMAIN, "import_profile", {"entity_id": twin, "profile": "{not json"}, blocking=True
+        )
+
+    res = await hass.services.async_call(
+        DOMAIN, "import_brightness_curve", {"entity_id": twin, "curve": {"10": 30}},
+        blocking=True, return_response=True,
+    )
+    assert res == {"written": 59}
+    # the twin shows the new calibration count
+    assert hass.states.get(twin).attributes["calibrated_cells"] == 60
+
+
+async def test_panel_registered_with_frontend(hass: HomeAssistant, sources) -> None:
+    """With the frontend loaded the panel and its module are registered."""
+    from unittest.mock import AsyncMock, MagicMock, patch
+
+    from custom_components.light_match import panel
+
+    hass.config.components.add("frontend")
+    static = AsyncMock()
+    with (
+        patch.object(hass, "http", MagicMock(async_register_static_paths=static)),
+        patch("homeassistant.components.panel_custom.async_register_panel", AsyncMock()) as reg,
+    ):
+        assert await panel.async_register_panel(hass) is True
+    assert static.call_args[0][0][0].url_path == "/light_match_static"
+    kwargs = reg.call_args.kwargs
+    assert kwargs["webcomponent_name"] == "light-match-panel"
+    assert kwargs["frontend_url_path"] == "light-match"
+    assert kwargs["require_admin"] is True
+    assert kwargs["module_url"].startswith("/light_match_static/light-match-panel.js?v=")
+    assert panel.FRONTEND_DIR.joinpath("light-match-panel.js").is_file()

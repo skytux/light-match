@@ -1,0 +1,95 @@
+calibrate_cell:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity:
+          integration: light_match
+          domain: light
+    cell:
+      required: true
+      example: "color:red:5"
+      selector:
+        text:
+    brightness:
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 255
+    hs_color:
+      example: "[0, 100]"
+      selector:
+        object:
+    rgb_color:
+      example: "[255, 0, 0]"
+      selector:
+        object:
+    rgbw_color:
+      example: "[12, 0, 0, 0]"
+      selector:
+        object:
+    rgbww_color:
+      example: "[255, 0, 0, 0, 0]"
+      selector:
+        object:
+    color_temp_kelvin:
+      selector:
+        color_temp:
+          unit: kelvin
+          min: 1500
+          max: 9000
+reset_cell:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity:
+          integration: light_match
+          domain: light
+    cell:
+      required: true
+      example: "white:2700:20"
+      selector:
+        text:
+export_profile:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity:
+          integration: light_match
+          domain: light
+    model:
+      example: "Brand X A60 RGBW"
+      selector:
+        text:
+import_profile:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity:
+          integration: light_match
+          domain: light
+    profile:
+      required: true
+      selector:
+        object:
+    merge:
+      default: false
+      selector:
+        boolean:
+import_brightness_curve:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity:
+          integration: light_match
+          domain: light
+    curve:
+      required: true
+      example: '{"10": 30, "50": 70}'
+      selector:
+        object:
