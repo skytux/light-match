@@ -60,7 +60,6 @@ class CalibratedLight(LightEntity):
     """A light that translates uniform commands into its source's own."""
 
     _attr_should_poll = False
-    _attr_supported_features = LightEntityFeature.TRANSITION
     _attr_min_color_temp_kelvin = TWIN_MIN_KELVIN
     _attr_max_color_temp_kelvin = TWIN_MAX_KELVIN
 
@@ -126,6 +125,14 @@ class CalibratedLight(LightEntity):
             self._target = target
 
     # -- state ---------------------------------------------------------------
+
+    @property
+    def supported_features(self) -> LightEntityFeature:
+        """Transition when the source takes it (or its model profile says so)."""
+        features = LightEntityFeature(0)
+        if self._data.transition_supported():
+            features |= LightEntityFeature.TRANSITION
+        return features
 
     @property
     def supported_color_modes(self) -> set[ColorMode]:
@@ -209,7 +216,7 @@ class CalibratedLight(LightEntity):
     ) -> None:
         """Send a source command, remembering it to map the state back."""
         service_data: dict[str, Any] = {ATTR_ENTITY_ID: self._data.source, **command}
-        if transition is not None:
+        if transition is not None and self._data.transition_supported():
             service_data[ATTR_TRANSITION] = transition
         context = self._context or Context()
         self._target = target
@@ -222,7 +229,7 @@ class CalibratedLight(LightEntity):
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the source off."""
         service_data: dict[str, Any] = {ATTR_ENTITY_ID: self._data.source}
-        if ATTR_TRANSITION in kwargs:
+        if ATTR_TRANSITION in kwargs and self._data.transition_supported():
             service_data[ATTR_TRANSITION] = kwargs[ATTR_TRANSITION]
         await self.hass.services.async_call(
             "light", "turn_off", service_data, blocking=True, context=self._context

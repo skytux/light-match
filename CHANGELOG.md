@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.2.0 - 2026-11-22
+
+- Lamp profile database by manufacturer and model:
+  `profiles/<manufacturer>/<model>.json`, bundled with the integration, with
+  a JSON schema (`profile.schema.json`), an index with checksums and
+  `scripts/profiles.py` to check the schema, the rules, duplicate models and
+  the index.
+- Each profile names the device as Home Assistant's device registry reports
+  it (manufacturer and aliases, model names or ids, integrations, firmware
+  range), its capabilities, its provenance (spec, by eye, lux meter or
+  colorimeter; sources; verified), contributors by nickname with a role and
+  date, and the data licence CC BY 4.0 (`profiles/LICENSE`).
+- Data-driven adapters from the profile: brightness floor, sub-floor method
+  (channel scaling or none), kelvin range, colour modes, xy gamut clamping
+  (Hue gamuts A, B, C or custom corners), channel gains and transition
+  support. The twin only offers transitions when the lamp takes them.
+- A new twin is matched to a profile by the source lamp's device
+  (manufacturer, model, model id, integration, firmware); the config flow
+  shows the lamp and the match and lets you pick another profile or none,
+  also later in the options. Equal matches prefer verified, then measured
+  profiles.
+- Layering: built-in defaults < model profile cells < your own cells. The
+  panel shows the matched profile and each cell's source.
+- Seed profiles from public specs only, marked spec-based and unverified
+  with their sources: WiZ (10 % floor) and Philips Hue gamuts A, B and C.
+- Profile files are format version 2; version 1 exports still import.
+
 ## 0.1.1 - 2026-11-22
 
 - README: install, set-up, calibration walkthrough, how it works, profile

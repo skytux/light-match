@@ -61,6 +61,9 @@ class SourceCaps:
     min_kelvin: int = 2000
     max_kelvin: int = 6500
     floor: int = 0  # lowest brightness (0-255) the lamp really dims to
+    gamut: tuple[tuple[float, float], ...] | None = None  # xy corners red, green, blue
+    subfloor: bool = True  # the lamp dims its channels at the floor brightness
+    channel_gain: tuple[float, ...] | None = None  # relative output per channel
 
     @classmethod
     def from_modes(
@@ -69,6 +72,7 @@ class SourceCaps:
         min_kelvin: int | None = None,
         max_kelvin: int | None = None,
         floor: int = 0,
+        **adapters: Any,
     ) -> SourceCaps:
         """Pick the command modes from a light's supported_color_modes."""
         modes = set(modes or [])
@@ -93,7 +97,23 @@ class SourceCaps:
             min_kelvin=int(min_kelvin or 2000),
             max_kelvin=int(max_kelvin or 6500),
             floor=max(0, min(255, int(floor or 0))),
+            **adapters,
         )
+
+    def hs_in_gamut(self, hue: float, sat: float) -> tuple[float, float]:
+        """The hue and saturation the lamp really shows, clamped to its gamut."""
+        if not self.gamut:
+            return hue, sat
+        gamut = color_util.GamutType(*(color_util.XYPoint(*p) for p in self.gamut))
+        x, y = color_util.color_hs_to_xy(hue, sat, gamut)
+        return color_util.color_xy_to_hs(x, y)
+
+    def balance(self, color: tuple[float, ...], mode: str) -> tuple[float, ...]:
+        """Divide channel ratios by the channel gains, renormalised."""
+        gain = self.channel_gain
+        if not gain or len(gain) != len(color):
+            return color
+        return _normalise(tuple(c / g for c, g in zip(color, gain, strict=True)), mode)
 
     @property
     def white_kelvins(self) -> list[int]:
@@ -480,8 +500,18 @@ def convert_command(cmd: dict[str, Any], src_mode: str, dst_mode: str, caps: Sou
 # ---------------------------------------------------------------------------
 
 
+SOURCE_USER = "user"
+SOURCE_MODEL = "model"
+SOURCE_DEFAULT = "default"
+
+
 class Profile:
-    """A lamp's calibration: calibrated cells plus defaults for the rest."""
+    """A lamp's calibration in layers: defaults < model profile < user cells.
+
+    ``cells`` are the user's own calibrated cells; ``model_cells`` come from
+    the lamp's model profile in the database, already converted to this
+    lamp's command modes (see :meth:`convert_cells`).
+    """
 
     def __init__(
         self,
@@ -489,12 +519,58 @@ class Profile:
         cells: dict[str, dict[str, Any]] | None = None,
         fallback: str = BEHAVIOUR_SMART,
         identity: bool = False,
+        model_cells: dict[str, dict[str, Any]] | None = None,
     ) -> None:
         """Create a profile for a lamp with these capabilities."""
         self.caps = caps
         self.cells: dict[str, dict[str, Any]] = dict(cells or {})
+        self.model_cells: dict[str, dict[str, Any]] = dict(model_cells or {})
         self.fallback = fallback
         self.identity = identity
+
+    def stored(self, key: str) -> dict[str, Any] | None:
+        """The command stored for a cell: the user's, else the model profile's."""
+        if self.identity:
+            return None
+        return self.cells.get(key) or self.model_cells.get(key)
+
+    def cell_source(self, key: str) -> str:
+        """Where a cell's command comes from: user, model or default."""
+        if not self.identity and key in self.cells:
+            return SOURCE_USER
+        if not self.identity and key in self.model_cells:
+            return SOURCE_MODEL
+        return SOURCE_DEFAULT
+
+    def convert_cells(
+        self, cells: dict[str, Any], modes: dict[str, Any]
+    ) -> tuple[dict[str, dict[str, Any]], int]:
+        """Convert cells given in other command modes to this lamp's modes.
+
+        Returns (converted cells, number skipped).
+        """
+        valid = self.valid_keys()
+        converted: dict[str, dict[str, Any]] = {}
+        skipped = 0
+        for key, cmd in cells.items():
+            try:
+                kind = parse_cell_key(key)[0]
+            except ValueError:
+                skipped += 1
+                continue
+            dst = self.mode_for(kind)
+            src = modes.get(kind)
+            if key not in valid or dst is None or src not in MODE_ATTR:
+                skipped += 1
+                continue
+            try:
+                result = convert_command(validate_command(cmd, src), src, dst, self.caps)
+                if result is None:
+                    raise ValueError("cannot convert")
+                converted[key] = validate_command(result, dst)
+            except (ValueError, KeyError, TypeError):
+                skipped += 1
+        return converted, skipped
 
     # -- cells ---------------------------------------------------------------
 
@@ -529,15 +605,15 @@ class Profile:
 
     def cell_command(self, key: str) -> dict[str, Any]:
         """The command of a cell: calibrated if stored, else the default."""
-        if key in self.cells and not self.identity:
-            return dict(self.cells[key])
+        if (stored := self.stored(key)) is not None:
+            return dict(stored)
         kind, anchor, level = parse_cell_key(key)
         value = COLOR_ANCHORS[anchor] if kind == KIND_COLOR else float(anchor)
         return self.default_command(kind, value, level)
 
     @property
     def _subfloor(self) -> bool:
-        return self.fallback == BEHAVIOUR_SMART and not self.identity
+        return self.fallback == BEHAVIOUR_SMART and not self.identity and self.caps.subfloor
 
     def _default_point(self, kind: str, anchor: float, level: float) -> Point:
         caps = self.caps
@@ -550,8 +626,8 @@ class Profile:
                 rgb = color_util.color_hs_to_RGB(anchor, 100.0)
                 base = tuple(float(c) for c in rgb)
                 color = base + (0.0,) * (CHANNEL_MODES[mode] - 3)
-                return Point(mode, target_level, _normalise(color, mode))
-            return Point("hs", target_level, (anchor, 100.0))
+                return Point(mode, target_level, caps.balance(_normalise(color, mode), mode))
+            return Point("hs", target_level, caps.hs_in_gamut(anchor, 100.0))
         # white
         if mode == "color_temp":
             kelvin = max(caps.min_kelvin, min(caps.max_kelvin, anchor))
@@ -560,15 +636,15 @@ class Profile:
             return Point(mode, target_level)
         rgb = color_util.color_temperature_to_rgb(anchor)
         if mode == "hs":
-            return Point(mode, target_level, color_util.color_RGB_to_hs(*rgb))
+            return Point(mode, target_level, caps.hs_in_gamut(*color_util.color_RGB_to_hs(*rgb)))
         channels = _normalise(tuple(float(c) for c in _rgb_to_channels(rgb, mode, caps)), mode)
-        return Point(mode, target_level, channels)
+        return Point(mode, target_level, caps.balance(channels, mode))
 
     def _cell_point(self, kind: str, anchor_name: str | int, anchor: float, level: float) -> Point:
         key = cell_key(kind, anchor_name, level)
         mode = self.mode_for(kind)
-        if key in self.cells and not self.identity and mode is not None:
-            return command_to_point(self.cells[key], mode)
+        if mode is not None and (stored := self.stored(key)) is not None:
+            return command_to_point(stored, mode)
         return self._default_point(kind, anchor, level)
 
     # -- forward -------------------------------------------------------------
@@ -651,8 +727,8 @@ class Profile:
         if self.caps.white_mode is None:
             return {}
         key = self._exact_key(target)
-        if key is not None and key in self.cells and not self.identity:
-            return dict(self.cells[key])
+        if key is not None and (stored := self.stored(key)) is not None:
+            return dict(stored)
         return point_to_command(self.forward_point(target), self.caps.floor, self._subfloor)
 
     # -- inverse -------------------------------------------------------------
@@ -766,7 +842,7 @@ class Profile:
 
         written = 0
         for cell in grid_cells(self.caps):
-            if cell["key"] in self.cells:
+            if self.cell_source(cell["key"]) != SOURCE_DEFAULT:
                 continue
             anchor = cell["hue"] if cell["kind"] == KIND_COLOR else float(cell["kelvin"])
             mapped = max(0.1, min(100.0, remap(cell["brightness"])))
@@ -774,17 +850,26 @@ class Profile:
             written += 1
         return written
 
-    def to_json(self, model: str | None = None) -> dict[str, Any]:
-        """Export the profile so it can be shared."""
+    def to_json(
+        self, model: str | None = None, meta: dict[str, Any] | None = None, effective: bool = False
+    ) -> dict[str, Any]:
+        """Export the profile so it can be shared.
+
+        ``effective`` exports the model profile's cells under the user's own;
+        ``meta`` adds the portable metadata (device, capabilities, provenance).
+        """
+        cells = {**self.model_cells, **self.cells} if effective else self.cells
         data: dict[str, Any] = {
             "format": PROFILE_FORMAT,
             "version": PROFILE_VERSION,
             "modes": {"color": self.caps.color_mode, "white": self.caps.white_mode},
             "floor": self.caps.floor,
-            "cells": {key: dict(cmd) for key, cmd in sorted(self.cells.items())},
+            "cells": {key: dict(cmd) for key, cmd in sorted(cells.items())},
         }
         if model:
             data["model"] = model
+        if meta:
+            data.update(meta)
         return data
 
     def import_json(self, data: Any, replace: bool = True) -> tuple[int, int]:
@@ -795,33 +880,17 @@ class Profile:
         """
         if not isinstance(data, dict) or data.get("format") != PROFILE_FORMAT:
             raise ValueError("not a Light Match profile")
-        if int(data.get("version", 0)) > PROFILE_VERSION:
+        try:
+            version = int(data.get("version", 0))
+        except (TypeError, ValueError) as err:
+            raise ValueError("bad profile version") from err
+        if version > PROFILE_VERSION:
             raise ValueError("profile is from a newer version of Light Match")
         modes = data.get("modes") or {}
         cells = data.get("cells") or {}
-        if not isinstance(cells, dict):
-            raise ValueError("profile cells must be an object")
-        valid = self.valid_keys()
-        imported: dict[str, dict[str, Any]] = {}
-        skipped = 0
-        for key, cmd in cells.items():
-            try:
-                kind = parse_cell_key(key)[0]
-            except ValueError:
-                skipped += 1
-                continue
-            dst = self.mode_for(kind)
-            src = modes.get(kind)
-            if key not in valid or dst is None or src not in MODE_ATTR:
-                skipped += 1
-                continue
-            try:
-                converted = convert_command(validate_command(cmd, src), src, dst, self.caps)
-                if converted is None:
-                    raise ValueError("cannot convert")
-                imported[key] = validate_command(converted, dst)
-            except (ValueError, KeyError, TypeError):
-                skipped += 1
+        if not isinstance(cells, dict) or not isinstance(modes, dict):
+            raise ValueError("profile cells and modes must be objects")
+        imported, skipped = self.convert_cells(cells, modes)
         if replace:
             self.cells = imported
         else:

@@ -1,0 +1,41 @@
+{
+  "$schema": "../profile.schema.json",
+  "format": "light_match_profile",
+  "version": 2,
+  "revision": 1,
+  "name": "Philips Hue legacy colour lights (gamut A)",
+  "license": "CC-BY-4.0",
+  "reference": false,
+  "device": {
+    "manufacturer": "Signify Netherlands B.V.",
+    "manufacturer_aliases": [
+      "Philips",
+      "Signify",
+      "Philips Hue"
+    ],
+    "models": [
+      "LST001",
+      "LLC005",
+      "LLC006",
+      "LLC007",
+      "LLC010",
+      "LLC011",
+      "LLC012",
+      "LLC013",
+      "LLC014"
+    ]
+  },
+  "capabilities": {
+    "gamut": "A",
+    "subfloor": "none"
+  },
+  "provenance": {
+    "method": "spec",
+    "sources": [
+      "https://github.com/benknight/hue-python-rgb-converter/blob/master/rgbxy/__init__.py",
+      "https://developers.meethue.com/develop/application-design-guidance/color-conversion-formulas-rgb-to-xy-and-back/"
+    ],
+    "verified": false,
+    "notes": "Gamut corners and model ids from the Philips Hue developer documentation as published in the rgbxy converter. Home Assistant reports the colour temperature range of Hue lamps itself, so none is set here. Hue lamps are commanded in xy, so the sub-floor channel trick does not apply."
+  }
+}

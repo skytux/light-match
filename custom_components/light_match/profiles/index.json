@@ -1,0 +1,69 @@
+{
+  "format": "light_match_profile_index",
+  "version": 1,
+  "profiles": [
+    {
+      "id": "signify/hue-gamut-a",
+      "path": "signify/hue-gamut-a.json",
+      "revision": 1,
+      "name": "Philips Hue legacy colour lights (gamut A)",
+      "manufacturer": "Signify Netherlands B.V.",
+      "models": [
+        "LST001",
+        "LLC005",
+        "LLC006",
+        "LLC007",
+        "LLC010",
+        "LLC011",
+        "LLC012",
+        "LLC013",
+        "LLC014"
+      ],
+      "sha256": "31971c6aec99f2ff488b77470ce46da0d513773db8a64891dc13cbeaf53b9de1"
+    },
+    {
+      "id": "signify/hue-gamut-b",
+      "path": "signify/hue-gamut-b.json",
+      "revision": 1,
+      "name": "Philips Hue older colour bulbs (gamut B)",
+      "manufacturer": "Signify Netherlands B.V.",
+      "models": [
+        "LCT001",
+        "LCT002",
+        "LCT003",
+        "LCT007",
+        "LLM001"
+      ],
+      "sha256": "8ebcabe93e1c7af3b341f7aa9ceae029c2916338618fc4e07d706db0b49413ce"
+    },
+    {
+      "id": "signify/hue-gamut-c",
+      "path": "signify/hue-gamut-c.json",
+      "revision": 1,
+      "name": "Philips Hue colour lights (gamut C)",
+      "manufacturer": "Signify Netherlands B.V.",
+      "models": [
+        "LCT010",
+        "LCT011",
+        "LCT012",
+        "LCT014",
+        "LCT015",
+        "LCT016",
+        "LLC020",
+        "LST002"
+      ],
+      "sha256": "41d796ef827a00920a7c42002c9b6a3dab59b9cc20f8548063485d01f3991d23"
+    },
+    {
+      "id": "wiz/generic",
+      "path": "wiz/generic.json",
+      "revision": 1,
+      "name": "WiZ bulbs (all models)",
+      "manufacturer": "WiZ",
+      "models": [
+        "*"
+      ],
+      "sha256": "e781f9aa8dbc12380a6784daac288e03fc53a81a18d0f7579bfacd83d6b5f42d"
+    }
+  ]
+}

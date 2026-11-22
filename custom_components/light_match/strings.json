@@ -12,6 +12,16 @@
           "source": "The real lamp to calibrate.",
           "name": "Leave empty to use the source name plus \"calibrated\"."
         }
+      },
+      "profile": {
+        "title": "Lamp profile",
+        "description": "Lamp: {device}\nMatched profile: {match}\n\nA model profile gives Light Match what is known about this lamp model: its brightness floor, colour gamut and colour temperature range, and possibly a shared calibration. Your own calibration always goes on top.",
+        "data": {
+          "profile": "Model profile"
+        },
+        "data_description": {
+          "profile": "Keep \"Detected\" to follow the database (also after it is updated), pick a profile yourself, or use none."
+        }
       }
     },
     "error": {
@@ -27,19 +37,22 @@
       "init": {
         "title": "Calibrated light options",
         "data": {
+          "profile": "Model profile",
           "behaviour": "Behaviour",
           "reference_entity": "Reference lamp for calibration",
-          "auto_floor": "Detect the brightness floor",
+          "auto_floor": "Brightness floor from the model profile",
           "brightness_floor": "Brightness floor (0-255)",
           "hide_source": "Hide the source light"
         },
         "data_description": {
           "behaviour": "How commands are translated for cells you have not calibrated yet.",
           "reference_entity": "The lamp the panel offers as the look to match. Usually the twin of your best lamp, set to \"This lamp is the reference\".",
-          "auto_floor": "Use the known floor for the source's integration (WiZ: 26). Turn off to set the floor yourself.",
+          "auto_floor": "Use the brightness floor from the model profile (WiZ: 26). Turn off to set the floor yourself.",
           "brightness_floor": "The lowest brightness the lamp really dims to; 0 for none. Used only when detection is off.",
-          "hide_source": "Hide the real lamp from dashboards and voice assistants. It is shown again when you remove this light."
-        }
+          "hide_source": "Hide the real lamp from dashboards and voice assistants. It is shown again when you remove this light.",
+          "profile": "Detected follows the database; pick one yourself if the lamp was not recognised."
+        },
+        "description": "Lamp: {device}\nDetected profile: {match}"
       }
     }
   },
@@ -62,47 +75,98 @@
       "name": "Calibrate cell",
       "description": "Store the source command that makes this lamp show the target look of one grid cell.",
       "fields": {
-        "entity_id": {"name": "Calibrated light", "description": "The Light Match light."},
-        "cell": {"name": "Cell", "description": "Cell key: color:<name>:<level> or white:<kelvin>:<level>, levels 1, 5, 20, 50, 100."},
-        "brightness": {"name": "Brightness", "description": "Source brightness 1-255."},
-        "hs_color": {"name": "Hue and saturation", "description": "For lamps commanded in hs."},
-        "rgb_color": {"name": "RGB", "description": "For RGB lamps."},
-        "rgbw_color": {"name": "RGBW", "description": "For RGBW lamps."},
-        "rgbww_color": {"name": "RGBWW", "description": "For RGBWW lamps."},
-        "color_temp_kelvin": {"name": "Colour temperature", "description": "For white cells of lamps with colour temperature."}
+        "entity_id": {
+          "name": "Calibrated light",
+          "description": "The Light Match light."
+        },
+        "cell": {
+          "name": "Cell",
+          "description": "Cell key: color:<name>:<level> or white:<kelvin>:<level>, levels 1, 5, 20, 50, 100."
+        },
+        "brightness": {
+          "name": "Brightness",
+          "description": "Source brightness 1-255."
+        },
+        "hs_color": {
+          "name": "Hue and saturation",
+          "description": "For lamps commanded in hs."
+        },
+        "rgb_color": {
+          "name": "RGB",
+          "description": "For RGB lamps."
+        },
+        "rgbw_color": {
+          "name": "RGBW",
+          "description": "For RGBW lamps."
+        },
+        "rgbww_color": {
+          "name": "RGBWW",
+          "description": "For RGBWW lamps."
+        },
+        "color_temp_kelvin": {
+          "name": "Colour temperature",
+          "description": "For white cells of lamps with colour temperature."
+        }
       }
     },
     "reset_cell": {
       "name": "Reset cell",
       "description": "Forget a calibrated cell; * forgets all.",
       "fields": {
-        "entity_id": {"name": "Calibrated light", "description": "The Light Match light."},
-        "cell": {"name": "Cell", "description": "Cell key, or * for all cells."}
+        "entity_id": {
+          "name": "Calibrated light",
+          "description": "The Light Match light."
+        },
+        "cell": {
+          "name": "Cell",
+          "description": "Cell key, or * for all cells."
+        }
       }
     },
     "export_profile": {
       "name": "Export profile",
       "description": "Return the calibration profile as JSON, to share it for this lamp model.",
       "fields": {
-        "entity_id": {"name": "Calibrated light", "description": "The Light Match light."},
-        "model": {"name": "Model", "description": "Optional lamp model to put in the profile."}
+        "entity_id": {
+          "name": "Calibrated light",
+          "description": "The Light Match light."
+        },
+        "model": {
+          "name": "Model",
+          "description": "Optional lamp model to put in the profile."
+        }
       }
     },
     "import_profile": {
       "name": "Import profile",
       "description": "Load an exported profile into this lamp.",
       "fields": {
-        "entity_id": {"name": "Calibrated light", "description": "The Light Match light."},
-        "profile": {"name": "Profile", "description": "The exported profile (object or JSON text)."},
-        "merge": {"name": "Merge", "description": "Keep cells the profile does not have."}
+        "entity_id": {
+          "name": "Calibrated light",
+          "description": "The Light Match light."
+        },
+        "profile": {
+          "name": "Profile",
+          "description": "The exported profile (object or JSON text)."
+        },
+        "merge": {
+          "name": "Merge",
+          "description": "Keep cells the profile does not have."
+        }
       }
     },
     "import_brightness_curve": {
       "name": "Import brightness curve",
       "description": "Fill uncalibrated cells from a brightness curve (target % to lamp %), such as a Lightener brightness map.",
       "fields": {
-        "entity_id": {"name": "Calibrated light", "description": "The Light Match light."},
-        "curve": {"name": "Curve", "description": "Object of target percentage to lamp percentage."}
+        "entity_id": {
+          "name": "Calibrated light",
+          "description": "The Light Match light."
+        },
+        "curve": {
+          "name": "Curve",
+          "description": "Object of target percentage to lamp percentage."
+        }
       }
     }
   }

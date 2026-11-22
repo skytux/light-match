@@ -16,11 +16,48 @@ from .const import (
     CONF_FLOOR,
     CONF_HIDE_SOURCE,
     CONF_NAME,
+    CONF_PROFILE,
     CONF_REFERENCE,
     CONF_SOURCE,
     DEFAULT_OPTIONS,
     DOMAIN,
+    PROFILE_AUTO,
+    PROFILE_NONE,
 )
+
+
+def _describe(prof: Any) -> str:
+    prov = prof.data["provenance"]
+    method = {"spec": "spec-based", "by_eye": "calibrated by eye", "lux_meter": "measured with a lux meter",
+              "colorimeter": "measured with a colorimeter"}[prov["method"]]
+    verified = "verified" if prov["verified"] else "unverified"
+    return f"{prof.name} ({method}, {verified})"
+
+
+async def _profile_selector(hass: Any, source: str) -> tuple[selector.SelectSelector, str, str]:
+    """A select of the model profiles, and descriptions of the device and its match."""
+    from . import async_get_database, device_info_for  # noqa: PLC0415
+
+    db = await async_get_database(hass)
+    device = device_info_for(hass, source)
+    match = db.match(device)
+    auto_label = f"Detected: {_describe(match)}" if match else "Detect (no profile found for this lamp)"
+    options = [
+        selector.SelectOptionDict(value=PROFILE_AUTO, label=auto_label),
+        selector.SelectOptionDict(value=PROFILE_NONE, label="No model profile"),
+    ]
+    options += [
+        selector.SelectOptionDict(value=pid, label=_describe(prof))
+        for pid, prof in sorted(db.all().items())
+    ]
+    dev = " ".join(v for v in (device.manufacturer, device.model, device.model_id) if v) or "unknown"
+    if device.integration:
+        dev += f" ({device.integration})"
+    return (
+        selector.SelectSelector(selector.SelectSelectorConfig(options=options)),
+        dev,
+        _describe(match) if match else "none",
+    )
 
 
 def _own_twins(hass: Any) -> list[str]:
@@ -32,6 +69,8 @@ class LightMatchConfigFlow(ConfigFlow, domain=DOMAIN):
     """Create one calibrated twin for a source light."""
 
     VERSION = 1
+    _source: str
+    _title: str
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Pick the source light and a name."""
@@ -51,11 +90,9 @@ class LightMatchConfigFlow(ConfigFlow, domain=DOMAIN):
                     state = self.hass.states.get(source)
                     base = state.name if state else source.split(".", 1)[-1]
                     name = f"{base} calibrated"
-                return self.async_create_entry(
-                    title=name,
-                    data={CONF_SOURCE: source},
-                    options=dict(DEFAULT_OPTIONS),
-                )
+                self._source = source
+                self._title = name
+                return await self.async_step_profile()
         schema = vol.Schema(
             {
                 vol.Required(CONF_SOURCE): selector.EntitySelector(
@@ -68,6 +105,21 @@ class LightMatchConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=self.add_suggested_values_to_schema(schema, user_input or {}),
             errors=errors,
+        )
+
+    async def async_step_profile(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        """Show the model profile matched to the lamp and allow another choice."""
+        if user_input is not None:
+            return self.async_create_entry(
+                title=self._title,
+                data={CONF_SOURCE: self._source},
+                options={**DEFAULT_OPTIONS, CONF_PROFILE: user_input[CONF_PROFILE]},
+            )
+        select, device, match = await _profile_selector(self.hass, self._source)
+        return self.async_show_form(
+            step_id="profile",
+            data_schema=vol.Schema({vol.Required(CONF_PROFILE, default=PROFILE_AUTO): select}),
+            description_placeholders={"device": device, "match": match},
         )
 
     @staticmethod
@@ -91,8 +143,12 @@ class LightMatchOptionsFlow(OptionsFlow):
             return self.async_create_entry(data=options)
 
         current = {**DEFAULT_OPTIONS, **self.config_entry.options}
+        profile_select, device, match = await _profile_selector(
+            self.hass, self.config_entry.data[CONF_SOURCE]
+        )
         schema = vol.Schema(
             {
+                vol.Required(CONF_PROFILE): profile_select,
                 vol.Required(CONF_BEHAVIOUR): selector.SelectSelector(
                     selector.SelectSelectorConfig(
                         options=BEHAVIOURS,
@@ -118,4 +174,5 @@ class LightMatchOptionsFlow(OptionsFlow):
         return self.async_show_form(
             step_id="init",
             data_schema=self.add_suggested_values_to_schema(schema, current),
+            description_placeholders={"device": device, "match": match},
         )

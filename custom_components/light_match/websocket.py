@@ -11,7 +11,7 @@ from homeassistant.exceptions import HomeAssistantError
 import voluptuous as vol
 
 from . import LightMatchData, data_for_entity, data_for_entry, loaded_entries
-from .const import CONF_BEHAVIOUR, CONF_REFERENCE, DOMAIN
+from .const import CONF_BEHAVIOUR, CONF_PROFILE, CONF_REFERENCE, DOMAIN
 from .profile import MODE_ATTR, cell_target, grid_cells, nominal_command
 
 COMMAND_KEYS = {"brightness", *(a for a in MODE_ATTR.values() if a)}
@@ -36,7 +36,12 @@ def async_register_websocket(hass: HomeAssistant) -> None:
 def _summary(data: LightMatchData) -> dict[str, Any]:
     caps = data.caps()
     total = len(grid_cells(caps))
+    model = data.model_profile()
     return {
+        "device": data.device_info().as_dict(),
+        "model_profile": model.summary() if model else None,
+        "profile_choice": data.option(CONF_PROFILE),
+        "transition": data.transition_supported(),
         "entry_id": data.entry.entry_id,
         "title": data.entry.title,
         "entity_id": data.entity.entity_id if data.entity else None,
@@ -85,6 +90,8 @@ def ws_profile(hass: HomeAssistant, connection: Any, msg: dict[str, Any]) -> Non
             {
                 **cell,
                 "calibrated": key in data.cells,
+                "source": profile.cell_source(key),
+                "model_command": profile.model_cells.get(key),
                 "command": profile.cell_command(key),
                 "default": profile.default_command(cell["kind"], anchor, cell["brightness"]),
                 "mode": profile.mode_for(cell["kind"]),

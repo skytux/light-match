@@ -1,0 +1,16 @@
+Light Match lamp profile data
+
+The lamp profiles in this directory (*.json other than the schema files) and
+the profile index are licensed under the Creative Commons Attribution 4.0
+International licence (CC BY 4.0):
+
+    https://creativecommons.org/licenses/by/4.0/
+
+You may share and adapt them for any purpose, including commercially, as long
+as you give appropriate credit. Credit is given by naming the Light Match
+profile database and the contributors listed in each file by the nickname
+they chose.
+
+Submitting a profile to the database means you agree to license it under
+CC BY 4.0. The Light Match code itself is licensed under the GNU General
+Public License version 2 or later (see LICENSE in the repository root).

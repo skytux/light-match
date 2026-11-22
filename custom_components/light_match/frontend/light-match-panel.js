@@ -2,6 +2,8 @@
 // Talks to the integration over the websocket API (light_match/*).
 
 const LEVELS = [1, 5, 20, 50, 100];
+const SOURCE_LABEL = { user: "calibrated", model: "from the model profile", default: "default", inferred: "inferred" };
+const METHOD_LABEL = { spec: "spec-based", by_eye: "calibrated by eye", lux_meter: "lux meter", colorimeter: "colorimeter" };
 const CHANNEL_NAMES = {
   rgb: ["Red", "Green", "Blue"],
   rgbw: ["Red", "Green", "Blue", "White"],
@@ -252,8 +254,9 @@ class LightMatchPanel extends HTMLElement {
     for (const [name, { cell, items }] of rows) {
       html += `<tr><th><span class="dot" style="background:${this._swatch(cell)}"></span>${esc(name)}</th>`;
       for (const { cell: c, i } of items) {
-        const cls = [c.calibrated ? "done" : "", i === this._index ? "current" : ""].join(" ");
-        html += `<td><button class="cell ${cls}" data-index="${i}" title="${esc(this._label(c))}">${c.calibrated ? "&#10003;" : ""}</button></td>`;
+        const cls = [c.calibrated ? "done" : "", c.source === "model" ? "model" : "", i === this._index ? "current" : ""].join(" ");
+        const mark = c.calibrated ? "&#10003;" : c.source === "model" ? "M" : "";
+        html += `<td><button class="cell ${cls}" data-index="${i}" title="${esc(this._label(c))} (${esc(SOURCE_LABEL[c.source] || c.source)})">${mark}</button></td>`;
       }
       html += "</tr>";
     }
@@ -275,6 +278,15 @@ class LightMatchPanel extends HTMLElement {
       (twins.length ? `<optgroup label="Calibrated lights">${twins.map((e) => opt(e.entity_id, e.title)).join("")}</optgroup>` : "") +
       `<optgroup label="Other lights">${lights.map((id) => opt(id, name(id))).join("")}</optgroup>`
     );
+  }
+
+  _modelLine(entry) {
+    const m = entry.model_profile;
+    const dev = entry.device || {};
+    const lamp = [dev.manufacturer, dev.model, dev.model_id].filter(Boolean).join(" ") || "unknown lamp";
+    if (!m) return `<p class="meta">${esc(lamp)} · no model profile${entry.profile_choice === "none" ? " (turned off)" : ""}</p>`;
+    const how = METHOD_LABEL[m.method] || m.method;
+    return `<p class="meta">${esc(lamp)} · model profile <b>${esc(m.name)}</b> (${esc(how)}, ${m.verified ? "verified" : "unverified"}${m.cells ? `, ${m.cells} cells` : ""})</p>`;
   }
 
   _render() {
@@ -300,13 +312,14 @@ class LightMatchPanel extends HTMLElement {
             <select id="reference">${this._referenceOptions()}</select></label>
         </div>
         <div class="progress"><div style="width:${pct}%"></div></div>
+        ${this._modelLine(entry)}
         <p class="meta">${entry.calibrated} of ${entry.total} cells calibrated · commanded in ${esc(entry.modes.color || "-")} / ${esc(entry.modes.white || "-")} · floor ${entry.floor}${entry.behaviour === "reference" ? " · <b>this lamp is set as the reference; its cells are not used</b>" : ""}</p>
       </div>
       ${
         cell
           ? `<div class="card">
         <h2><span class="dot big" style="background:${this._swatch(cell)}"></span>${esc(this._label(cell))}
-          <small>${cell.calibrated ? "calibrated" : "default"} · ${this._index + 1}/${this._profile.cells.length}</small></h2>
+          <small>${esc(SOURCE_LABEL[cell.source] || cell.source)} · ${this._index + 1}/${this._profile.cells.length}</small></h2>
         <p class="hint">Make the lamp under test look like the reference, then Save. Changes are sent to the lamp live.</p>
         ${this._sliders()}
         <p class="cmd">${esc(JSON.stringify(this._command))}</p>
@@ -365,7 +378,8 @@ class LightMatchPanel extends HTMLElement {
         .grid th { text-align:left; font-weight: normal; color: var(--secondary-text-color); padding: 2px 4px; white-space: nowrap; }
         .grid td { padding: 2px; text-align:center; }
         .cell { width: 100%; min-width: 28px; height: 26px; padding: 0; font-size: 13px; }
-        .cell.done { background: var(--success-color, #43a047); color: #fff; border-color: transparent; }
+        .cell.model { background: var(--secondary-background-color); color: var(--secondary-text-color); font-size: 11px; }
+      .cell.done { background: var(--success-color, #43a047); color: #fff; border-color: transparent; }
         .cell.current { outline: 2px solid var(--primary-color); outline-offset: 1px; }
         @media (max-width: 600px) { .row { grid-template-columns: 90px 1fr 64px; } .content { padding: 8px 16px; } }
       </style>

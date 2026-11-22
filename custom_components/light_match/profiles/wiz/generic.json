@@ -1,0 +1,30 @@
+{
+  "$schema": "../profile.schema.json",
+  "format": "light_match_profile",
+  "version": 2,
+  "revision": 1,
+  "name": "WiZ bulbs (all models)",
+  "license": "CC-BY-4.0",
+  "device": {
+    "manufacturer": "WiZ",
+    "models": [
+      "*"
+    ],
+    "integrations": [
+      "wiz"
+    ]
+  },
+  "capabilities": {
+    "brightness_floor": 26,
+    "subfloor": "channel_scale"
+  },
+  "provenance": {
+    "method": "spec",
+    "sources": [
+      "https://github.com/sbidy/pywizlight/blob/master/pywizlight/bulb.py",
+      "https://github.com/home-assistant/core/blob/dev/homeassistant/components/wiz/light.py"
+    ],
+    "verified": false,
+    "notes": "Floor: pywizlight clamps dimming to DEFAULT_MIN_DIMMING = 10 % (26 of 255) for bulbs that do not report their own minDimLevel. Some models report a different minimum; give them their own profile. Sub-floor: Home Assistant passes rgb/rgbw channels unchanged to the bulb, so weak channels at the floor brightness can go below it. How far below depends on the model and is not measured here."
+  }
+}

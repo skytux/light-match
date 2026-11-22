@@ -10,7 +10,11 @@ from typing import TYPE_CHECKING, Any
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import Event, HomeAssistant, callback
-from homeassistant.helpers import config_validation as cv, entity_registry as er
+from homeassistant.helpers import (
+    config_validation as cv,
+    device_registry as dr,
+    entity_registry as er,
+)
 from homeassistant.helpers.storage import Store
 from homeassistant.helpers.typing import ConfigType
 
@@ -21,11 +25,21 @@ from .const import (
     CONF_BEHAVIOUR,
     CONF_FLOOR,
     CONF_HIDE_SOURCE,
+    CONF_PROFILE,
     CONF_SOURCE,
     DEFAULT_OPTIONS,
     DOMAIN,
-    KNOWN_FLOORS,
+    PROFILE_AUTO,
+    PROFILE_NONE,
     STORAGE_VERSION,
+)
+from .database import (
+    SUBFLOOR_NONE,
+    DeviceInfo,
+    ModelProfile,
+    ProfileDatabase,
+    gamut_points,
+    load_bundled,
 )
 from .profile import Profile, SourceCaps
 
@@ -91,12 +105,37 @@ class LightMatchData:
     def _registry_entry(self) -> er.RegistryEntry | None:
         return er.async_get(self.hass).async_get(self.source)
 
+    def device_info(self) -> DeviceInfo:
+        """How Home Assistant identifies the source lamp."""
+        return device_info_for(self.hass, self.source)
+
+    def model_profile(self) -> ModelProfile | None:
+        """The model profile in use: chosen in the options, or matched."""
+        choice = self.option(CONF_PROFILE) or PROFILE_AUTO
+        if choice == PROFILE_NONE:
+            return None
+        db = database(self.hass)
+        if choice != PROFILE_AUTO:
+            return db.get(choice)
+        return db.match(self.device_info())
+
     def floor(self) -> int:
-        """The source's brightness floor (0-255): configured or detected."""
+        """The source's brightness floor (0-255): configured or from the model profile."""
         if not self.option(CONF_AUTO_FLOOR):
             return int(self.option(CONF_FLOOR) or 0)
-        reg = self._registry_entry()
-        return KNOWN_FLOORS.get(reg.platform, 0) if reg else 0
+        model = self.model_profile()
+        return int(model.capabilities.get("brightness_floor", 0)) if model else 0
+
+    def transition_supported(self) -> bool:
+        """Whether transitions are passed to the source."""
+        model = self.model_profile()
+        override = model.capabilities.get("transition") if model else None
+        if override is not None:
+            return bool(override)
+        state = self.hass.states.get(self.source)
+        if state is None:
+            return True
+        return bool(int(state.attributes.get("supported_features", 0)) & 32)
 
     def caps(self) -> SourceCaps:
         """The source's capabilities from its state, else the registry."""
@@ -109,22 +148,33 @@ class LightMatchData:
         if not attrs:
             reg = self._registry_entry()
             attrs = dict(reg.capabilities or {}) if reg else {}
+        model = self.model_profile()
+        mcaps = model.capabilities if model else {}
+        modes = attrs.get("supported_color_modes") or mcaps.get("color_modes")
+        gain = mcaps.get("channel_gain")
         return SourceCaps.from_modes(
-            attrs.get("supported_color_modes"),
-            attrs.get("min_color_temp_kelvin"),
-            attrs.get("max_color_temp_kelvin"),
+            modes,
+            mcaps.get("min_kelvin") or attrs.get("min_color_temp_kelvin"),
+            mcaps.get("max_kelvin") or attrs.get("max_color_temp_kelvin"),
             self.floor(),
+            gamut=gamut_points(mcaps.get("gamut")),
+            subfloor=mcaps.get("subfloor") != SUBFLOOR_NONE,
+            channel_gain=tuple(gain) if gain else None,
         )
 
     def profile(self) -> Profile:
         """A profile object for the current cells, options and capabilities."""
         behaviour = self.option(CONF_BEHAVIOUR) or BEHAVIOUR_SMART
-        return Profile(
+        profile = Profile(
             self.caps(),
             self.cells,
             fallback=behaviour,
             identity=behaviour == BEHAVIOUR_REFERENCE,
         )
+        model = self.model_profile()
+        if model is not None and model.cells:
+            profile.model_cells, _ = profile.convert_cells(model.cells, model.modes)
+        return profile
 
     async def async_set_cell(self, key: str, command: dict[str, Any]) -> dict[str, Any]:
         """Store a calibrated cell."""
@@ -165,6 +215,37 @@ class LightMatchData:
         return written
 
 
+def database(hass: HomeAssistant) -> ProfileDatabase:
+    """The profile database (empty until the integration is set up)."""
+    return hass.data.setdefault(DOMAIN, {}).setdefault("db", ProfileDatabase())
+
+
+async def async_get_database(hass: HomeAssistant) -> ProfileDatabase:
+    """The profile database, reading the bundled profiles the first time."""
+    db = database(hass)
+    if not db.loaded:
+        db.bundled = await hass.async_add_executor_job(load_bundled)
+        db.loaded = True
+    return db
+
+
+def device_info_for(hass: HomeAssistant, entity_id: str) -> DeviceInfo:
+    """Manufacturer, model, integration and firmware of a light's device."""
+    reg = er.async_get(hass).async_get(entity_id)
+    if reg is None:
+        return DeviceInfo()
+    device = dr.async_get(hass).async_get(reg.device_id) if reg.device_id else None
+    if device is None:
+        return DeviceInfo(integration=reg.platform)
+    return DeviceInfo(
+        manufacturer=device.manufacturer,
+        model=device.model,
+        model_id=getattr(device, "model_id", None),
+        integration=reg.platform,
+        firmware=device.sw_version,
+    )
+
+
 def loaded_entries(hass: HomeAssistant) -> list[LightMatchConfigEntry]:
     """Config entries of this integration that are set up."""
     return [
@@ -196,6 +277,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     from .services import async_register_services  # noqa: PLC0415
     from .websocket import async_register_websocket  # noqa: PLC0415
 
+    await async_get_database(hass)
     async_register_websocket(hass)
     async_register_services(hass)
     await async_register_panel(hass)

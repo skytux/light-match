@@ -5,7 +5,7 @@ from __future__ import annotations
 DOMAIN = "light_match"
 STORAGE_VERSION = 1
 PROFILE_FORMAT = "light_match_profile"
-PROFILE_VERSION = 1
+PROFILE_VERSION = 2
 
 CONF_SOURCE = "source"
 CONF_NAME = "name"
@@ -28,6 +28,7 @@ DEFAULT_OPTIONS = {
     "auto_floor": True,
     "brightness_floor": 0,
     "hide_source": False,
+    "profile": "auto",
 }
 
 # The calibration grid. Hues are the anchor points on the colour circle that
@@ -50,9 +51,9 @@ BRIGHTNESS_LEVELS: list[float] = [1.0, 5.0, 20.0, 50.0, 100.0]
 TWIN_MIN_KELVIN = WHITE_KELVINS[0]
 TWIN_MAX_KELVIN = WHITE_KELVINS[-1]
 
-# Known brightness floors (0-255) by integration platform, used when the
-# floor is set to automatic. WiZ bulbs do not go below 10 % on their own.
-KNOWN_FLOORS: dict[str, int] = {"wiz": 26}
+CONF_PROFILE = "profile"
+PROFILE_AUTO = "auto"
+PROFILE_NONE = "none"
 
 PANEL_URL = "light-match"
 PANEL_TITLE = "Light Match"

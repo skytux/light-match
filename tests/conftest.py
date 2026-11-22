@@ -97,6 +97,34 @@ async def sources(hass: HomeAssistant) -> dict[str, FakeLight]:
     return lights
 
 
+@pytest.fixture
+async def wiz_device(hass: HomeAssistant, sources) -> str:
+    """A WiZ device: light.wiz_bulb (wiz platform) and light.bulb_rgbw's device."""
+    from homeassistant.helpers import device_registry as dr, entity_registry as er
+
+    owner = MockConfigEntry(domain="test")
+    owner.add_to_hass(hass)
+    devices = dr.async_get(hass)
+    entities = er.async_get(hass)
+    device = devices.async_get_or_create(
+        config_entry_id=owner.entry_id,
+        identifiers={("wiz", "a1b2c3")},
+        manufacturer="WiZ",
+        model="ESP01_SHRGB_03",
+        sw_version="1.25.0",
+    )
+    entities.async_get_or_create(
+        "light", "wiz", "a1b2c3", suggested_object_id="wiz_bulb", device_id=device.id,
+        config_entry=owner,
+    )
+    other = devices.async_get_or_create(
+        config_entry_id=owner.entry_id, identifiers={("test", "rgbw1")},
+        manufacturer="WiZ", model="ESP01_SHRGB_03",
+    )
+    entities.async_update_entity("light.bulb_rgbw", device_id=other.id)
+    return "light.wiz_bulb"
+
+
 async def add_twin(
     hass: HomeAssistant, source: str, title: str = "Twin", **options: Any
 ) -> MockConfigEntry:

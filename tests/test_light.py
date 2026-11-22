@@ -127,11 +127,12 @@ async def test_user_hidden_source_is_left_alone(hass: HomeAssistant, sources) ->
     assert registry.async_get("light.bulb_hs").hidden_by is er.RegistryEntryHider.USER
 
 
-async def test_floor_detection_by_platform(hass: HomeAssistant, sources) -> None:
-    registry = er.async_get(hass)
-    registry.async_get_or_create("light", "wiz", "abc123", suggested_object_id="wiz_bulb")
+async def test_floor_from_model_profile(hass: HomeAssistant, sources, wiz_device) -> None:
     entry = await add_twin(hass, "light.wiz_bulb")
     assert entry.runtime_data.floor() == 26
+    assert entry.runtime_data.model_profile().id == "wiz/generic"
+    manual = await add_twin(hass, "light.bulb_hs", title="Manual", auto_floor=False, brightness_floor=12)
+    assert manual.runtime_data.floor() == 12
     other = await add_twin(hass, "light.bulb_rgbw", title="Other")
     assert other.runtime_data.floor() == 0
 
@@ -141,3 +142,16 @@ async def test_source_rename_is_followed(hass: HomeAssistant, sources) -> None:
     er.async_get(hass).async_update_entity("light.bulb_rgbw", new_entity_id="light.renamed")
     await hass.async_block_till_done()
     assert entry.data["source"] == "light.renamed"
+
+
+async def test_transition_follows_source_and_profile(hass: HomeAssistant, sources) -> None:
+    from homeassistant.components.light import LightEntityFeature
+
+    src = sources["light.bulb_hs"]
+    src._attr_supported_features = LightEntityFeature(0)
+    src.async_write_ha_state()
+    entry = await add_twin(hass, "light.bulb_hs")
+    twin = twin_id(hass, entry)
+    assert hass.states.get(twin).attributes["supported_features"] == 0
+    await _on(hass, twin, brightness=100)
+    assert "transition" not in src.calls[-1][1]
