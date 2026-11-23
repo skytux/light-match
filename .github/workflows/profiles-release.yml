@@ -33,7 +33,7 @@ jobs:
       - name: Upload to the profiles release
         run: |
           gh release view profiles >/dev/null 2>&1 || \
-            gh release create profiles --title "Lamp profiles" --notes "Profile files for the optional online update. Updated nightly." --latest=false
+            gh release create profiles --title "Lamp profiles" --notes "Profile files for the optional online update. Updated nightly." --latest=false --prerelease
           gh release upload profiles dist/*.json --clobber
       - name: Refresh community stats
         run: |

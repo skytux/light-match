@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.7 - 2026-11-23
+
+- The nightly "profiles" release (lamp profile files for the online update) is created as a pre-release, so HACS keeps offering the newest version release instead of it.
+
 ## 0.8.6 - 2026-11-23
 
 - The calibrate_cell service text no longer uses angle brackets in the cell key description (hassfest rejects them as HTML); it now reads color:NAME:LEVEL or white:KELVIN:LEVEL with examples.
