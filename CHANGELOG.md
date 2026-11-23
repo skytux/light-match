@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.6 - 2026-11-23
+
+- The calibrate_cell service text no longer uses angle brackets in the cell key description (hassfest rejects them as HTML); it now reads color:NAME:LEVEL or white:KELVIN:LEVEL with examples.
+
 ## 0.8.5 - 2026-11-23
 
 - Published as github.com/skytux/light-match: manifest documentation and issue tracker, online profile updates, Discussions and Share profile links point at the new repository.

@@ -93,7 +93,7 @@
         },
         "cell": {
           "name": "Cell",
-          "description": "Cell key: color:<name>:<level> or white:<kelvin>:<level>, levels 1, 5, 20, 50, 100."
+          "description": "Cell key: color:NAME:LEVEL or white:KELVIN:LEVEL (for example color:red:5 or white:2700:20), levels 1, 5, 20, 50, 100."
         },
         "brightness": {
           "name": "Brightness",
