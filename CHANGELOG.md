@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.3 - 2026-11-22
+
+- Twins accept RGB, RGBW, RGBWW and xy besides hue/saturation and colour temperature, whatever the source lamp takes, so other systems can drive them with raw channels.
+- The input is translated to one look: channels as sRGB (white channels added as light: W neutral, CW 6500 K, WW 2700 K), the strongest channel / 255 folded into the brightness; near the Planckian locus it becomes a white at that colour temperature, otherwise a colour at hue/saturation. Interpolation and sub-floor dimming apply as for hs.
+- The state echoes the input as sent (color_mode and channels, brightness), so scenes and Home Scenes restore it losslessly; the computed look is in the new attribute match_target.
+
 ## 0.8.2 - 2026-11-22
 
 - Rough camera calibration: the phone's rear camera measures the lamps and adjusts the lamp under test in damped steps (Auto-match this cell, Auto-run all cells with Stop); nothing is saved until you press Save.

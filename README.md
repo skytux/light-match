@@ -167,6 +167,41 @@ You do not need to calibrate everything. Start with the cells that look most
 wrong, typically the lowest brightness levels and the reds. Uncalibrated
 cells use the defaults, and every target between cells is interpolated.
 
+## Use twins from other systems
+
+A twin with a colour source accepts every colour input Home Assistant knows:
+hue/saturation, colour temperature, **RGB, RGBW, RGBWW and xy**, whatever the
+source lamp itself takes. Other systems (scene managers, effect engines,
+bridges that only speak raw channels) can drive twins without knowing about
+the calibration. Each input is translated to one neutral look and then goes
+through the calibration grid like an hs or colour-temperature command, so the
+interpolation and the sub-floor dimming apply:
+
+- **RGB**: the channels are taken as sRGB. Their colour gives the hue and
+  saturation (as Home Assistant computes them: `[255, 0, 0]` is the grid's
+  red) and their intensity, the strongest channel / 255, is folded into the
+  brightness. `rgb_color: [25, 0, 0]` at brightness 255 is red at about
+  10 %, the same as `hs_color: [0, 100]` at brightness 25.
+- **RGBW / RGBWW**: as RGB, with the white channels added as light. W is a
+  neutral white (the sRGB white point, as Home Assistant's own RGBW
+  conversion assumes); the cold and warm whites of RGBWW are taken as 6500 K
+  and 2700 K. At 255 a white channel gives as much light as RGB 255/255/255.
+  `[12, 0, 0, 0]` at 255 is red at about 4.7 %.
+- **xy**: used as it is, at the brightness given.
+- A result close to the Planckian locus (Duv within ±0.006, 1900-8000 K)
+  becomes a **white** at that colour temperature (clamped to 2200-6500 K);
+  only white channels lit is always a white. Anything else becomes a
+  **colour** at hue/saturation.
+
+The twin's state reports the input the way it was sent: `color_mode: rgbw`
+with the same `rgbw_color` and brightness, so `scene.create`, Home Scenes and
+other snapshot tools restore exactly the same thing. Callers that use
+hue/saturation or colour temperature see those as before. The look the twin
+worked out is in the attribute `match_target`: `kind` (`color` or `white`),
+`hue` and `sat` or `kelvin`, and `level` (the brightness in %, after the
+folding). A change made on the source lamp itself is reported in hue/
+saturation or colour temperature again.
+
 ## How it works
 
 **Targets and cells.** A twin receives a uniform command: a colour (hue,

@@ -28,7 +28,7 @@ async def test_twin_forwards_colour_with_subfloor(hass: HomeAssistant, sources) 
 
     state = hass.states.get(twin)
     assert state.state == STATE_OFF
-    assert set(state.attributes["supported_color_modes"]) == {"hs", "color_temp"}
+    assert set(state.attributes["supported_color_modes"]) == {"hs", "rgb", "rgbw", "rgbww", "xy", "color_temp"}
     assert state.attributes["min_color_temp_kelvin"] == 2200
 
     await _on(hass, twin, hs_color=[0, 100], brightness=3, transition=2)
@@ -214,3 +214,74 @@ async def test_dim_white_below_the_floor_uses_colour_leds(hass: HomeAssistant, s
     await hass.async_block_till_done()
     await _on(hass, twin, color_temp_kelvin=4000, brightness=3)
     assert "color_temp_kelvin" in _sent(src)
+
+
+async def test_twin_accepts_any_colour_input_and_echoes_it(hass: HomeAssistant, sources) -> None:
+    entry = await add_twin(hass, "light.bulb_hs")
+    twin = twin_id(hass, entry)
+    src = sources["light.bulb_hs"]
+    state = hass.states.get(twin)
+    assert set(state.attributes["supported_color_modes"]) == {"hs", "rgb", "rgbw", "rgbww", "xy", "color_temp"}
+
+    # rgbw in: the hs lamp gets hs, the state reports the rgbw as sent
+    await _on(hass, twin, rgbw_color=[200, 40, 0, 30], brightness=180)
+    assert "hs_color" in _sent(src)
+    state = hass.states.get(twin)
+    assert state.attributes["color_mode"] == "rgbw"
+    assert tuple(state.attributes["rgbw_color"]) == (200, 40, 0, 30)
+    assert state.attributes["brightness"] == 180
+    target = state.attributes["match_target"]
+    assert target["kind"] == "color" and 0 < target["hue"] < 40
+    assert target["level"] == pytest.approx(180 / 255 * 100 * 200 / 255, abs=0.05)
+
+    # the round trip: restoring the reported state sends the lamp the same command
+    first = _sent(src)
+    await _on(hass, twin, rgb_color=[0, 0, 255], brightness=255)
+    assert hass.states.get(twin).attributes["color_mode"] == "rgb"
+    await _on(hass, twin, rgbw_color=list(state.attributes["rgbw_color"]), brightness=state.attributes["brightness"])
+    assert _sent(src) == first
+    assert hass.states.get(twin).attributes["rgbw_color"] == state.attributes["rgbw_color"]
+
+    # brightness alone keeps the input
+    await _on(hass, twin, brightness=90)
+    state = hass.states.get(twin)
+    assert state.attributes["color_mode"] == "rgbw" and state.attributes["brightness"] == 90
+
+    # xy, rgbww; a near-white input becomes a white target
+    await _on(hass, twin, xy_color=[0.4578, 0.4101])  # 2700 K
+    state = hass.states.get(twin)
+    assert state.attributes["color_mode"] == "xy" and tuple(state.attributes["xy_color"]) == (0.4578, 0.4101)
+    assert state.attributes["match_target"]["kind"] == "white"
+    assert abs(state.attributes["match_target"]["kelvin"] - 2700) < 60
+    assert "color_temp_kelvin" in _sent(src)
+    await _on(hass, twin, rgbww_color=[0, 0, 0, 0, 255], brightness=255)
+    state = hass.states.get(twin)
+    assert state.attributes["color_mode"] == "rgbww" and tuple(state.attributes["rgbww_color"]) == (0, 0, 0, 0, 255)
+
+    # hs and colour-temperature callers see hs and ct as before
+    await _on(hass, twin, hs_color=[120, 100])
+    state = hass.states.get(twin)
+    assert state.attributes["color_mode"] == "hs" and tuple(state.attributes["hs_color"]) == (120.0, 100.0)
+    assert state.attributes["brightness"] == 255
+    await _on(hass, twin, color_temp_kelvin=3000)
+    assert hass.states.get(twin).attributes["color_mode"] == "color_temp"
+
+
+async def test_raw_channels_fold_into_brightness_below_the_floor(hass: HomeAssistant, sources) -> None:
+    # a WiZ-like rgbw lamp with a floor of 26: another system sends a faint red as raw channels
+    entry = await add_twin(hass, "light.bulb_rgbw", auto_floor=False, brightness_floor=26)
+    twin = twin_id(hass, entry)
+    src = sources["light.bulb_rgbw"]
+    await _on(hass, twin, rgb_color=[25, 0, 0], brightness=255)
+    sent = _sent(src)
+    assert sent["brightness"] == 26  # the floor, with the red channel scaled down under it
+    assert 0 < sent["rgbw_color"][0] < 255 and sent["rgbw_color"][1:] == (0, 0, 0)
+    assert hass.states.get(twin).attributes["match_target"]["level"] == pytest.approx(25 / 255 * 100, abs=0.05)
+    await _on(hass, twin, rgbw_color=[12, 0, 0, 0], brightness=255)
+    fainter = _sent(src)
+    assert fainter["brightness"] == 26 and fainter["rgbw_color"][0] < sent["rgbw_color"][0]
+    state = hass.states.get(twin)
+    assert state.attributes["color_mode"] == "rgbw" and tuple(state.attributes["rgbw_color"]) == (12, 0, 0, 0)
+    # the same look as a red at about 4.7 % sent as hs
+    await _on(hass, twin, hs_color=[0, 100], brightness=round(255 * 12 / 255))
+    assert _sent(src)["brightness"] == 26
