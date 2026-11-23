@@ -81,7 +81,7 @@ def method_rank(data: dict[str, Any]) -> int:
         return CAMERA_ABSOLUTE_RANK
     return METHOD_RANK[method]
 
-DISCUSSIONS_URL = "https://github.com/skytux/ha-light-match/discussions/categories/lamp-profiles"
+DISCUSSIONS_URL = "https://github.com/skytux/light-match/discussions/categories/lamp-profiles"
 
 TARGET_REFERENCE = "lm-ref-1"
 TARGET_HOUSE = "house"

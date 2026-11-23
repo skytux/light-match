@@ -253,7 +253,7 @@ def test_stats_script_aggregates_github_data(tmp_path) -> None:
         [
             {
                 "title": HUE_C,
-                "url": "https://github.com/skytux/ha-light-match/discussions/7",
+                "url": "https://github.com/skytux/light-match/discussions/7",
                 "reactionGroups": [
                     {"content": "THUMBS_UP", "reactors": {"totalCount": 5}},
                     {"content": "THUMBS_DOWN", "reactors": {"totalCount": 1}},
@@ -265,7 +265,7 @@ def test_stats_script_aggregates_github_data(tmp_path) -> None:
     stats = profile_stats.merge_stats([HUE_C, "wiz/generic"], discussions, downloads, {HUE_C: "2026-11-20"})
     assert stats[HUE_C] == {
         "updated": "2026-11-20",
-        "discussion": "https://github.com/skytux/ha-light-match/discussions/7",
+        "discussion": "https://github.com/skytux/light-match/discussions/7",
         "rating": {"up": 5, "down": 1},
         "downloads": 10,
     }

@@ -139,7 +139,7 @@ async def test_share_websocket(hass: HomeAssistant, sources, hass_ws_client) -> 
     res = (await client.receive_json())["result"]
     assert res["target"] == "lm-ref-1" and res["cells"] == 1
     assert res["path"] == "acme/a1.json" and res["json_in_url"]
-    assert res["url"].startswith("https://github.com/skytux/ha-light-match/issues/new?")
+    assert res["url"].startswith("https://github.com/skytux/light-match/issues/new?")
     text = str(res["profile"])
     # nothing from the house: no entity ids, names or titles
     for private in ("light.", "bulb", "calibrated", entry.title):

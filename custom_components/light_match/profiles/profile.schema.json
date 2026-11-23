@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/skytux/ha-light-match/custom_components/light_match/profiles/profile.schema.json",
+  "$id": "https://github.com/skytux/light-match/custom_components/light_match/profiles/profile.schema.json",
   "title": "Light Match lamp profile",
   "description": "A lamp model profile in the Light Match database: how Home Assistant identifies the lamp, its capabilities, where the data comes from and, optionally, calibrated cells in the reference space lm-ref-1.",
   "type": "object",

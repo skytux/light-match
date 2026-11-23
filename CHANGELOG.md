@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.5 - 2026-11-23
+
+- Published as github.com/skytux/light-match: manifest documentation and issue tracker, online profile updates, Discussions and Share profile links point at the new repository.
+- README for new users: HACS custom repository URL, minimum Home Assistant version, quick start, using twins with voice assistants and scripts, and a note that in-panel GitHub rating is off in this release (no OAuth app set).
+
 ## 0.8.4 - 2026-11-22
 
 - The warm white channel of RGBWW input is taken as 2200 K (was 2700 K), the twin's warmest white and what Home Assistant assumes for RGBWW.

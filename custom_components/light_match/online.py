@@ -35,7 +35,7 @@ from .database import ProfileDatabase, accept_db_profile, load_bundled_index, va
 
 _LOGGER = logging.getLogger(__name__)
 
-REPO = "skytux/ha-light-match"
+REPO = "skytux/light-match"
 INDEX_URL = f"https://raw.githubusercontent.com/{REPO}/main/custom_components/light_match/profiles/index.json"
 ASSET_URL = f"https://github.com/{REPO}/releases/download/profiles/{{asset}}"
 UPDATE_INTERVAL = timedelta(hours=24)

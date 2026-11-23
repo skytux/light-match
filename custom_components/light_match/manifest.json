@@ -13,10 +13,10 @@
     "http",
     "websocket_api"
   ],
-  "documentation": "https://github.com/skytux/ha-light-match",
+  "documentation": "https://github.com/skytux/light-match",
   "integration_type": "helper",
   "iot_class": "calculated",
-  "issue_tracker": "https://github.com/skytux/ha-light-match/issues",
+  "issue_tracker": "https://github.com/skytux/light-match/issues",
   "requirements": [],
-  "version": "0.8.4"
+  "version": "0.8.5"
 }

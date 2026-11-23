@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/skytux/ha-light-match/custom_components/light_match/profiles/index.schema.json",
+  "$id": "https://github.com/skytux/light-match/custom_components/light_match/profiles/index.schema.json",
   "title": "Light Match profile index",
   "description": "Every profile in the database with its checksum and release asset (structural fields, from the files) and its community stats (rating, downloads, discussion, last update; refreshed by a scheduled workflow).",
   "type": "object",

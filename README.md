@@ -34,16 +34,33 @@ colorimeter, lux meter or scripts are needed.
 
 ## Install
 
+Requires Home Assistant 2025.2 or newer. Light Match is not in the default
+HACS store yet; add it as a custom repository.
+
 ### HACS (custom repository)
 
-1. HACS → three-dot menu → **Custom repositories** → add this repository's
-   URL with type **Integration**.
+1. HACS → three-dot menu → **Custom repositories** → add
+   `https://github.com/skytux/light-match` with type **Integration**.
 2. Install **Light Match**, then restart Home Assistant.
+3. Continue with [Set up](#set-up).
 
 ### Manual
 
-Copy `custom_components/light_match` into the `custom_components` folder of
-your Home Assistant configuration and restart Home Assistant.
+Download this repository (or a release), copy
+`custom_components/light_match` into the `custom_components` folder of your
+Home Assistant configuration and restart Home Assistant.
+
+## Quick start
+
+1. Add a Light Match twin for each lamp (see [Set up](#set-up)); each twin
+   is a new light entity, named "<lamp name> calibrated" unless you name it.
+2. Pick your best lamp as the reference and calibrate the others against it
+   in the **Light Match** sidebar panel (see [Calibrate](#calibrate)). Even
+   without calibrating anything, the twins already use smart defaults and any
+   matching profile from the bundled lamp database.
+3. Use the twins instead of the real lamps: in scenes, automations, scripts,
+   dashboards and voice assistants. Tick **Hide the source light** so voice
+   assistants and dashboards only see the twin.
 
 ## Set up
 
@@ -301,7 +318,9 @@ only adds or removes your thumbs up/down on the profile's discussion.
 👍 / 👎 links then appear next to profiles that have a discussion. **Sign
 out of GitHub** forgets the token (you can also revoke it in your GitHub
 settings). Without the OAuth app the feature is hidden; the Discussions link
-always works.
+always works. **This release ships without an OAuth app** (`CLIENT_ID` in
+`github.py` is empty), so in-panel rating is off; rate on the Discussion
+page instead.
 
 **Format versions.** Profile files carry `format_version` (a file without
 it is format 1). Files are written in the lowest format that holds them:
@@ -395,6 +414,19 @@ renamed or deleted, and are stored with the library.
 | `light_match.export_profile` | Return the profile as a response (optional `model`). |
 | `light_match.import_profile` | Load a profile (object or JSON text); `merge: true` keeps cells it does not have. |
 | `light_match.import_brightness_curve` | Fill the uncalibrated cells from a brightness curve of target % to lamp %, for example a Lightener brightness map: `curve: {"10": 30, "50": 70}`. Colours keep their defaults. |
+
+## Using twins with voice assistants and scripts
+
+A twin is an ordinary light entity, so anything that controls lights can
+control it. Two ways to make a voice assistant use the calibration:
+
+- **Expose the twins, hide the real lamps** (simplest): turn on **Hide the
+  source light** in the twin's options and expose the twin to Assist (or
+  your other assistant) under the name people use for the lamp.
+- **Keep the real lamps exposed and redirect in your scripts**: if your
+  voice intents run scripts, send the colour and brightness commands to the
+  twin of the lamp when it has one. Turning lamps on and off works on either
+  entity, since the twin mirrors the source's state.
 
 ## Limits
 
