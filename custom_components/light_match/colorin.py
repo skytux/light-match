@@ -41,7 +41,7 @@ from .const import TWIN_MAX_KELVIN, TWIN_MIN_KELVIN
 INPUT_MODES = ("rgb", "rgbw", "rgbww", "xy")
 CHANNELS = {"rgb": 3, "rgbw": 4, "rgbww": 5}
 
-WW_KELVIN = 2700  # the warm white channel of rgbww
+WW_KELVIN = 2200  # the warm white channel of rgbww (HA assumes the twin's min colour temperature, 2200 K)
 CW_KELVIN = 6500  # the cold white channel of rgbww
 WHITE_DUV = 0.006  # how far from the Planckian locus a colour still counts as white
 WHITE_MIN_KELVIN = 1900

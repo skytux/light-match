@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.4 - 2026-11-22
+
+- The warm white channel of RGBWW input is taken as 2200 K (was 2700 K), the twin's warmest white and what Home Assistant assumes for RGBWW.
+
 ## 0.8.3 - 2026-11-22
 
 - Twins accept RGB, RGBW, RGBWW and xy besides hue/saturation and colour temperature, whatever the source lamp takes, so other systems can drive them with raw channels.

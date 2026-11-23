@@ -58,7 +58,7 @@ def test_rgbw_and_rgbww() -> None:
     pink = translate("rgbw", [255, 0, 0, 128])
     assert pink.kind == "color" and pink.hue == pytest.approx(0, abs=3) and pink.sat < 90 and pink.intensity == 1
     ww = translate("rgbww", [0, 0, 0, 0, 255])
-    assert ww.kind == "white" and ww.kelvin == pytest.approx(WW_KELVIN, abs=30)
+    assert WW_KELVIN == 2200 and ww.kind == "white" and ww.kelvin == 2200
     cw = translate("rgbww", [0, 0, 0, 255, 0])
     assert cw.kind == "white" and cw.kelvin == pytest.approx(CW_KELVIN, abs=50)
     both = translate("rgbww", [0, 0, 0, 255, 255])

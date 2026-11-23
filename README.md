@@ -185,7 +185,7 @@ interpolation and the sub-floor dimming apply:
 - **RGBW / RGBWW**: as RGB, with the white channels added as light. W is a
   neutral white (the sRGB white point, as Home Assistant's own RGBW
   conversion assumes); the cold and warm whites of RGBWW are taken as 6500 K
-  and 2700 K. At 255 a white channel gives as much light as RGB 255/255/255.
+  and 2200 K (the twin's warmest white, as Home Assistant assumes for RGBWW). At 255 a white channel gives as much light as RGB 255/255/255.
   `[12, 0, 0, 0]` at 255 is red at about 4.7 %.
 - **xy**: used as it is, at the brightness given.
 - A result close to the Planckian locus (Duv within ±0.006, 1900-8000 K)
