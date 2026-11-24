@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.8 - 2026-11-24
+
+- Integration icon (a colour ring with a tick) in custom_components/light_match/brand/ (icon.png 256 px, icon@2x.png 512 px), shown by HACS and Home Assistant and needed for the HACS default store.
+
 ## 0.8.7 - 2026-11-23
 
 - The nightly "profiles" release (lamp profile files for the online update) is created as a pre-release, so HACS keeps offering the newest version release instead of it.
